@@ -10,8 +10,24 @@
     "test": "jest"
   },
   "dependencies": {
+    "@react-native-community/geolocation": "^3.4.0",
+    "@react-native-picker/picker": "^2.10.2",
+    "@react-navigation/native": "^7.0.13",
+    "@react-navigation/stack": "^7.0.18",
+    "axios": "^1.7.8",
+    "body-parser": "^1.20.3",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mssql": "^11.0.1",
     "react": "18.3.1",
-    "react-native": "0.76.3"
+    "react-native": "0.76.3",
+    "react-native-geolocation-service": "^5.3.1",
+    "react-native-gesture-handler": "^2.21.2",
+    "react-native-image-picker": "^7.2.2",
+    "react-native-reanimated": "^3.16.3",
+    "react-native-safe-area-context": "^5.0.0",
+    "react-native-screens": "^4.3.0",
+    "react-native-vector-icons": "^10.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
