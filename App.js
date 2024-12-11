@@ -6,6 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 //import LoginScreen from './screens/LoginScreen';
 import FormScreen from './screens/FormScreen';
 import TestScreen from './screens/TestScreen';
+import FaimlyScreen from './screens/FaimlyScreen';
 import FormWithPhoto from './screens/FormWithPhoto';
 
 
@@ -26,6 +27,7 @@ const Stack = createStackNavigator();
       <Stack.Navigator initialRouteName="Login">
         <Stack.Screen name="Login" component={FormScreen} />
         <Stack.Screen name="Home" component={TestScreen} />
+        <Stack.Screen name="Faimly" component={FaimlyScreen} />
       </Stack.Navigator>
     </NavigationContainer>
  );

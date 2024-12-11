@@ -16,6 +16,7 @@ const PropertyComponent = () => {
     const [religion, setReligion] = useState('');
     const [category, setCategory] = useState('');
     const [createdBy, setCreatedBy] = useState('');
+    const navigation = useNavigation();
 
     const validateAndSubmit = () => {
         try {
@@ -53,6 +54,7 @@ const PropertyComponent = () => {
             // Simulate API call
             console.log("Submitting Owner Details:", ownerDetails);
             Alert.alert("Success", "Owner details submitted successfully.");
+                navigation.navigate('Home');
         } catch (error) {
             Alert.alert("Validation Error", error.message);
         }
