@@ -1,8 +1,8 @@
 import React from 'react';
 import { ScrollView, View, StyleSheet } from 'react-native';
-import FamilyComponent from '../components/FaimlyComponent'; // Ensure the path is correct
+import FamilyComponent from '../components/FamilyComponent'; // Ensure the path is correct
 
-const FaimlyScreen = () => {
+const FamilyScreen = () => {
   return (
     <ScrollView >
       <View>
@@ -22,4 +22,4 @@ const FaimlyScreen = () => {
 //   },
 // });
 
-export default FaimlyScreen;
+export default FamilyScreen;

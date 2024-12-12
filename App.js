@@ -6,8 +6,10 @@ import { createStackNavigator } from '@react-navigation/stack';
 //import LoginScreen from './screens/LoginScreen';
 import FormScreen from './screens/FormScreen';
 import TestScreen from './screens/TestScreen';
-import FaimlyScreen from './screens/FaimlyScreen';
+import FamilyScreen from './screens/FamilyScreen';
 import FormWithPhoto from './screens/FormWithPhoto';
+import PropertyScreen from './screens/PropertyScreen';
+import SpecialConsiderationScreen from './screens/SpecialConsiderationScreen';
 
 
 
@@ -25,9 +27,12 @@ const Stack = createStackNavigator();
  const App = () => (
   <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
+      
         <Stack.Screen name="Login" component={FormScreen} />
         <Stack.Screen name="Home" component={TestScreen} />
-        <Stack.Screen name="Faimly" component={FaimlyScreen} />
+        <Stack.Screen name="Family" component={FamilyScreen} />
+        <Stack.Screen name="Property" component={PropertyScreen} />
+        <Stack.Screen name="SpecialConsideration" component={SpecialConsiderationScreen} />
       </Stack.Navigator>
     </NavigationContainer>
  );

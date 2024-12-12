@@ -10,7 +10,7 @@
 
 import React from 'react';
 import {ScrollView, View, StyleSheet } from 'react-native'; // Removed duplicate imports
-import PropertyComponent from '../components/PropertyComponent'; // Ensure the path is correct
+import PropertyComponent from '../components/OwnerComponent'; // Ensure the path is correct
 
 const TestScreen = () => {
   return (

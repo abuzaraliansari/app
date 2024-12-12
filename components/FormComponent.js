@@ -21,14 +21,14 @@ const LoginComponent = () => {
         }
 
         try {
-            const response = await axios.post('http://172.16.2.7:3000/auth/login', {
+            const response = await axios.post('http://192.168.29.56:3000/auth/login', {
                 username,
                 password,
             });
 
             if (response.data.success) {
                 Alert.alert('Success', 'Login successful!');
-                navigation.navigate('Faimly');
+                navigation.navigate('Home');
 
              //   navigation.navigate('ATestScreen'); 
             } else {
