@@ -1,9 +1,20 @@
 import React, { useState } from 'react';
-import { View, Text, Button, Image, StyleSheet, PermissionsAndroid, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  Button,
+  Image,
+  StyleSheet,
+  PermissionsAndroid,
+  Alert,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { launchCamera } from 'react-native-image-picker';
 
-const FormWithPhoto = () => {
-  const [photo, setPhoto] = useState(null);
+const FormWithMultiplePhotos = () => {
+  const [photos, setPhotos] = useState([]);
 
   // Function to request camera permission
   const requestCameraPermission = async () => {
@@ -11,11 +22,11 @@ const FormWithPhoto = () => {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.CAMERA,
         {
-          title: "Camera Permission",
-          message: "We need access to your camera to take a photo.",
-          buttonNeutral: "Ask Me Later",
-          buttonNegative: "Cancel",
-          buttonPositive: "OK",
+          title: 'Camera Permission',
+          message: 'We need access to your camera to take photos.',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
         }
       );
       return granted === PermissionsAndroid.RESULTS.GRANTED;
@@ -25,11 +36,12 @@ const FormWithPhoto = () => {
     }
   };
 
-  const capturePhoto = async () => {
+  // Function to capture a photo
+  const capturePhoto = async (index) => {
     const hasPermission = await requestCameraPermission();
 
     if (!hasPermission) {
-      Alert.alert("Permission Denied", "Camera permission is required to take photos.");
+      Alert.alert('Permission Denied', 'Camera permission is required to take photos.');
       return;
     }
 
@@ -38,41 +50,102 @@ const FormWithPhoto = () => {
         mediaType: 'photo',
         saveToPhotos: true,
       },
-      (response) => {
+      async (response) => {
         if (response.didCancel) {
           console.log('User cancelled camera');
         } else if (response.errorCode) {
           console.log('Camera error:', response.errorMessage);
         } else {
-          const { uri } = response.assets[0]; // Extract the image URI
-          setPhoto(uri);
+          const { uri } = response.assets[0];
+          const updatedPhotos = [...photos];
+          updatedPhotos[index] = uri;
+          setPhotos(updatedPhotos);
+
+          // Save photos to local storage
+          try {
+            await AsyncStorage.setItem('capturedPhotos', JSON.stringify(updatedPhotos));
+            Alert.alert('Success', 'Photo saved to local storage.');
+          } catch (error) {
+            console.error('Error saving photo to local storage:', error);
+            Alert.alert('Error', 'Failed to save photo.');
+          }
         }
       }
     );
   };
 
+  // Function to load photos from local storage
+  const loadPhotosFromStorage = async () => {
+    try {
+      const storedPhotos = await AsyncStorage.getItem('capturedPhotos');
+      if (storedPhotos) {
+        setPhotos(JSON.parse(storedPhotos));
+        Alert.alert('Success', 'Photos loaded from local storage.');
+      } else {
+        Alert.alert('No Photos Found', 'No photos exist in local storage.');
+      }
+    } catch (error) {
+      console.error('Error loading photos from local storage:', error);
+      Alert.alert('Error', 'Failed to load photos.');
+    }
+  };
+
+  // Add a new photo slot
+  const addPhotoSlot = () => {
+    setPhotos([...photos, null]);
+  };
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.label}>Person's Photo *</Text>
-      <View style={styles.photoContainer}>
-        {photo ? (
-          <Image source={{ uri: photo }} style={styles.photo} />
-        ) : (
-          <Text style={styles.placeholder}>No photo selected</Text>
-        )}
-      </View>
-      <Button title="Capture Photo" onPress={capturePhoto} />
-    </View>
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.title}>Capture Multiple Photos</Text>
+      {photos.map((photo, index) => (
+        <View key={index} style={styles.photoSection}>
+          <Text style={styles.label}>Photo {index + 1}</Text>
+          <View style={styles.photoContainer}>
+            {photo ? (
+              <Image source={{ uri: photo }} style={styles.photo} />
+            ) : (
+              <Text style={styles.placeholder}>No photo selected</Text>
+            )}
+          </View>
+          <TouchableOpacity
+            style={styles.captureButton}
+            onPress={() => capturePhoto(index)}
+          >
+            <Text style={styles.buttonText}>Capture Photo</Text>
+          </TouchableOpacity>
+        </View>
+      ))}
+      <TouchableOpacity style={styles.addButton} onPress={addPhotoSlot}>
+        <Text style={styles.addButtonText}>+ Add Another Photo</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.loadButton} onPress={loadPhotosFromStorage}>
+        <Text style={styles.buttonText}>Load Photos</Text>
+      </TouchableOpacity>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     padding: 16,
+    backgroundColor: '#f9f9f9',
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 16,
+    color: '#333',
+  },
+  photoSection: {
+    marginBottom: 24,
+    alignItems: 'center',
   },
   label: {
     fontSize: 16,
     marginBottom: 8,
+    color: '#555',
   },
   photoContainer: {
     width: 200,
@@ -81,7 +154,10 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 16,
+    borderRadius: 10,
+    backgroundColor: '#fff',
+    overflow: 'hidden',
+    marginBottom: 8,
   },
   photo: {
     width: '100%',
@@ -91,6 +167,36 @@ const styles = StyleSheet.create({
   placeholder: {
     color: '#888',
   },
+  captureButton: {
+    backgroundColor: '#007bff',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  addButton: {
+    marginVertical: 16,
+    backgroundColor: '#28a745',
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    borderRadius: 5,
+  },
+  addButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  loadButton: {
+    backgroundColor: '#ffc107',
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    borderRadius: 5,
+    marginTop: 16,
+  },
 });
 
-export default FormWithPhoto;
+export default FormWithMultiplePhotos;

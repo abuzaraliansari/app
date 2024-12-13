@@ -5,11 +5,12 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 //import LoginScreen from './screens/LoginScreen';
 import FormScreen from './screens/FormScreen';
-import TestScreen from './screens/TestScreen';
+import OwnerScreen from './screens/OwnerScreen';
 import FamilyScreen from './screens/FamilyScreen';
 import FormWithPhoto from './screens/FormWithPhoto';
 import PropertyScreen from './screens/PropertyScreen';
 import SpecialConsiderationScreen from './screens/SpecialConsiderationScreen';
+
 
 
 
@@ -29,10 +30,11 @@ const Stack = createStackNavigator();
       <Stack.Navigator initialRouteName="Login">
       
         <Stack.Screen name="Login" component={FormScreen} />
-        <Stack.Screen name="Home" component={TestScreen} />
+        <Stack.Screen name="Home" component={OwnerScreen} />
         <Stack.Screen name="Family" component={FamilyScreen} />
         <Stack.Screen name="Property" component={PropertyScreen} />
         <Stack.Screen name="SpecialConsideration" component={SpecialConsiderationScreen} />
+        <Stack.Screen name="FormWithPhoto" component={FormWithPhoto} />
       </Stack.Navigator>
     </NavigationContainer>
  );

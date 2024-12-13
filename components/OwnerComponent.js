@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { View, Text, TextInput, Button, Alert, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, Alert, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
 
-const PropertyComponent = () => {
+const OwnerComponent = () => {
     const [firstName, setFirstName] = useState('');
     const [middleName, setMiddleName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -59,7 +59,6 @@ const PropertyComponent = () => {
                 navigation.navigate('Family', { ownerID: response.data.ownerID }); // Adjust the navigation target if needed
             } else {
                 Alert.alert("Success", response.status+ response.data);
-               // throw new Error("Failed to submit owner details."+ response.message + response.status );
             }
         } catch (error) {
             Alert.alert("Validation Error", error.message);
@@ -67,24 +66,26 @@ const PropertyComponent = () => {
     };
 
     return (
-        <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.container}>
+            <Text style={styles.heading}>Owner Details</Text>
+
             <Text style={styles.label}>First Name *</Text>
-            <TextInput style={styles.input} value={firstName} onChangeText={setFirstName} />
+            <TextInput style={styles.input} value={firstName} onChangeText={setFirstName} placeholder="Enter first name" />
 
             <Text style={styles.label}>Middle Name</Text>
-            <TextInput style={styles.input} value={middleName} onChangeText={setMiddleName} />
+            <TextInput style={styles.input} value={middleName} onChangeText={setMiddleName} placeholder="Enter middle name" />
 
             <Text style={styles.label}>Last Name *</Text>
-            <TextInput style={styles.input} value={lastName} onChangeText={setLastName} />
+            <TextInput style={styles.input} value={lastName} onChangeText={setLastName} placeholder="Enter last name" />
 
             <Text style={styles.label}>Mobile Number *</Text>
-            <TextInput style={styles.input} value={mobileNumber} onChangeText={setMobileNumber} keyboardType="phone-pad" />
+            <TextInput style={styles.input} value={mobileNumber} onChangeText={setMobileNumber} keyboardType="phone-pad" placeholder="Enter mobile number" />
 
             <Text style={styles.label}>Occupation</Text>
-            <TextInput style={styles.input} value={occupation} onChangeText={setOccupation} />
+            <TextInput style={styles.input} value={occupation} onChangeText={setOccupation} placeholder="Enter occupation" />
 
             <Text style={styles.label}>Age *</Text>
-            <TextInput style={styles.input} value={age} onChangeText={setAge} keyboardType="numeric" />
+            <TextInput style={styles.input} value={age} onChangeText={setAge} keyboardType="numeric" placeholder="Enter age" />
 
             <Text style={styles.label}>Gender *</Text>
             <Picker
@@ -99,42 +100,77 @@ const PropertyComponent = () => {
             </Picker>
 
             <Text style={styles.label}>Income *</Text>
-            <TextInput style={styles.input} value={income} onChangeText={setIncome} keyboardType="numeric" />
+            <TextInput style={styles.input} value={income} onChangeText={setIncome} keyboardType="numeric" placeholder="Enter income" />
 
             <Text style={styles.label}>Religion</Text>
-            <TextInput style={styles.input} value={religion} onChangeText={setReligion} />
+            <TextInput style={styles.input} value={religion} onChangeText={setReligion} placeholder="Enter religion" />
 
             <Text style={styles.label}>Category</Text>
-            <TextInput style={styles.input} value={category} onChangeText={setCategory} />
+            <TextInput style={styles.input} value={category} onChangeText={setCategory} placeholder="Enter category" />
 
             <Text style={styles.label}>Created By *</Text>
-            <TextInput style={styles.input} value={createdBy} onChangeText={setCreatedBy} />
+            <TextInput style={styles.input} value={createdBy} onChangeText={setCreatedBy} placeholder="Enter created By" />
 
-            <Button title="Save and Next" onPress={validateAndSubmit} />
-        </View>
+            <TouchableOpacity style={styles.button} onPress={validateAndSubmit}>
+                <Text style={styles.buttonText}>Save and Next</Text>
+            </TouchableOpacity>
+        </ScrollView>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
         padding: 20,
-        backgroundColor: '#fff',
+        backgroundColor: '#f0f4f7',
+    },
+    heading: {
+        fontSize: 40,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginBottom: 20,
+        color: '#333',
     },
     label: {
-        fontSize: 16,
+        fontSize: 20,
+        fontWeight: 'bold',
         marginVertical: 8,
+        color: '#555',
     },
     input: {
         borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 4,
-        padding: 8,
-        fontSize: 16,
+        borderColor: '#ddd',
+        borderRadius: 15,
+        padding: 10,
+        fontSize: 20,
+        backgroundColor: '#fff',
+        marginBottom: 15,
     },
     picker: {
-        height: 50,
-        width: '100%',
+        borderWidth: 3,
+        borderColor: '#ddd',
+        borderRadius: 15,
+        paddingHorizontal: 10,
+        marginBottom: 15,
+        backgroundColor: '#fff',
+        fontSize: 30, 
+    },
+   
+    button: {
+        backgroundColor: '#4CAF50',
+        paddingVertical: 10,
+        borderRadius: 10,
+        alignItems: 'center',
+        marginTop: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 20,
+        fontWeight: 'bold',
     },
 });
 
-export default PropertyComponent;
+export default OwnerComponent;

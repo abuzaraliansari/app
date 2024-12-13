@@ -10,13 +10,13 @@
 
 import React from 'react';
 import {ScrollView, View, StyleSheet } from 'react-native'; // Removed duplicate imports
-import PropertyComponent from '../components/OwnerComponent'; // Ensure the path is correct
+import OwnerComponent from '../components/OwnerComponent'; // Ensure the path is correct
 
-const TestScreen = () => {
+const OwnerScreen = () => {
   return (
     <ScrollView >
     <View >
-      <PropertyComponent />
+      <OwnerComponent />
     </View>
     </ScrollView>
   );
@@ -31,5 +31,5 @@ const TestScreen = () => {
 //   },
 // });
 
-export default TestScreen;
+export default OwnerScreen;
 
