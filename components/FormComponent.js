@@ -8,6 +8,8 @@ import {
     Alert,
     StyleSheet,
     ImageBackground,
+    Image,
+    ScrollView,
 } from 'react-native';
 import axios from 'axios';
 
@@ -41,11 +43,14 @@ const LoginComponent = () => {
     };
 
     return (
+        
         <ImageBackground
-            source={{ uri: 'https://via.placeholder.com/800x600.png?text=Background' }} // Replace with a proper image URL
+            source={require('../logo.jpg')} // Local background image
             style={styles.background}
-        >
+        ><ScrollView >
             <View style={styles.container}>
+                <Image source={require('../logo.jpg')} style={styles.logo} />
+
                 <Text style={styles.title}>Babrala House No. Allocation App!</Text>
                 <Text style={styles.subtitle}>Login to your account</Text>
 
@@ -70,25 +75,27 @@ const LoginComponent = () => {
                     <Text style={styles.buttonText}>Login</Text>
                 </TouchableOpacity>
             </View>
+            </ScrollView>
         </ImageBackground>
+        
     );
 };
 
 const styles = StyleSheet.create({
-    background: {
-        
-        resizeMode: 'cover',
-        justifyContent: 'center',
+    background: {           // Full screen background image
+        resizeMode: 'cover', 
+        backgroundColor: 'rgba(255, 255, 255, 0.8)', 
+        height: '100%',
     },
     container: {
-        backgroundColor: '#f0f4f7',
-        margin: 10,
-        borderRadius: 15,
-        padding: 10,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 1,
-        shadowRadius: 5,
+        flex: 1,                          // Full height and width
+        justifyContent: 'center',          // Center the form vertically
+        alignItems: 'center',              // Center the form horizontally
+        paddingHorizontal: 20,             // Padding on left and right
+        backgroundColor: 'rgba(255, 255, 255, 0.8)', // Background with slight transparency
+        paddingTop: '10%',                 // Top padding to account for safe area
+        paddingBottom: '10%',              // Bottom padding to ensure content is fully centered vertically
+        minHeight: '100%',                 // Ensure container takes full height
     },
     title: {
         fontSize: 30,
@@ -118,17 +125,76 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         borderRadius: 15,
         alignItems: 'center',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.2,
-        shadowRadius: 4,
         marginTop: 20,
+        padding: 10,
     },
     buttonText: {
         color: '#fff',
         fontSize: 25,
         fontWeight: 'bold',
     },
+    logo: {
+        width: 100,
+        height: 100,
+        marginBottom: 20,
+    },
 });
+// const styles = StyleSheet.create({
+//     background: {           // Full screen background image
+//         resizeMode: 'cover', 
+//         backgroundColor: 'rgba(255, 255, 255, 0.8)', 
+//         height: '100%',
+//     },
+//     container: {
+//         flex: 1,                      // Full height and width
+//         justifyContent: 'center',      // Center the form vertically
+//         alignItems: 'center',          // Center the form horizontally
+//         paddingHorizontal: 10,         // Padding on left and right
+//         backgroundColor: 'rgba(255, 255, 255, 0.8)', // Background with slight transparency
+//         paddingTop: '50%', 
+//         paddingBottom: '50%', 
+//     },
+//     title: {
+//         fontSize: 30,
+//         fontWeight: 'bold',
+//         color: '#333',
+//         textAlign: 'center',
+//         marginBottom: 10,
+//     },
+//     subtitle: {
+//         fontSize: 20,
+//         color: '#555',
+//         textAlign: 'center',
+//         marginBottom: 20,
+//     },
+//     input: {
+//         height: 50,
+//         borderColor: '#ddd',
+//         borderWidth: 3,
+//         borderRadius: 8,
+//         paddingHorizontal: 15,
+//         fontSize: 20,
+//         marginBottom: 15,
+//         backgroundColor: '#f9f9f9',
+//     },
+//     button: {
+//         backgroundColor: '#4CAF50',
+//         paddingVertical: 10,
+//         borderRadius: 15,
+//         alignItems: 'center',
+//         marginTop: 20,
+//         padding: 10,
+//     },
+//     buttonText: {
+//         color: '#fff',
+//         fontSize: 25,
+//         fontWeight: 'bold',
+//     },
+//     logo: {
+//         width: 100,
+//         height: 100,
+//         marginBottom: 20,
+//     },
+//});
 
 export default LoginComponent;
