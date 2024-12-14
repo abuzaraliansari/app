@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useContext  } from 'react';
+import { AuthContext } from '../contexts/AuthContext';
 import { useNavigation } from '@react-navigation/native';
 import {
     View,
@@ -13,9 +14,11 @@ import {
 } from 'react-native';
 import axios from 'axios';
 
+
 const LoginComponent = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const { login } = useContext(AuthContext); 
     const navigation = useNavigation();
 
     const handleLogin = async () => {
@@ -25,13 +28,14 @@ const LoginComponent = () => {
         }
 
         try {
-            const response = await axios.post('http://192.168.29.56:3000/auth/login', {
+            const response = await axios.post('http://172.16.2.4:3000/auth/login', {
                 username,
                 password,
             });
 
             if (response.data.success) {
-                Alert.alert('Success', 'Login successful!');
+                login(password, username, null);///-- need to reterive token
+              //  Alert.alert('Success', 'Login successful!');
                 navigation.navigate('Home');
             } else {
                 Alert.alert('Error', response.data.message);

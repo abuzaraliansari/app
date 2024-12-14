@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState ,useContext} from 'react';
 import {
   View,
   TextInput,
@@ -9,9 +9,11 @@ import {
   ActivityIndicator
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { AuthContext } from '../contexts/AuthContext'; 
 
 const FamilyMember = () => {
-  const [ownerID, setOwnerID] = useState('');
+  const { authState } = useContext(AuthContext);
+  const ownerID = authState.ownerID;
   const [name, setName] = useState('');
   const [age, setAge] = useState('');
   const [gender, setGender] = useState('');
@@ -44,7 +46,7 @@ const FamilyMember = () => {
     setLoading(true);
 
     try {
-      const response = await fetch('http://192.168.29.56:3000/auth/family', {
+      const response = await fetch('http://172.16.2.4:3000/auth/family', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -89,12 +91,12 @@ const FamilyMember = () => {
     <View style={styles.container}>
       <Text style={styles.header}>Add Family Member</Text>
 
-      <Text style={styles.label}>Owner ID</Text>
+      <Text style={styles.label}>Owner ID  {authState.ownerID}</Text>
       <TextInput
         style={styles.input}
         placeholder="Enter OwnerID"
         value={ownerID}
-        onChangeText={setOwnerID}
+       
         keyboardType="numeric"
       />
 

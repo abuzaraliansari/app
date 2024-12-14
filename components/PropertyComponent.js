@@ -62,7 +62,7 @@ const PropertyDetailsComponent = () => {
                 createdBy,
             };
 
-            const response = await fetch('http://192.168.29.56:3000/auth/PropertyDetails', {
+            const response = await fetch('http://172.16.2.4:3000/auth/PropertyDetails', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ PropertyDetails: propertyDetails }),

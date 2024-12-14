@@ -30,7 +30,7 @@ const SpecialConsiderationComponent = () => {
     };
 
     try {
-      const response = await fetch('http://192.168.29.56:3000/auth/SpecialConsideration', {
+      const response = await fetch('http://172.16.2.43000/auth/SpecialConsideration', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
