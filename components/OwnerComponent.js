@@ -13,6 +13,7 @@ import {
 import {Picker} from '@react-native-picker/picker';
 import {AuthContext} from '../contexts/AuthContext';
 import axios from 'axios';
+import AppStyles from '../styles/AppStyles';
 
 const OwnerComponent = () => {
   const {authState} = useContext(AuthContext);
@@ -76,56 +77,57 @@ const OwnerComponent = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text>Welcome, {authState.user}!</Text>
+    <ScrollView contentContainerStyle={AppStyles.container}>
+      
 
-      <Text style={styles.heading}>Owner Details</Text>
+      <Text style={AppStyles.heading}>Owner Details</Text>
+      <Text style={AppStyles.label}>Welcome, {authState.user}!</Text>
 
-      <Text style={styles.label}>First Name *</Text>
+      <Text style={AppStyles.label}>First Name *</Text>
       <TextInput
-        style={styles.input}
+        style={AppStyles.input}
         value={firstName}
         onChangeText={setFirstName}
         placeholder="Enter first name"
       />
 
-      <Text style={styles.label}>Middle Name</Text>
+      <Text style={AppStyles.label}>Middle Name</Text>
       <TextInput
-        style={styles.input}
+        style={AppStyles.input}
         value={middleName}
         onChangeText={setMiddleName}
         placeholder="Enter middle name"
       />
 
-      <Text style={styles.label}>Last Name *</Text>
+      <Text style={AppStyles.label}>Last Name *</Text>
       <TextInput
-        style={styles.input}
+        style={AppStyles.input}
         value={lastName}
         onChangeText={setLastName}
         placeholder="Enter last name"
       />
 
-      <Text style={styles.label}>Mobile Number *</Text>
+      <Text style={AppStyles.label}>Mobile Number *</Text>
       <TextInput
-        style={styles.input}
+        style={AppStyles.input}
         value={mobileNumber}
         onChangeText={setMobileNumber}
         keyboardType="phone-pad"
         placeholder="Enter mobile number"
       />
 
-      <Text style={styles.label}>Occupation</Text>
+      <Text style={AppStyles.label}>Occupation</Text>
       <TextInput
-        style={styles.input}
+        style={AppStyles.input}
         value={occupation}
         onChangeText={setOccupation}
         placeholder="Enter occupation"
       />
 
-      <Text style={styles.label}>Age *</Text>
+      <Text style={AppStyles.label}>Age *</Text>
       <Picker
         selectedValue={age}
-        style={styles.picker}
+        style={AppStyles.picker}
         onValueChange={itemValue => setAge(itemValue)}>
         <Picker.Item label="Select an age range" value="" />
         <Picker.Item label="18-20" value="18-20" />
@@ -138,21 +140,21 @@ const OwnerComponent = () => {
         <Picker.Item label="81-90" value="81-90" />
         <Picker.Item label="90+" value="90+" />
       </Picker>
-      <Text style={styles.label}>Gender *</Text>
+      <Text style={AppStyles.label}>Gender *</Text>
       <Picker
         selectedValue={gender}
         onValueChange={itemValue => setGender(itemValue)}
-        style={styles.picker}>
+        style={AppStyles.picker}>
         <Picker.Item label="Select Gender" value="" />
         <Picker.Item label="Male" value="M" />
         <Picker.Item label="Female" value="F" />
         <Picker.Item label="Other" value="O" />
       </Picker>
 
-      <Text style={styles.label}>Income *</Text>
+      <Text style={AppStyles.label}>Income *</Text>
       <Picker
         selectedValue={income}
-        style={styles.picker}
+        style={AppStyles.picker}
         onValueChange={itemValue => setIncome(itemValue)}>
         <Picker.Item label="Select an Income range" value="" />
         <Picker.Item label="Below 10,000" value="Below 10,000" />
@@ -172,10 +174,10 @@ const OwnerComponent = () => {
         />
         <Picker.Item label="10,000,000+" value="10,000,000+" />
       </Picker>
-      <Text style={styles.label}>Religion</Text>
+      <Text style={AppStyles.label}>Religion</Text>
       <Picker
         selectedValue={religion}
-        style={styles.picker}
+        style={AppStyles.picker}
         onValueChange={itemValue => setReligion(itemValue)}>
         <Picker.Item label="Select an Religion range" value="" />
         <Picker.Item label="Hindu" value="Hindu" />
@@ -185,10 +187,10 @@ const OwnerComponent = () => {
         <Picker.Item label="Other" value="Other" />
       </Picker>
 
-      <Text style={styles.label}>Category</Text>
+      <Text style={AppStyles.label}>Category</Text>
       <Picker
         selectedValue={category}
-        style={styles.picker}
+        style={AppStyles.picker}
         onValueChange={itemValue => setCategory(itemValue)}>
         <Picker.Item label="Select an Category range" value="" />
         <Picker.Item label="General" value="General" />
@@ -198,66 +200,11 @@ const OwnerComponent = () => {
         <Picker.Item label="Other" value="Other" />
       </Picker>
 
-      <TouchableOpacity style={styles.button} onPress={validateAndSubmit}>
-        <Text style={styles.buttonText}>Save and Next</Text>
+      <TouchableOpacity style={AppStyles.button} onPress={validateAndSubmit}>
+        <Text style={AppStyles.buttonText}>Save and Next</Text>
       </TouchableOpacity>
     </ScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-    backgroundColor: '#f0f4f7',
-  },
-  heading: {
-    fontSize: 40,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 20,
-    color: '#333',
-  },
-  label: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginVertical: 8,
-    color: '#555',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 15,
-    padding: 10,
-    fontSize: 20,
-    backgroundColor: '#fff',
-    marginBottom: 15,
-  },
-  picker: {
-    borderWidth: 3,
-    borderColor: '#ddd',
-    borderRadius: 15,
-    paddingHorizontal: 10,
-    marginBottom: 15,
-    backgroundColor: '#fff',
-    fontSize: 30,
-  },
-
-  button: {
-    backgroundColor: '#4CAF50',
-    paddingVertical: 10,
-    borderRadius: 10,
-    alignItems: 'center',
-    marginTop: 10,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-});
 
 export default OwnerComponent;

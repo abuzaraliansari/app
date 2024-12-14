@@ -3,6 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import { View, Text, TextInput, Button, Alert, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
+import AppStyles from '../styles/AppStyles';
 
 const SpecialConsiderationComponent = () => {
   const [ownerID, setOwnerID] = useState('');
@@ -55,24 +56,24 @@ const SpecialConsiderationComponent = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.heading}>Special Consideration Details</Text>
+    <ScrollView contentContainerStyle={AppStyles.container}>
+      <Text style={AppStyles.heading}>Special Consideration Details</Text>
 
-      <Text style={styles.label}>Owner ID *</Text>
+      <Text style={AppStyles.label}>Owner ID *</Text>
       <TextInput
-        style={styles.input}
+        style={AppStyles.input}
         placeholder="Enter Owner ID"
         value={ownerID}
         onChangeText={setOwnerID}
         keyboardType="numeric"
       />
 
-      <Text style={styles.label}>Consideration Type *</Text>
-      <View style={styles.pickerContainer}>
+      <Text style={AppStyles.label}>Consideration Type *</Text>
+      <View style={AppStyles.pickerContainer}>
         <Picker
           selectedValue={considerationType}
           onValueChange={(itemValue) => setConsiderationType(itemValue)}
-          style={styles.picker}
+          style={AppStyles.picker}
         >
           <Picker.Item label="Select Consideration Type" value="" />
           <Picker.Item label="Senior Citizen" value="Senior Citizen" />
@@ -83,36 +84,36 @@ const SpecialConsiderationComponent = () => {
         </Picker>
       </View>
 
-      <Text style={styles.label}>Description</Text>
+      <Text style={AppStyles.label}>Description</Text>
       <TextInput
-        style={styles.input}
+        style={AppStyles.input}
         placeholder="Enter Description"
         value={description}
         onChangeText={setDescription}
       />
 
-      <Text style={styles.label}>Created By *</Text>
+      <Text style={AppStyles.label}>Created By *</Text>
       <TextInput
-        style={styles.input}
+        style={AppStyles.input}
         placeholder="Enter Created By"
         value={createdBy}
         onChangeText={setCreatedBy}
       />
 
-      <Text style={styles.label}>Modified By</Text>
+      <Text style={AppStyles.label}>Modified By</Text>
       <TextInput
-        style={styles.input}
+        style={AppStyles.input}
         placeholder="Enter Modified By"
         value={modifiedBy}
         onChangeText={setModifiedBy}
       />
 
-      <TouchableOpacity style={styles.button} onPress={handleAddSpecialConsideration}>
-        <Text style={styles.buttonText}>Save and Next</Text>
+      <TouchableOpacity style={AppStyles.button} onPress={handleAddSpecialConsideration}>
+        <Text style={AppStyles.buttonText}>Save and Next</Text>
       </TouchableOpacity>
 
       {message && (
-        <Text style={[styles.message, { color: isError ? 'red' : 'green' }]}>
+        <Text style={[AppStyles.message, { color: isError ? 'red' : 'green' }]}>
           {message}
         </Text>
       )}
@@ -120,69 +121,5 @@ const SpecialConsiderationComponent = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-    backgroundColor: '#f0f4f7',
-  },
-  heading: {
-    fontSize: 35,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 20,
-    color: '#333',
-  },
-  label: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginVertical: 8,
-    color: '#555',
-  },
-  input: {
-    borderWidth: 3,
-    borderColor: '#ddd',
-    borderRadius: 15,
-    padding: 10,
-    fontSize: 20,
-    backgroundColor: '#fff',
-    marginBottom: 15,
-  },
-  pickerContainer: {
-    borderWidth: 3,
-    borderColor: '#ddd',
-    borderRadius: 15,
-    marginBottom: 15,
-    fontSize: 20,
-    backgroundColor: '#fff',
-  },
-  picker: {
-    borderRadius: 15,
-    borderColor: '#ddd',
-    borderWidth: 3,
-    backgroundColor: '#fff',
-    
-  },
-  button: {
-    backgroundColor: '#4CAF50',
-    paddingVertical: 10,
-    borderRadius: 10,
-    alignItems: 'center',
-    marginTop: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  message: {
-    textAlign: 'center',
-    marginTop: 15,
-    fontSize: 20,
-  },
-});
 
 export default SpecialConsiderationComponent;
