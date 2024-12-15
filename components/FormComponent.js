@@ -28,7 +28,7 @@ const LoginComponent = () => {
         }
 
         try {
-            const response = await axios.post('http://172.16.2.4:3000/auth/login', {
+            const response = await axios.post('http://192.168.29.56:3000/auth/login', {
                 username,
                 password,
             });

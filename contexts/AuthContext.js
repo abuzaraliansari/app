@@ -12,12 +12,12 @@ export const AuthProvider = ({ children }) => {
         familyMemberID: null,
     });
 
-    const login = async (token, user, ownerId, familyMemberID) => {
-        setAuthState({ isAuthenticated: true, token, user ,ownerId ,familyMemberID});
+    const login = async (token, user, ownerId) => {
+        setAuthState({ isAuthenticated: true, token, user ,ownerId });
         await AsyncStorage.setItem('authToken', token);
         await AsyncStorage.setItem('user', JSON.stringify(user));
         await AsyncStorage.setItem('ownerId', ownerId);
-        await AsyncStorage.setItem('familyMemberID', familyMemberID);
+        
     };
 
 // const UpdateOwnerID = async () => {

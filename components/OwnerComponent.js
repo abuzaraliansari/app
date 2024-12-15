@@ -30,6 +30,7 @@ const OwnerComponent = () => {
   const [religion, setReligion] = useState('');
   const [category, setCategory] = useState('');
   const createdBy = authState.user;
+  const [Email, setEmail] = useState('');
   const navigation = useNavigation();
 
   const validateAndSubmit = async () => {
@@ -57,16 +58,17 @@ const OwnerComponent = () => {
         religion,
         category,
         createdBy,
+        Email,
       };
 
       // Simulate API call with axios
-      const response = await axios.post('http://172.16.2.4:3000/auth/owner', {
+      const response = await axios.post('http://192.168.29.56:3000/auth/owner', {
         ownerDetails,
       });
 
       if (response.status === 201) {
         Alert.alert('Success', 'Owner details submitted successfully.');
-        login(authState.password, authState.username, response.data.ownerID);
+        login(authState.password, authState.user, response.data.ownerID);
         navigation.navigate('Family', {ownerID: response.data.ownerID}); // Adjust the navigation target if needed
       } else {
         Alert.alert('Success', response.status + response.data);
@@ -117,19 +119,36 @@ const OwnerComponent = () => {
       />
 
       <Text style={AppStyles.label}>Occupation</Text>
-      <TextInput
-        style={AppStyles.input}
-        value={occupation}
-        onChangeText={setOccupation}
-        placeholder="Enter occupation"
-      />
+       <Picker
+        selectedValue={occupation}
+        onValueChange={(itemValue) => setOccupation(itemValue)}
+        style={AppStyles.picker}
+      >
+        <Picker.Item label="Select an occupation" value="" />
+        <Picker.Item label="Government Employee" value="Government Employee" />
+        <Picker.Item label="Private Employee" value="Private Employee" />
+        <Picker.Item label="Self-Employed" value="Self-Employed" />
+        <Picker.Item label="Farmer" value="Farmer" />
+        <Picker.Item label="Student" value="Student" />
+        <Picker.Item label="Unemployed" value="Unemployed" />
+        <Picker.Item label="Retired" value="Retired" />
+        <Picker.Item label="Housewife" value="Housewife" />
+        <Picker.Item label="Teacher" value="Teacher" />
+        <Picker.Item label="Engineer" value="Engineer" />
+        <Picker.Item label="Doctor" value="Doctor" />
+        <Picker.Item label="Lawyer" value="Lawyer" />
+        <Picker.Item label="Artist" value="Artist" />
+        <Picker.Item label="Business Owner" value="Business Owner" />
+        <Picker.Item label="Freelancer" value="Freelancer" />
+        <Picker.Item label="Others" value="Others" />
+      </Picker>
 
       <Text style={AppStyles.label}>Age *</Text>
       <Picker
         selectedValue={age}
         style={AppStyles.picker}
         onValueChange={itemValue => setAge(itemValue)}>
-        <Picker.Item label="Select an age range" value="" />
+        <Picker.Item label="Select age" value="" />
         <Picker.Item label="18-20" value="18-20" />
         <Picker.Item label="21-30" value="21-30" />
         <Picker.Item label="31-40" value="31-40" />
@@ -199,6 +218,14 @@ const OwnerComponent = () => {
         <Picker.Item label="ST" value="ST" />
         <Picker.Item label="Other" value="Other" />
       </Picker>
+
+      <Text style={AppStyles.label}>Email</Text>
+      <TextInput
+        style={AppStyles.input}
+        value={Email}
+        onChangeText={setEmail}
+        placeholder="Enter Email"
+      />
 
       <TouchableOpacity style={AppStyles.button} onPress={validateAndSubmit}>
         <Text style={AppStyles.buttonText}>Save and Next</Text>

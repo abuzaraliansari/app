@@ -1,4 +1,4 @@
-import React, { useState ,useContext} from 'react';
+import React, {useState, useContext} from 'react';
 import {
   View,
   TextInput,
@@ -6,16 +6,17 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  ActivityIndicator
+  ActivityIndicator,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { AuthContext } from '../contexts/AuthContext'; 
+import {useNavigation} from '@react-navigation/native';
+import {AuthContext} from '../contexts/AuthContext';
 import {Picker} from '@react-native-picker/picker';
 import AppStyles from '../styles/AppStyles';
 
 const FamilyMember = () => {
-  const { authState } = useContext(AuthContext);
-  const ownerID = authState.ownerID;
+  const {authState} = useContext(AuthContext);
+
+  const ownerID = authState.ownerId;
   const [name, setName] = useState('');
   const [age, setAge] = useState('');
   const [gender, setGender] = useState('');
@@ -39,7 +40,7 @@ const FamilyMember = () => {
   };
 
   const handleSaveFamilyMember = async () => {
-    if (!ownerID || !name || !age || !gender || !occupation) {
+    if (!name || !age || !gender || !occupation) {
       setMessage('All fields are required.');
       setIsError(true);
       return;
@@ -48,7 +49,7 @@ const FamilyMember = () => {
     setLoading(true);
 
     try {
-      const response = await fetch('http://172.16.2.4:3000/auth/family', {
+      const response = await fetch('http://192.168.29.56:3000/auth/family', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -59,7 +60,7 @@ const FamilyMember = () => {
       const data = await response.json();
       setLoading(false);
 
-      if (response.ok) {
+      if (response.status === 201) {
         setMessage('Family member saved successfully.');
         setIsError(false);
         // Clear fields for next family member entry
@@ -67,7 +68,6 @@ const FamilyMember = () => {
         setAge('');
         setGender('');
         setOccupation('');
-        setCreatedBy('');
       } else {
         setMessage(data.message || 'Failed to save family member.');
         setIsError(true);
@@ -80,26 +80,13 @@ const FamilyMember = () => {
   };
 
   const handleAddFamilyMember = () => {
-    if (!ownerID) {
-      setMessage('OwnerID is required to add a family member.');
-      setIsError(true);
-      return;
-    }
-    login(authState.password, authState.username, response.data.fa);
-    navigation.navigate('Property', { ownerID });
+    navigation.navigate('Property');
   };
 
   return (
     <View style={AppStyles.container}>
       <Text style={AppStyles.header}>Add Family Member</Text>
-
-      <Text style={AppStyles.label}>Owner ID  {authState.ownerID}</Text>
-      <TextInput
-        style={AppStyles.input}
-        placeholder="Enter OwnerID"
-        value={ownerID}
-        onChangeText={authState.ownerID}
-      />
+      <Text style={AppStyles.label}>Welcome, {authState.user}</Text>
 
       <Text style={AppStyles.label}>Full Name</Text>
       <TextInput
@@ -109,12 +96,12 @@ const FamilyMember = () => {
         onChangeText={setName}
       />
 
-<Text style={AppStyles.label}>Age *</Text>
+      <Text style={AppStyles.label}>Age *</Text>
       <Picker
         selectedValue={age}
         style={AppStyles.picker}
         onValueChange={itemValue => setAge(itemValue)}>
-        <Picker.Item label="Select an age range" value="" />
+        <Picker.Item label="Select age" value="" />
         <Picker.Item label="18-20" value="18-20" />
         <Picker.Item label="21-30" value="21-30" />
         <Picker.Item label="31-40" value="31-40" />
@@ -136,41 +123,55 @@ const FamilyMember = () => {
         <Picker.Item label="Other" value="O" />
       </Picker>
 
-<Text style={AppStyles.label}>Occupation</Text>
-      <TextInput
-        style={AppStyles.input}
-        placeholder="Enter Occupation"
-        value={occupation}
-        onChangeText={setOccupation}
-      />
-
-<Text style={AppStyles.label}>Created By {authState.user}</Text>
-      <TextInput
-        style={AppStyles.input}
-        placeholder="Enter Created By"
-        value={createdBy}
-        onChangeText={authState.user}
-      />
+      <Text style={AppStyles.label}>Occupation</Text>
+      <Picker
+        selectedValue={occupation}
+        onValueChange={(itemValue) => setOccupation(itemValue)}
+        style={AppStyles.picker}
+      >
+        <Picker.Item label="Select an occupation" value="" />
+        <Picker.Item label="Government Employee" value="Government Employee" />
+        <Picker.Item label="Private Employee" value="Private Employee" />
+        <Picker.Item label="Self-Employed" value="Self-Employed" />
+        <Picker.Item label="Farmer" value="Farmer" />
+        <Picker.Item label="Student" value="Student" />
+        <Picker.Item label="Unemployed" value="Unemployed" />
+        <Picker.Item label="Retired" value="Retired" />
+        <Picker.Item label="Housewife" value="Housewife" />
+        <Picker.Item label="Teacher" value="Teacher" />
+        <Picker.Item label="Engineer" value="Engineer" />
+        <Picker.Item label="Doctor" value="Doctor" />
+        <Picker.Item label="Lawyer" value="Lawyer" />
+        <Picker.Item label="Artist" value="Artist" />
+        <Picker.Item label="Business Owner" value="Business Owner" />
+        <Picker.Item label="Freelancer" value="Freelancer" />
+        <Picker.Item label="Others" value="Others" />
+      </Picker>
 
       {loading ? (
         <ActivityIndicator size="large" color="#1E90FF" />
       ) : (
         <>
-          <TouchableOpacity style={AppStyles.button} onPress={handleSaveFamilyMember}>
+          <TouchableOpacity
+            style={AppStyles.button}
+            onPress={handleSaveFamilyMember}>
             <Text style={AppStyles.buttonText}>Save and Add Member</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[AppStyles.button, AppStyles.nextButton]} onPress={handleAddFamilyMember}>
+          <TouchableOpacity
+            style={[AppStyles.button, AppStyles.nextButton]}
+            onPress={handleAddFamilyMember}>
             <Text style={AppStyles.buttonText}>Save and Next</Text>
           </TouchableOpacity>
         </>
       )}
 
       {message && (
-        <Text style={[AppStyles.message, { color: isError ? 'red' : 'green' }]}>{message}</Text>
+        <Text style={[AppStyles.message, {color: isError ? 'red' : 'green'}]}>
+          {message}
+        </Text>
       )}
     </View>
   );
 };
-
 
 export default FamilyMember;
