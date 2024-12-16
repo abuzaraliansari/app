@@ -41,8 +41,8 @@ const PropertyDetailsComponent = () => {
     const fetchLocalities = async () => {
       setLocalities([]);
       try {
-        const response = await axios.get('http://192.168.29.56:3000/auth/Locality', {
-          "ZoneID": zone || 1,
+        const response = await axios.post('http://192.168.29.56:3000/auth/Locality', {
+          "ZoneID": String(zone) 
         });
         if (response.data?.locality) {
           setLocalities(response.data.locality);

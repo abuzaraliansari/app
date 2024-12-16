@@ -10,6 +10,8 @@ import FamilyScreen from './screens/FamilyScreen';
 import FormWithPhoto from './screens/FormWithPhoto';
 import PropertyScreen from './screens/PropertyScreen';
 import SpecialConsiderationScreen from './screens/SpecialConsiderationScreen';
+import LiveLocationScreen from './screens/LiveLocationScreen';
+
 
 
 
@@ -36,6 +38,7 @@ const Stack = createStackNavigator();
         <Stack.Screen name="Property" component={PropertyScreen} />
         <Stack.Screen name="SpecialConsideration" component={SpecialConsiderationScreen} />
         <Stack.Screen name="FormWithPhoto" component={FormWithPhoto} />
+        <Stack.Screen name="LiveLocation" component={LiveLocationScreen} />
       </Stack.Navigator>
     </NavigationContainer>
     </AppWrapper>
