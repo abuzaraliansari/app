@@ -13,7 +13,15 @@ import { Picker } from '@react-native-picker/picker';
 import AppStyles from '../styles/AppStyles';
 import { AuthContext } from '../contexts/AuthContext';
 import axios from 'axios';
+import { API_BASE_URL } from '@env';
 
+const apiClient = axios.create({
+  baseURL: API_BASE_URL,
+  timeout: 10000,
+  headers: {
+      'Content-Type': 'application/json',
+  },
+});
 const PropertyDetailsComponent = () => {
   const { authState } = useContext(AuthContext);
   const navigation = useNavigation();
@@ -41,7 +49,7 @@ const PropertyDetailsComponent = () => {
     const fetchLocalities = async () => {
       setLocalities([]);
       try {
-        const response = await axios.post('http://192.168.29.56:3000/auth/Locality', {
+        const response = await apiClient.post('/auth/Locality', {
           "ZoneID": String(zone) 
         });
         if (response.data?.locality) {
