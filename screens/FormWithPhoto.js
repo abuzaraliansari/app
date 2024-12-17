@@ -74,22 +74,6 @@ const FormWithMultiplePhotos = () => {
     );
   };
 
-  // Function to load photos from local storage
-  const loadPhotosFromStorage = async () => {
-    try {
-      const storedPhotos = await AsyncStorage.getItem('capturedPhotos');
-      if (storedPhotos) {
-        setPhotos(JSON.parse(storedPhotos));
-        Alert.alert('Success', 'Photos loaded from local storage.');
-      } else {
-        Alert.alert('No Photos Found', 'No photos exist in local storage.');
-      }
-    } catch (error) {
-      console.error('Error loading photos from local storage:', error);
-      Alert.alert('Error', 'Failed to load photos.');
-    }
-  };
-
   // Add a new photo slot
   const addPhotoSlot = () => {
     setPhotos([...photos, null]);
@@ -118,9 +102,6 @@ const FormWithMultiplePhotos = () => {
       ))}
       <TouchableOpacity style={styles.addButton} onPress={addPhotoSlot}>
         <Text style={styles.addButtonText}>+ Add Another Photo</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.loadButton} onPress={loadPhotosFromStorage}>
-        <Text style={styles.buttonText}>Load Photos</Text>
       </TouchableOpacity>
     </ScrollView>
   );

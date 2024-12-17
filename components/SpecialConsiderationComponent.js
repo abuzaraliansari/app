@@ -14,6 +14,7 @@ import {Picker} from '@react-native-picker/picker';
 import axios from 'axios';
 import AppStyles from '../styles/AppStyles';
 import {AuthContext} from '../contexts/AuthContext';
+import Config from 'react-native-config';
 
 const SpecialConsiderationComponent = () => {
   const {authState} = useContext(AuthContext);
@@ -25,7 +26,7 @@ const SpecialConsiderationComponent = () => {
   const [message, setMessage] = useState('');
   const [isError, setIsError] = useState(false);
   const navigation = useNavigation();
-
+  const API_ENDPOINT = `${Config.API_URL}/auth/SpecialConsideration`;
   const handleAddSpecialConsideration = async () => {
     if (!ownerID || !considerationType) {
       setMessage('Consideration Type, and Created By are required.');
@@ -42,8 +43,9 @@ const SpecialConsiderationComponent = () => {
     };
 
     try {
+      console.log('API_ENDPOINT:', API_ENDPOINT); 
       const response = await fetch(
-        'http://192.168.29.56:3000/auth/SpecialConsideration',
+        API_ENDPOINT,
         {
           method: 'POST',
           headers: {

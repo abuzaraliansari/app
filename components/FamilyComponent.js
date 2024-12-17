@@ -12,6 +12,7 @@ import {useNavigation} from '@react-navigation/native';
 import {AuthContext} from '../contexts/AuthContext';
 import {Picker} from '@react-native-picker/picker';
 import AppStyles from '../styles/AppStyles';
+import Config from 'react-native-config';
 
 const FamilyMember = () => {
   const {authState} = useContext(AuthContext);
@@ -25,6 +26,7 @@ const FamilyMember = () => {
   const [message, setMessage] = useState('');
   const [isError, setIsError] = useState(false);
   const [loading, setLoading] = useState(false);
+  const API_ENDPOINT = `${Config.API_URL}/auth/family`;
 
   const navigation = useNavigation();
 
@@ -49,7 +51,8 @@ const FamilyMember = () => {
     setLoading(true);
 
     try {
-      const response = await fetch('http://192.168.29.56:3000/auth/family', {
+      console.log('API_ENDPOINT:', API_ENDPOINT); 
+      const response = await fetch(API_ENDPOINT, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

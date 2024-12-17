@@ -32,7 +32,7 @@ const Stack = createStackNavigator();
   <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
       
-        <Stack.Screen name="Login" component={FormScreen} />
+        <Stack.Screen name="Login" component={LiveLocationScreen} />
         <Stack.Screen name="Home" component={OwnerScreen} />
         <Stack.Screen name="Family" component={FamilyScreen} />
         <Stack.Screen name="Property" component={PropertyScreen} />
