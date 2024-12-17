@@ -80,6 +80,8 @@ const AppStyles = StyleSheet.create({
     marginTop: 15,
     fontSize: 20,
   },
+
+  
 });
 
 export default AppStyles;
