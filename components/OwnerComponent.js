@@ -14,6 +14,8 @@ import {Picker} from '@react-native-picker/picker';
 import {AuthContext} from '../contexts/AuthContext';
 import axios from 'axios';
 import AppStyles from '../styles/AppStyles';
+import Config from 'react-native-config';
+
 
 const OwnerComponent = () => {
   const {authState} = useContext(AuthContext);
@@ -32,6 +34,7 @@ const OwnerComponent = () => {
   const createdBy = authState.user;
   const [Email, setEmail] = useState('');
   const navigation = useNavigation();
+  const API_ENDPOINT = `${Config.API_URL}/auth/owner`;
 
   const validateAndSubmit = async () => {
     try {
@@ -61,8 +64,9 @@ const OwnerComponent = () => {
         Email,
       };
 
+      console.log('API_ENDPOINT:', API_ENDPOINT); 
       // Simulate API call with axios
-      const response = await axios.post('http://192.168.29.56:3000/auth/owner', {
+      const response = await axios.post(API_ENDPOINT, {
         ownerDetails,
       });
 

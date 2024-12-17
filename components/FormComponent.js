@@ -13,6 +13,7 @@ import {
     ScrollView,
 } from 'react-native';
 import axios from 'axios';
+import Config from 'react-native-config';
 
 
 const LoginComponent = () => {
@@ -20,7 +21,7 @@ const LoginComponent = () => {
     const [password, setPassword] = useState('');
     const { login } = useContext(AuthContext); 
     const navigation = useNavigation();
-
+    const API_ENDPOINT = `${Config.API_URL}/auth/login`;
     const handleLogin = async () => {
         if (!username || !password) {
             Alert.alert('Error', 'Please enter your username and password.');
@@ -28,7 +29,8 @@ const LoginComponent = () => {
         }
 
         try {
-            const response = await axios.post('http://192.168.29.56:3000/auth/login', {
+            console.log('API_ENDPOINT:', API_ENDPOINT); 
+            const response = await axios.post(API_ENDPOINT, {
                 username,
                 password,
             });
