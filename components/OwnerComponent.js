@@ -71,12 +71,12 @@ const OwnerComponent = () => {
       });
 
       if (response.status === 201) {
-        Alert.alert('Success', 'Owner details submitted successfully.');
+        //Alert.alert('Success', 'Owner details submitted successfully.');
         login(authState.password, authState.user, response.data.ownerID);
         navigation.navigate('Family', {ownerID: response.data.ownerID}); // Adjust the navigation target if needed
-      } else {
-        Alert.alert('Success', response.status + response.data);
-      }
+      }// else {
+      //   Alert.alert('Success', response.status + response.data);
+      // }
     } catch (error) {
       Alert.alert('Validation Error', error.message);
     }

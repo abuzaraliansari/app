@@ -96,7 +96,7 @@ const PropertyDetailsComponent = () => {
       const result = await response.json();
 
       if (response.status === 201) {
-        Alert.alert('Success', 'Property details submitted successfully.');
+        //Alert.alert('Success', 'Property details submitted successfully.');
         navigation.navigate('SpecialConsideration');
       } else {
         throw new Error(result.error || 'Submission failed.');

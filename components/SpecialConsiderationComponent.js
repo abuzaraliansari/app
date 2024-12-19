@@ -58,7 +58,7 @@ const SpecialConsiderationComponent = () => {
       const data = await response.json();
 
       if (response.status === 201) {
-        setMessage('Special consideration added successfully.');
+        //setMessage('Special consideration added successfully.');
         setIsError(false);
         navigation.navigate('FormWithPhoto');
       } else {
