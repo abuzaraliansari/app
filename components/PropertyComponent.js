@@ -1,4 +1,5 @@
-import React, {useState , useContext} from 'react';
+import React, {useState , useContext , useEffect} from 'react';
+
 import {
   View,
   Text,
@@ -10,14 +11,16 @@ import {
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {Picker} from '@react-native-picker/picker';
-
 import AppStyles from '../styles/AppStyles';
 import {AuthContext} from '../contexts/AuthContext';
 import Config from 'react-native-config';
+import Geolocation from '@react-native-community/geolocation';
+import axios from 'axios';
+
 
 const PropertyDetailsComponent = () => {
   const {authState} = useContext(AuthContext);
-
+  
   const ownerID = authState.ownerId;
   const [propertyMode, setPropertyMode] = useState('');
   const [propertyAge, setPropertyAge] = useState('');
@@ -28,33 +31,109 @@ const PropertyDetailsComponent = () => {
   const [waterHarvesting, setWaterHarvesting] = useState('');
   const [submersible, setSubmersible] = useState('');
   const [geoLocation, setGeoLocation] = useState({ latitude: null, longitude: null });
-  const [Locality, setLocality] = useState('');
+  //const [Locality, setLocality] = useState('');
   const [houseNumber, setHouseNumber] = useState('');
   const [galliNumber, setGalliNumber] = useState('');
   const [bankAccountNumber, setBankAccountNumber] = useState('');
   const [consent, setConsent] = useState('');
   const createdBy = authState.user;
-  const [Zone, setZone] = useState('');
+  // const [Zone, setZone] = useState('');
   const [Colony, setColony] = useState('');
   const navigation = useNavigation();
-  const [localities, setLocalities] = useState([]);  // Array to hold localities
+  const [zone, setZone] = useState('');
+  const [locality, setLocality] = useState('');
+  const [localities, setLocalities] = useState([]); // Array to hold localities
   const [selectedLocality, setSelectedLocality] = useState('');
+  const API_ENDPOINTloc = `${Config.API_URL}/auth/Locality`;
   const API_ENDPOINT = `${Config.API_URL}/auth/PropertyDetails`;
+
   const zoneID = 4;
 
-  const fetchCurrentLocation = () => {
-    Geolocation.getCurrentPosition(
-      position => {
-        const { latitude, longitude } = position.coords;
-        setGeoLocation({ latitude, longitude });
-      },
-      error => {
-        console.error(error);
-        Alert.alert('Error', 'Unable to fetch current location.');
-      },
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
-    );
+// Fetch localities when component mounts
+useEffect(() => {
+  const fetchLocalities = async () => {
+    setLocalities([]);
+    try {
+      console.log('API_ENDPOINTloc:', API_ENDPOINTloc); 
+      const response = await axios.post(API_ENDPOINTloc, {
+        "ZoneID": String(zone) 
+      });
+      if (response.data?.locality) {
+        setLocalities(response.data.locality);
+      } else {
+        console.error('Invalid response format:', response.data);
+      }
+    } catch (error) {
+      console.error('Error fetching localities:', error);
+    }
   };
+
+  fetchLocalities();
+}, [zone]);
+
+
+  const fetchMaxHouseNumber = async (colonyName) => {
+    try {
+      const response = await fetch(`${Config.API_URL}/auth/getMaxHouseNumber`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        
+        body: JSON.stringify({ colonyName }),
+      });
+
+
+      const result = await response.json();
+      if (response.ok) {
+        setHouseNumber(result.newHouseNumber.toString()); // Set new house number
+      } else {
+        throw new Error(result.error || 'Failed to fetch the max house number.');
+      }
+    } catch (error) {
+      console.error('Error fetching max house number:', error);
+    }
+  };
+
+  // useEffect(() => {
+  //   if (colony) {
+  //     fetchMaxHouseNumber(colony);
+  //   }
+  // }, [colony]);
+
+  const LiveLocationComponent = () => {
+    const [location, setLocation] = useState(null);
+    const [error, setError] = useState(null);
+  
+    useEffect(() => {
+      Geolocation.getCurrentPosition(
+        position => {
+          setGeoLocation({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          });
+        },
+        error => {
+          console.error('Error getting location:', error);
+        },
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+      );
+    }, []);
+    return (
+        <View style={AppStyles.container}>
+          {location ? (
+            <View>
+
+              <Text>Latitude: {location.latitude}</Text>
+              <Text>Longitude: {location.longitude}</Text>
+            </View>
+          ) : (
+            <View>
+              <Text>Fetching live location...</Text>
+              {error && <Text style={styles.error}>{error}</Text>}
+            </View>
+          )}
+        </View>
+      );
+    };
   const validateAndSubmit = async () => {
     try {
       if (!propertyMode || !geoLocation ) {
@@ -74,13 +153,13 @@ const PropertyDetailsComponent = () => {
         waterHarvesting: waterHarvesting === 'Yes',
         submersible: submersible === 'Yes',
         geoLocation,
-        Locality,
+        locality,
         houseNumber,
         galliNumber,
         bankAccountNumber,
         consent: consent === 'Yes',
         createdBy,
-        Zone,
+        zone,
         Colony,
       };
       console.log('API_ENDPOINT:', API_ENDPOINT); 
@@ -113,7 +192,7 @@ const PropertyDetailsComponent = () => {
 
       <Text style={AppStyles.label}>Zone</Text>
       <Picker
-        selectedValue={Zone}
+        selectedValue={zone}
         onValueChange={(itemValue) => setZone(itemValue)}
         style={AppStyles.picker}
       >
@@ -121,32 +200,28 @@ const PropertyDetailsComponent = () => {
         <Picker.Item label="Zone 1" value="1" />
         <Picker.Item label="Zone 2" value="2" />
         <Picker.Item label="Zone 3" value="3" />
-        
       </Picker>
 
       <Text style={AppStyles.label}>Locality</Text>
       <Picker
-      selectedValue={Locality}
-      onValueChange={(itemValue) => setLocality(itemValue)}
-      style={AppStyles.picker}
-    >
-       <Picker.Item label="Select Zone" value="" />
-        <Picker.Item label="Locality 1" value="1Locality" />
-        <Picker.Item label="Locality 2" value="Locality" />
-        <Picker.Item label="Locality 3" value="Locality" />
-    </Picker>
+        selectedValue={locality}
+        onValueChange={(itemValue) => setLocality(itemValue)}
+        style={AppStyles.picker}
+      >
+        <Picker.Item label="Select Locality" value="" />
+        {localities.map((loc) => (
+          <Picker.Item key={loc.LocalityID} label={loc.Locality} value={String(loc.LocalityID)}  />
+        ))}
+      </Picker>
 
 
 <Text style={AppStyles.label}>Colony</Text>
-<Picker
-  selectedValue={Colony}
-  onValueChange={itemValue => setColony(itemValue)}
-  style={AppStyles.picker}>
-  <Picker.Item label="Select Colony" value="" />
-  <Picker.Item label="Colony 1" value="Colony 1" />
-  <Picker.Item label="Colony 2" value="Colony 2" />
-  <Picker.Item label="Colony 3" value="Colony 3" />
-</Picker>
+<Picker selectedValue={Colony} onValueChange={setColony} style={AppStyles.picker}>
+        <Picker.Item label="Select Colony" value="" />
+        <Picker.Item label="Colony 1" value="1" />
+        <Picker.Item label="Colony 2" value="2" />
+        <Picker.Item label="Colony 3" value="3" />
+      </Picker>
       <Text style={AppStyles.label}>Galli Number</Text>
       <TextInput
         style={AppStyles.input}
@@ -155,13 +230,15 @@ const PropertyDetailsComponent = () => {
         onChangeText={setGalliNumber}
       />
 
+
 <Text style={AppStyles.label}>House Number</Text>
-      <TextInput
-        style={AppStyles.input}
+<TextInput
+ style={AppStyles.input}
         placeholder="Enter House Number"
         value={houseNumber}
-        onChangeText={setHouseNumber}
+        editable={false} // Disabled for auto-fill
       />
+
 
       <Text style={AppStyles.label}>Property Mode *</Text>
       <View style={AppStyles.pickerContainer}>
@@ -301,13 +378,16 @@ const PropertyDetailsComponent = () => {
           <Picker.Item label="No" value="No" />
         </Picker>
       </View>
-
-      <Text style={AppStyles.label}>GeoLocation *</Text>
+ <Text style={AppStyles.label}>Live Location</Text>
+      <View style={AppStyles.liveLocationContainer}>
+        <LiveLocationComponent />
+      </View>
+      <Text style={AppStyles.label}>GeoLocation</Text>
       <TextInput
         style={AppStyles.input}
         placeholder="Enter GeoLocation"
-        value={geoLocation}
-        onChangeText={setGeoLocation}
+        value={`${geoLocation.latitude},${geoLocation.longitude}`}
+        editable={true}
       />
 
       <Text style={AppStyles.label}>Bank Account Number</Text>
