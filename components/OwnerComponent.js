@@ -72,7 +72,7 @@ const OwnerComponent = () => {
 
       if (response.status === 201) {
         //Alert.alert('Success', 'Owner details submitted successfully.');
-        login(authState.password, authState.user, response.data.ownerID);
+        login(authState.password, authState.user, response.data.ownerID, 0);
         navigation.navigate('PropertyScreen', {ownerID: response.data.ownerID}); // Adjust the navigation target if needed
       }// else {
       //   Alert.alert('Success', response.status + response.data);

@@ -9,16 +9,27 @@ export const AuthProvider = ({ children }) => {
         token: null,
         user: null,
         ownerId: null,
-        familyMemberID: null,
+        propertyID: null,
     });
 
-    const login = async (token, user, ownerId) => {
+    const login = async (token, user, ownerId, propertyID) => {
         setAuthState({ isAuthenticated: true, token, user ,ownerId });
         await AsyncStorage.setItem('authToken', token);
         await AsyncStorage.setItem('user', JSON.stringify(user));
         await AsyncStorage.setItem('ownerId', ownerId);
-        
+        await AsyncStorage.setItem('propertyID', propertyID);
+     
+      
     };
+
+    // const propertyAuth = async (token, user, ownerId, propertyID) => {
+    //     setAuthState({ isAuthenticated: true, token, user ,ownerId ,propertyID});
+    //     await AsyncStorage.setItem('authToken', token);
+    //     await AsyncStorage.setItem('user', JSON.stringify(user));
+    //     await AsyncStorage.setItem('ownerId', ownerId);
+    //     await AsyncStorage.setItem('propertyID', propertyID);
+        
+    // };
 
 // const UpdateOwnerID = async () => {
 //         setAuthState({ isAuthenticated: true, token, user, ownerID });
@@ -47,7 +58,7 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ authState, login, logout  }}>
+        <AuthContext.Provider value={{ authState, login, logout }}>
             {children}
         </AuthContext.Provider>
     );

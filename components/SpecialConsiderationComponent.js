@@ -1,5 +1,5 @@
 import React, {useState, useContext} from 'react';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute } from '@react-navigation/native';
 import {
   View,
   Text,
@@ -26,6 +26,11 @@ const SpecialConsiderationComponent = () => {
   const [message, setMessage] = useState('');
   const [isError, setIsError] = useState(false);
   const navigation = useNavigation();
+
+
+  const route = useRoute(); // Access the route object
+  const { HouseNumber } = route.params; // Extract HouseNumber from route.params
+
   const API_ENDPOINT = `${Config.API_URL}/auth/SpecialConsideration`;
   const handleAddSpecialConsideration = async () => {
     if (!ownerID || !considerationType) {
@@ -74,7 +79,7 @@ const SpecialConsiderationComponent = () => {
   return (
     <ScrollView contentContainerStyle={AppStyles.container}>
       <Text style={AppStyles.heading}>Special Consideration Details</Text>
-      <Text style={AppStyles.label}>Welcome, {authState.user}</Text>
+      <Text style={AppStyles.label}>Welcome, {authState.user}, {HouseNumber} </Text>
       <Text style={AppStyles.label}>Consideration Type *</Text>
       <View style={AppStyles.pickerContainer}>
         <Picker

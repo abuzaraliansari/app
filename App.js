@@ -11,6 +11,7 @@ import FormWithPhoto from './screens/FormWithPhoto';
 import PropertyScreen from './screens/PropertyScreen';
 import SpecialConsiderationScreen from './screens/SpecialConsiderationScreen';
 import LiveLocationScreen from './screens/LiveLocationScreen';
+import PropertyAreaComponent from './components/PropertyAreaComponent';
 
 
 
@@ -32,7 +33,7 @@ const Stack = createStackNavigator();
   <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
       
-        <Stack.Screen name="Login" component={PropertyScreen} />
+        <Stack.Screen name="Login" component={PropertyAreaComponent} />
         <Stack.Screen name="Home" component={OwnerScreen} />
         <Stack.Screen name="Family" component={FamilyScreen} />
         <Stack.Screen name="Property" component={PropertyScreen} />
