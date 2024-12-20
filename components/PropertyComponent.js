@@ -34,12 +34,12 @@ const PropertyDetailsComponent = () => {
   const [geoLocation, setGeoLocation] = useState({ latitude: null, longitude: null });
   //const [Locality, setLocality] = useState('');
   const [houseNumber, setHouseNumber] = useState('');
-  const [galliNumber, setGalliNumber] = useState('');
+  const [galliNumber, setGalliNumber,handlegalliNumberBlur] = useState('');
   const [bankAccountNumber, setBankAccountNumber] = useState('');
   const [consent, setConsent] = useState('');
   const createdBy = authState.user;
   // const [Zone, setZone] = useState('');
-  const [Colony, setColony] = useState('');
+  const [colony, setColony] = useState('');
   const navigation = useNavigation();
   const [zone, setZone] = useState('');
   const [locality, setLocality] = useState('');
@@ -97,9 +97,9 @@ useEffect(() => {
 
   useEffect(() => {
     if (setColony) {
-      fetchMaxHouseNumber(Colony);
+      fetchMaxHouseNumber(colony);
     }
-  }, []);
+  }, [colony]);
 
   const LiveLocationComponent = () => {
     const [location, setLocation] = useState(null);
@@ -144,6 +144,35 @@ useEffect(() => {
         );
       }
 
+
+      const handlegalliNumberBlur = async () => {
+        // if (galliNumber.trim() === '') {
+        //   Alert.alert('Error', 'Input cannot be empty.');
+        //   return;
+        // }
+    
+        try {
+          // Example API call
+          const response = await fetch(`${Config.API_URL}/auth/getMaxHouseNumber`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            
+            body: JSON.stringify({ colonyName }),
+          });
+    
+    
+          const result = await response.json();
+          if (response.ok) {
+            setHouseNumber(result.newHouseNumber.toString()); // Set new house number
+          } else {
+            throw new Error(result.error || 'Failed to fetch the max house number.');
+          }
+        } catch (error) {
+          console.error('Error fetching max house number:', error);
+        }
+          
+      };
+
       const propertyDetails = {
         ownerID,
         propertyMode,
@@ -154,7 +183,7 @@ useEffect(() => {
         tenantCount: parseInt(tenantCount, 10) || 0,
         waterHarvesting: waterHarvesting === 'Yes',
         submersible: submersible === 'Yes',
-        geoLocation,
+        geoLocation: geoLocation.toString(),
         locality,
         houseNumber,
         galliNumber,
@@ -162,7 +191,7 @@ useEffect(() => {
         consent: consent === 'Yes',
         createdBy,
         zone,
-        Colony,
+        colony,
       };
       console.log('API_ENDPOINT:', API_ENDPOINT); 
       const response = await fetch(
@@ -217,22 +246,23 @@ useEffect(() => {
       </Picker>
 
 
-      <Picker
-        selectedValue={colony}
-        onValueChange={(itemValue) => setColony(itemValue)}
-        style={AppStyles.picker}
-      >
-        <Picker.Item label="Select Colony" value="" />
-        {colonies.map((col) => (
-          <Picker.Item key={col.ColonyID} label={col.Colony} value={String(col.ColonyID)} />
-        ))}
-      </Picker>
+      
+      <Text style={AppStyles.label}>Colony</Text>
+      <TextInput
+        style={AppStyles.input}
+        placeholder="Enter Colony"
+        value={colony}
+        onChangeText={setColony}
+        />
+
       <Text style={AppStyles.label}>Galli Number</Text>
       <TextInput
         style={AppStyles.input}
         placeholder="Enter Galli Number"
         value={galliNumber}
         onChangeText={setGalliNumber}
+      
+        onBlur={handlegalliNumberBlur} 
       />
 
 
@@ -241,7 +271,7 @@ useEffect(() => {
  style={AppStyles.input}
         placeholder="Enter House Number"
         value={houseNumber}
-        editable={false} // Disabled for auto-fill
+       // editable={false} // Disabled for auto-fill
       />
 
 
@@ -392,7 +422,7 @@ useEffect(() => {
         style={AppStyles.input}
         placeholder="Enter GeoLocation"
         value={`${geoLocation.latitude},${geoLocation.longitude}`}
-        editable={true}
+       // editable={true}
       />
 
       <Text style={AppStyles.label}>Bank Account Number</Text>
