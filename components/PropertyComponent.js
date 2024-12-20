@@ -15,6 +15,7 @@ import AppStyles from '../styles/AppStyles';
 import {AuthContext} from '../contexts/AuthContext';
 import Config from 'react-native-config';
 import Geolocation from '@react-native-community/geolocation';
+import { PermissionsAndroid, Platform } from 'react-native';
 import axios from 'axios';
 
 
@@ -46,12 +47,13 @@ const PropertyDetailsComponent = () => {
   const [selectedLocality, setSelectedLocality] = useState('');
   const API_ENDPOINTloc = `${Config.API_URL}/auth/Locality`;
   const API_ENDPOINT = `${Config.API_URL}/auth/PropertyDetails`;
+  const API_ENDPOINTcol = `${Config.API_URL}/auth/Colony`;
 
   const zoneID = 4;
 
 // Fetch localities when component mounts
 useEffect(() => {
-  const fetchLocalities = async () => {
+  const fetchLocalities = async (zoneId) => {
     setLocalities([]);
     try {
       console.log('API_ENDPOINTloc:', API_ENDPOINTloc); 
@@ -93,11 +95,11 @@ useEffect(() => {
     }
   };
 
-  // useEffect(() => {
-  //   if (colony) {
-  //     fetchMaxHouseNumber(colony);
-  //   }
-  // }, [colony]);
+  useEffect(() => {
+    if (setColony) {
+      fetchMaxHouseNumber(Colony);
+    }
+  }, []);
 
   const LiveLocationComponent = () => {
     const [location, setLocation] = useState(null);
@@ -215,12 +217,15 @@ useEffect(() => {
       </Picker>
 
 
-<Text style={AppStyles.label}>Colony</Text>
-<Picker selectedValue={Colony} onValueChange={setColony} style={AppStyles.picker}>
+      <Picker
+        selectedValue={colony}
+        onValueChange={(itemValue) => setColony(itemValue)}
+        style={AppStyles.picker}
+      >
         <Picker.Item label="Select Colony" value="" />
-        <Picker.Item label="Colony 1" value="1" />
-        <Picker.Item label="Colony 2" value="2" />
-        <Picker.Item label="Colony 3" value="3" />
+        {colonies.map((col) => (
+          <Picker.Item key={col.ColonyID} label={col.Colony} value={String(col.ColonyID)} />
+        ))}
       </Picker>
       <Text style={AppStyles.label}>Galli Number</Text>
       <TextInput
