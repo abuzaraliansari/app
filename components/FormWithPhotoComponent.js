@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState , useContext} from 'react';
 import {
   View,
   Text,
@@ -11,17 +11,23 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { launchCamera } from 'react-native-image-picker';
+import {launchCamera} from 'react-native-image-picker';
 import axios from 'axios';
 import Config from 'react-native-config';
 import RNFS from 'react-native-fs';
+import {useNavigation} from '@react-navigation/native';
+import {AuthContext} from '../contexts/AuthContext';
+import {Picker} from '@react-native-picker/picker';
+import AppStyles from '../styles/AppStyles';
+
 const FormData = require('form-data');
 const fs = require('fs');
 const FormWithPhotoComponent = () => {
+  const {authState} = useContext(AuthContext);
   const [photos, setPhotos] = useState([]);
-  const [ownerID, setOwnerID] = useState('3122'); // Example OwnerID
+  const ownerID = authState.ownerId; // Example OwnerID
   const [propertyID, setPropertyID] = useState('3040'); // Example PropertyID
-  const [createdBy, setCreatedBy] = useState('John Doe'); // Example CreatedBy
+  const createdBy = authState.user; // Example CreatedBy
   const API_ENDPOINT = `${Config.API_URL}/auth/upload`;
 
   // Function to request camera permission
@@ -35,7 +41,7 @@ const FormWithPhotoComponent = () => {
           buttonNeutral: 'Ask Me Later',
           buttonNegative: 'Cancel',
           buttonPositive: 'OK',
-        }
+        },
       );
       return granted === PermissionsAndroid.RESULTS.GRANTED;
     } catch (err) {
@@ -45,11 +51,14 @@ const FormWithPhotoComponent = () => {
   };
 
   // Function to capture a photo
-  const capturePhoto = async (index) => {
+  const capturePhoto = async index => {
     const hasPermission = await requestCameraPermission();
 
     if (!hasPermission) {
-      Alert.alert('Permission Denied', 'Camera permission is required to take photos.');
+      Alert.alert(
+        'Permission Denied',
+        'Camera permission is required to take photos.',
+      );
       return;
     }
 
@@ -58,32 +67,35 @@ const FormWithPhotoComponent = () => {
         mediaType: 'photo',
         saveToPhotos: true,
       },
-      async (response) => {
+      async response => {
         if (response.didCancel) {
           console.log('User cancelled camera');
         } else if (response.errorCode) {
           console.log('Camera error:', response.errorMessage);
         } else {
-          const { uri, fileName, fileSize } = response.assets[0];
+          const {uri, fileName, fileSize} = response.assets[0];
           const updatedPhotos = [...photos];
-          updatedPhotos[index] = { uri, fileName, fileSize };
+          updatedPhotos[index] = {uri, fileName, fileSize};
           setPhotos(updatedPhotos);
 
           // Save photo details locally
           try {
-            await AsyncStorage.setItem('capturedPhotos', JSON.stringify(updatedPhotos));
+            await AsyncStorage.setItem(
+              'capturedPhotos',
+              JSON.stringify(updatedPhotos),
+            );
             Alert.alert('Success', 'Photo saved locally.');
           } catch (error) {
             console.error('Error saving photo to local storage:', error);
             Alert.alert('Error', 'Failed to save photo locally.');
           }
         }
-      }
+      },
     );
   };
 
   // Function to call the API to store photo details
-  const uploadPhotoDetails = async (photo) => {
+  const uploadPhotoDetails = async photo => {
     if (!photo || !photo.uri || !photo.fileName || !photo.fileSize) {
       Alert.alert('Error', 'Invalid photo data.');
       return;
@@ -102,9 +114,13 @@ const FormWithPhotoComponent = () => {
 
     try {
       const data = new FormData();
-      data.append('file', { uri: photo.uri, name: photo.fileName, type: 'image/jpeg' });
+      data.append('file', {
+        uri: photo.uri,
+        name: photo.fileName,
+        type: 'image/jpeg',
+      });
 
-     // data.append('file', fs.createReadStream(photo.uri));
+      // data.append('file', fs.createReadStream(photo.uri));
       // data.append('file', {
       //   uri: photo.uri,
       //   name: photo.fileName,
@@ -119,19 +135,19 @@ const FormWithPhotoComponent = () => {
         maxBodyLength: Infinity,
         url: 'http://192.168.29.56:3000/auth/upload',
         headers: {
-                 'Content-Type': 'multipart/form-data'
-             },
+          'Content-Type': 'multipart/form-data',
+        },
         data: data,
       };
       console.log('FormData:', photo.uri);
       const response = await axios.request(config);
-    //   const response = await fetch('http://192.168.29.56:3000/auth/upload', {
-    //     method: 'POST',
-    //     maxBodyLength: Infinity,
-    //     headers: {
-    //       'Content-Type': 'multipart/form-data',
-    //     },
-    //     body: data});
+      //   const response = await fetch('http://192.168.29.56:3000/auth/upload', {
+      //     method: 'POST',
+      //     maxBodyLength: Infinity,
+      //     headers: {
+      //       'Content-Type': 'multipart/form-data',
+      //     },
+      //     body: data});
       if (response.data.success) {
         Alert.alert('Success', 'Photo details uploaded successfully!');
       } else {
@@ -155,22 +171,20 @@ const FormWithPhotoComponent = () => {
           <Text style={styles.label}>Photo {index + 1}</Text>
           <View style={styles.photoContainer}>
             {photo ? (
-              <Image source={{ uri: photo.uri }} style={styles.photo} />
+              <Image source={{uri: photo.uri}} style={styles.photo} />
             ) : (
               <Text style={styles.placeholder}>No photo selected</Text>
             )}
           </View>
           <TouchableOpacity
             style={styles.captureButton}
-            onPress={() => capturePhoto(index)}
-          >
+            onPress={() => capturePhoto(index)}>
             <Text style={styles.buttonText}>Capture Photo</Text>
           </TouchableOpacity>
           {photo && (
             <TouchableOpacity
               style={styles.uploadButton}
-              onPress={() => uploadPhotoDetails(photo)}
-            >
+              onPress={() => uploadPhotoDetails(photo)}>
               <Text style={styles.buttonText}>Upload Details</Text>
             </TouchableOpacity>
           )}
