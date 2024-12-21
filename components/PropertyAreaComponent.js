@@ -98,7 +98,7 @@ console.log('result:', result);
         login(authState.password, authState.user, 1, result.propertyID );
         console.log('Property ID:', result.propertyID);
         console.log('HouseNumber ID:', result.HouseNumber);
-        navigation.navigate('SpecialConsideration',{ HouseNumber: result.HouseNumber });
+        navigation.navigate('PropertyHouse',{ HouseNumber: result.HouseNumber ,  propertyID: result.propertyID});
       } else {
         throw new Error(result.error || 'Submission failed.');
       }

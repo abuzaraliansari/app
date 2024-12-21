@@ -1,10 +1,10 @@
 import React from 'react';
 import { View } from 'react-native';
-import PropertyDetailsComponent from '../components/PropertyComponent';
+import PropertyAreaComponent from '../components/PropertyAreaComponent';
 
-const PropertyScreen = () => (
+const PropertyScreenArea = () => (
   <View>
-    <PropertyDetailsComponent />
+    <PropertyAreaComponent />
   </View>
 );
 
@@ -20,4 +20,4 @@ const PropertyScreen = () => (
 //   },
 // });
 
-export default PropertyScreen;
+export default PropertyScreenArea;

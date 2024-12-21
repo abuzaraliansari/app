@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, Button, StyleSheet , TouchableOpacity } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
 import Config from 'react-native-config';
 
@@ -10,7 +10,11 @@ const LiveLocationComponent = () => {
   useEffect(() => {
     Geolocation.getCurrentPosition(
       position => {
-        setLocation(position.coords);
+        if (position.coords.accuracy <= 20) {
+          setLocation(position.coords);
+        } else {
+          setError('The location accuracy is insufficient. Please move to an open area.');
+        }
       },
       error => {
         setError(error.message);
@@ -18,6 +22,16 @@ const LiveLocationComponent = () => {
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
     );
   }, []);
+  const addlocation = () => {
+    if (location && location.accuracy <= 20) {
+      console.log('Location submitted:', location);
+      // Logic to handle submitting the location
+    } else {
+      setError('The location accuracy is insufficient. Please move to an open area.');
+    }
+  };
+  
+
 
   return (
     <View style={styles.container}>
@@ -26,6 +40,7 @@ const LiveLocationComponent = () => {
           <Text style={styles.text}>Live Location:</Text>
           <Text>Latitude: {location.latitude}</Text>
           <Text>Longitude: {location.longitude}</Text>
+          <Text>Accuracy: {location.accuracy} m</Text>
         </View>
       ) : (
         <View>
@@ -33,10 +48,14 @@ const LiveLocationComponent = () => {
           {error && <Text style={styles.error}>{error}</Text>}
         </View>
       )}
+      
+  <TouchableOpacity style={styles.addButton} onPress={addlocation}>
+        <Text style={styles.addButtonText}> Submit Location</Text>
+      </TouchableOpacity>
+      
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -51,6 +70,18 @@ const styles = StyleSheet.create({
     color: 'red',
     marginTop: 10,
   },
+  addButton: {
+    backgroundColor: '#007BFF',
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 20,
+  },
+  addButtonText: {
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+  },
 });
+
+
 
 export default LiveLocationComponent;
