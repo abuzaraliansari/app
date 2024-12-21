@@ -26,7 +26,7 @@ const FormWithPhotoComponent = () => {
   const {authState} = useContext(AuthContext);
   const [photos, setPhotos] = useState([]);
   const ownerID = authState.ownerId; // Example OwnerID
-  const [propertyID, setPropertyID] = useState('3040'); // Example PropertyID
+  const propertyID = authState.propertyId;  // Example PropertyID
   const createdBy = authState.user; // Example CreatedBy
   const API_ENDPOINT = `${Config.API_URL}/auth/upload`;
 
@@ -101,17 +101,6 @@ const FormWithPhotoComponent = () => {
       return;
     }
 
-    const fileDetails = {
-      OriginalName: photo.fileName,
-      FileName: photo.fileName,
-      FilePath: photo.uri,
-      FileSize: photo.fileSize,
-      CreatedAt: new Date().toISOString(),
-      OwnerID: ownerID,
-      PropertyID: propertyID,
-      CreatedBy: createdBy,
-    };
-
     try {
       const data = new FormData();
       data.append('file', {
@@ -120,12 +109,6 @@ const FormWithPhotoComponent = () => {
         type: 'image/jpeg',
       });
 
-      // data.append('file', fs.createReadStream(photo.uri));
-      // data.append('file', {
-      //   uri: photo.uri,
-      //   name: photo.fileName,
-      //   type: 'image/jpeg', // Adjust MIME type as needed
-      // });
       data.append('ownerID', ownerID);
       data.append('propertyID', propertyID);
       data.append('createdBy', createdBy);
@@ -141,13 +124,7 @@ const FormWithPhotoComponent = () => {
       };
       console.log('FormData:', photo.uri);
       const response = await axios.request(config);
-      //   const response = await fetch('http://192.168.29.56:3000/auth/upload', {
-      //     method: 'POST',
-      //     maxBodyLength: Infinity,
-      //     headers: {
-      //       'Content-Type': 'multipart/form-data',
-      //     },
-      //     body: data});
+      
       if (response.data.success) {
         Alert.alert('Success', 'Photo details uploaded successfully!');
       } else {

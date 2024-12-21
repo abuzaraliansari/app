@@ -83,7 +83,7 @@ const FamilyMember = () => {
   };
 
   const handleAddFamilyMember = () => {
-    navigation.navigate('SpecialConsideration');
+    navigation.navigate('PropertyScreenArea');
   };
 
   return (
