@@ -83,7 +83,7 @@ const PropertyHouseComponent = () => {
 
       if (response.status === 200) {
         //Alert.alert('Success', 'Property details submitted successfully.');
-        navigation.navigate('SpecialConsideration');
+        navigation.navigate('LiveLocation');
       } else {
         throw new Error(result.error || 'Submission failed.');
       }

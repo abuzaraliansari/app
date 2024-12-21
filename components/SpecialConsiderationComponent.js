@@ -19,6 +19,7 @@ import Config from 'react-native-config';
 const SpecialConsiderationComponent = () => {
   const {authState} = useContext(AuthContext);
   const ownerID = authState.ownerId;
+  const propertyID = authState.propertyID;
   const [considerationType, setConsiderationType] = useState('');
   const [description, setDescription] = useState('');
   const createdBy = authState.user;
@@ -29,8 +30,8 @@ const SpecialConsiderationComponent = () => {
 
 
   const route = useRoute(); // Access the route object
-  const { HouseNumber } = route.params; // Extract HouseNumber from route.params
-
+  const { latitude, longitude  } = route.params; 
+  console.log('Latitude:', latitude, longitude);
   const API_ENDPOINT = `${Config.API_URL}/auth/SpecialConsideration`;
   const handleAddSpecialConsideration = async () => {
     if (!ownerID || !considerationType) {
@@ -41,9 +42,13 @@ const SpecialConsiderationComponent = () => {
 
     const specialConsiderationData = {
       ownerID,
+      propertyID: 1,
       considerationType,
       description,
+      latitude,
+      longitude,
       createdBy,
+      
       modifiedBy,
     };
 
@@ -79,7 +84,7 @@ const SpecialConsiderationComponent = () => {
   return (
     <ScrollView contentContainerStyle={AppStyles.container}>
       <Text style={AppStyles.heading}>Special Consideration Details</Text>
-      <Text style={AppStyles.label}>Welcome, {authState.user}, {HouseNumber} </Text>
+      <Text style={AppStyles.label}>Welcome, {authState.user}, {} </Text>
       <Text style={AppStyles.label}>Consideration Type *</Text>
       <View style={AppStyles.pickerContainer}>
         <Picker

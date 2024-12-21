@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Button, StyleSheet , TouchableOpacity } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
 import Config from 'react-native-config';
+import {useNavigation} from '@react-navigation/native';
 
 const LiveLocationComponent = () => {
   const [location, setLocation] = useState(null);
   const [error, setError] = useState(null);
+   const navigation = useNavigation();
 
   useEffect(() => {
     Geolocation.getCurrentPosition(
@@ -26,6 +28,7 @@ const LiveLocationComponent = () => {
     if (location && location.accuracy <= 20) {
       console.log('Location submitted:', location);
       // Logic to handle submitting the location
+      navigation.navigate('SpecialConsideration', { latitude: location. latitude, longitude:location.longitude });
     } else {
       setError('The location accuracy is insufficient. Please move to an open area.');
     }
