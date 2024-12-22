@@ -97,6 +97,7 @@ console.log('Request Body:', specialConsiderationData);
           <Picker.Item label="Armed Forces" value="Armed Forces" />
           <Picker.Item label="Handicapped" value="Handicapped" />
           <Picker.Item label="Widow" value="Widow" />
+          <Picker.Item label="None" value="None" />
         </Picker>
       </View>
 

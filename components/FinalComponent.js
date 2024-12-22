@@ -10,26 +10,22 @@ const FinalComponent = () => {
     navigation.navigate('Login');
   };
 
-  const navigateToOwner = () => {
-    navigation.navigate('Home');
-  };
-
   const navigateToProperty = () => {
-    navigation.navigate('PropertyArea');
+    navigation.navigate('Home');
   };
 
   return (
     <View style={AppStyles.container}>
-      <TouchableOpacity style={[AppStyles.button, AppStyles.nextButton]} onPress={navigateToLogin}>
-        <Text style={AppStyles.buttonText}>Go to Login</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={[AppStyles.button, AppStyles.nextButton]} onPress={navigateToOwner}>
-        <Text style={AppStyles.buttonText}>Add Another Owner</Text>
-      </TouchableOpacity>
+        <Text style={AppStyles.title}>Thank you for your submission!</Text>
+        <Text style={AppStyles.text}>Your Details has been successfully added!</Text>
+      
 
       <TouchableOpacity style={[AppStyles.button, AppStyles.nextButton]} onPress={navigateToProperty}>
         <Text style={AppStyles.buttonText}>Add Another Property</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={[AppStyles.button, AppStyles.logoutButton]} onPress={navigateToLogin}>
+        <Text style={AppStyles.buttonText}>Log Out</Text>
       </TouchableOpacity>
     </View>
   );

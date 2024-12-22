@@ -21,7 +21,7 @@ const LiveLocationComponent = () => {
       error => {
         setError(error.message);
       },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+      { enableHighAccuracy: true, timeout: 50000, maximumAge: 10000 }
     );
   }, []);
   const addlocation = () => {

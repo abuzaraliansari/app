@@ -18,7 +18,8 @@ const FamilyMember = () => {
   const {authState} = useContext(AuthContext);
 
   const ownerID = authState.ownerId;
-  const [name, setName] = useState('');
+  const [FirstName, setFirstName] = useState('');
+  const [LastName, setLastName] = useState('');
   const [age, setAge] = useState('');
   const [gender, setGender] = useState('');
   const [occupation, setOccupation] = useState('');
@@ -33,7 +34,8 @@ const FamilyMember = () => {
   const familyMemberData = {
     familyMember: {
       ownerID,
-      name,
+      FirstName,
+      LastName,
       age,
       gender,
       occupation,
@@ -42,7 +44,7 @@ const FamilyMember = () => {
   };
 
   const handleSaveFamilyMember = async () => {
-    if (!name || !age || !gender || !occupation) {
+    if (!FirstName || !age || !gender || !occupation) {
       setMessage('All fields are required.');
       setIsError(true);
       return;
@@ -67,7 +69,8 @@ const FamilyMember = () => {
         setMessage('Family member saved successfully.');
         setIsError(false);
         // Clear fields for next family member entry
-        setName('');
+        setFirstName('');
+        setLastName('');
         setAge('');
         setGender('');
         setOccupation('');
@@ -91,14 +94,21 @@ const FamilyMember = () => {
       <Text style={AppStyles.header}>Add Family Member</Text>
       <Text style={AppStyles.label}>Welcome, {authState.user}</Text>
 
-      <Text style={AppStyles.label}>Full Name</Text>
+      <Text style={AppStyles.label}>First Name</Text>
       <TextInput
         style={AppStyles.input}
         placeholder="Enter Name"
-        value={name}
-        onChangeText={setName}
+        value={FirstName}
+        onChangeText={setFirstName}
       />
 
+      <Text style={AppStyles.label}>Last Name</Text>
+      <TextInput
+        style={AppStyles.input}
+        placeholder="Enter Last Name"
+        value={LastName}
+        onChangeText={setLastName}
+      />
       <Text style={AppStyles.label}>Age *</Text>
       <Picker
         selectedValue={age}
@@ -163,7 +173,7 @@ const FamilyMember = () => {
           <TouchableOpacity
             style={[AppStyles.button, AppStyles.nextButton]}
             onPress={handleAddFamilyMember}>
-            <Text style={AppStyles.buttonText}>Skip And Next</Text>
+            <Text style={AppStyles.buttonText}>Next</Text>
           </TouchableOpacity>
         </>
       )}

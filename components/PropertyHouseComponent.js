@@ -160,7 +160,7 @@ const PropertyHouseComponent = () => {
         selectedValue={roomCount}
         onValueChange={itemValue => setRoomCount(itemValue)}
         style={AppStyles.picker}>
-        <Picker.Item label="Select Room Count" value="" />
+        <Picker.Item label="Select Room Count" value="0" />
         <Picker.Item label="0" value="0" />
         <Picker.Item label="1" value="1" />
         <Picker.Item label="2" value="2" />
@@ -189,7 +189,7 @@ const PropertyHouseComponent = () => {
         selectedValue={floorCount}
         onValueChange={itemValue => setFloorCount(itemValue)}
         style={AppStyles.picker}>
-        <Picker.Item label="Select Floor Count" value="" />
+        <Picker.Item label="Select Floor Count" value="0" />
         <Picker.Item label="0" value="0" />
         <Picker.Item label="1" value="1" />
         <Picker.Item label="2" value="2" />
@@ -205,7 +205,7 @@ const PropertyHouseComponent = () => {
         selectedValue={shopCount}
         onValueChange={itemValue => setShopCount(itemValue)}
         style={AppStyles.picker}>
-        <Picker.Item label="Select Shop Count" value="" />
+        <Picker.Item label="Select Shop Count" value="0" />
         <Picker.Item label="0" value="0" />
         <Picker.Item label="1" value="1" />
         <Picker.Item label="2" value="2" />
@@ -224,7 +224,7 @@ const PropertyHouseComponent = () => {
         selectedValue={tenantCount}
         onValueChange={itemValue => setTenantCount(itemValue)}
         style={AppStyles.picker}>
-        <Picker.Item label="Select Tenant Count" value="" />
+        <Picker.Item label="Select Tenant Count" value="0" />
         <Picker.Item label="0" value="0" />
         <Picker.Item label="1" value="1" />
         <Picker.Item label="2" value="2" />
@@ -243,7 +243,7 @@ const PropertyHouseComponent = () => {
         <Picker
           selectedValue={waterHarvesting}
           onValueChange={itemValue => setWaterHarvesting(itemValue)}>
-          <Picker.Item label="Select Water Harvesting" value="" />
+          <Picker.Item label="Select Water Harvesting" value="No" />
           <Picker.Item label="Yes" value="Yes" />
           <Picker.Item label="No" value="No" />
         </Picker>
@@ -254,7 +254,7 @@ const PropertyHouseComponent = () => {
         <Picker
           selectedValue={submersible}
           onValueChange={itemValue => setSubmersible(itemValue)}>
-          <Picker.Item label="Select Submersible" value="" />
+          <Picker.Item label="Select Submersible" value="No" />
           <Picker.Item label="Yes" value="Yes" />
           <Picker.Item label="No" value="No" />
         </Picker>
@@ -278,7 +278,7 @@ const PropertyHouseComponent = () => {
         <Picker
           selectedValue={consent}
           onValueChange={itemValue => setConsent(itemValue)}>
-          <Picker.Item label="Select Consent" value="" />
+          <Picker.Item label="Select Consent" value="No" />
           <Picker.Item label="Yes" value="Yes" />
           <Picker.Item label="No" value="No" />
         </Picker>

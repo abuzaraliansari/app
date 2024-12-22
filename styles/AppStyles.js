@@ -70,6 +70,10 @@ const AppStyles = StyleSheet.create({
   nextButton: {
     backgroundColor: '#4CAF50',
   },
+  logoutButton: {
+    backgroundColor: 'red',
+  },
+
   buttonText: {
     color: '#fff',
     fontSize: 20,
@@ -79,6 +83,21 @@ const AppStyles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 15,
     fontSize: 20,
+  },
+
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#2c3e50',
+    textAlign: 'center',
+    marginVertical: 10,
+  },
+  text: {
+    fontSize: 16,
+    color: '#34495e',
+    textAlign: 'center',
+    marginVertical: 5,
+    lineHeight: 22,
   },
 
   

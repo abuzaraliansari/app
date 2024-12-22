@@ -177,9 +177,9 @@ const FormWithPhotoComponent = () => {
       </TouchableOpacity>
 
       <TouchableOpacity
-            style={[AppStyles.button, AppStyles.nextButton]}
+            style={styles.nextButton}
             onPress={final}>
-            <Text style={AppStyles.buttonText}>Next</Text>
+            <Text style={styles.buttonText}>Next</Text>
           </TouchableOpacity>
     </ScrollView>
     
@@ -253,6 +253,19 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   addButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+
+  nextButton: {
+    marginVertical: 16,
+    backgroundColor: '#28a745',
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    borderRadius: 5,
+  },
+  buttonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',

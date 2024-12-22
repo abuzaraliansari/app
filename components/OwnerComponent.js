@@ -33,6 +33,8 @@ const OwnerComponent = () => {
   const [category, setCategory] = useState('');
   const createdBy = authState.user;
   const [Email, setEmail] = useState('');
+  const [PanNumber, setPanNumber] = useState('');
+  const [AdharNumber, setAdharNumber] = useState('');
   const navigation = useNavigation();
   const API_ENDPOINT = `${Config.API_URL}/auth/owner`;
 
@@ -62,6 +64,8 @@ const OwnerComponent = () => {
         category,
         createdBy,
         Email,
+        PanNumber,
+        AdharNumber,
       };
 
       console.log('API_ENDPOINT:', API_ENDPOINT); 
@@ -179,7 +183,7 @@ const OwnerComponent = () => {
         selectedValue={income}
         style={AppStyles.picker}
         onValueChange={itemValue => setIncome(itemValue)}>
-        <Picker.Item label="Select an Income range" value="" />
+        <Picker.Item label="Select an Income range" value="0" />
         <Picker.Item label="Below 10,000" value="Below 10,000" />
         <Picker.Item label="10,000 - 20,000" value="10,000 - 20,000" />
         <Picker.Item label="20,001 - 30,000" value="20,001 - 30,000" />
@@ -229,6 +233,21 @@ const OwnerComponent = () => {
         value={Email}
         onChangeText={setEmail}
         placeholder="Enter Email"
+      />
+      
+      <Text style={AppStyles.label}>PanNumber</Text>
+      <TextInput
+        style={AppStyles.input}
+        value={PanNumber}
+        onChangeText={setPanNumber}
+        placeholder="Enter PanNumber"
+      />
+      <Text style={AppStyles.label}>AdharNumber</Text>
+      <TextInput
+        style={AppStyles.input}
+        value={AdharNumber}
+        onChangeText={setAdharNumber}
+        placeholder="Enter AdharNumber"
       />
 
       <TouchableOpacity style={AppStyles.button} onPress={validateAndSubmit}>
