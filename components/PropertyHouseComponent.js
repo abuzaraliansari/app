@@ -18,6 +18,12 @@ import axios from 'axios';
 
 const PropertyHouseComponent = () => {
   const {authState} = useContext(AuthContext);
+
+  console.log('owner', authState.ownerId);
+  console.log('createdby', authState.user);
+  console.log('2', authState.propertyID)
+  console.log('3', authState.token)
+  //token, user, ownerId, propertyID)
   const navigation = useNavigation();
   const route = useRoute();
   const { HouseNumber ,propertyID} = route.params; 
@@ -45,7 +51,8 @@ const PropertyHouseComponent = () => {
   console.log('PropertyID:', propertyID);
   const API_ENDPOINT = `${Config.API_URL}/auth/PropertyDetailsHouse`;
  
- 
+ console.log('house', authState.ownerID)
+ console.log('createdby', authState.createdBy)
   
   const validateAndSubmit = async () => {
     try {
@@ -83,7 +90,8 @@ const PropertyHouseComponent = () => {
 
       if (response.status === 200) {
         //Alert.alert('Success', 'Property details submitted successfully.');
-        navigation.navigate('LiveLocation');
+        navigation.navigate('LiveLocation' ,{ propertyID: propertyID});
+  
       } else {
         throw new Error(result.error || 'Submission failed.');
       }
@@ -95,7 +103,7 @@ const PropertyHouseComponent = () => {
   return (
     <ScrollView style={AppStyles.container}>
       <Text style={AppStyles.header}>Property Details</Text>
-      <Text style={AppStyles.label}>Welcome, {authState.user} , {HouseNumber} </Text>
+      <Text style={AppStyles.label}>Welcome, {authState.user}</Text>
 
      
 
@@ -153,6 +161,7 @@ const PropertyHouseComponent = () => {
         onValueChange={itemValue => setRoomCount(itemValue)}
         style={AppStyles.picker}>
         <Picker.Item label="Select Room Count" value="" />
+        <Picker.Item label="0" value="0" />
         <Picker.Item label="1" value="1" />
         <Picker.Item label="2" value="2" />
         <Picker.Item label="3" value="3" />
@@ -181,6 +190,7 @@ const PropertyHouseComponent = () => {
         onValueChange={itemValue => setFloorCount(itemValue)}
         style={AppStyles.picker}>
         <Picker.Item label="Select Floor Count" value="" />
+        <Picker.Item label="0" value="0" />
         <Picker.Item label="1" value="1" />
         <Picker.Item label="2" value="2" />
         <Picker.Item label="3" value="3" />
@@ -196,6 +206,7 @@ const PropertyHouseComponent = () => {
         onValueChange={itemValue => setShopCount(itemValue)}
         style={AppStyles.picker}>
         <Picker.Item label="Select Shop Count" value="" />
+        <Picker.Item label="0" value="0" />
         <Picker.Item label="1" value="1" />
         <Picker.Item label="2" value="2" />
         <Picker.Item label="3" value="3" />
@@ -213,7 +224,8 @@ const PropertyHouseComponent = () => {
         selectedValue={tenantCount}
         onValueChange={itemValue => setTenantCount(itemValue)}
         style={AppStyles.picker}>
-        <Picker.Item label="Select Room Count" value="" />
+        <Picker.Item label="Select Tenant Count" value="" />
+        <Picker.Item label="0" value="0" />
         <Picker.Item label="1" value="1" />
         <Picker.Item label="2" value="2" />
         <Picker.Item label="3" value="3" />

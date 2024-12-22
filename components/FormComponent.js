@@ -40,11 +40,11 @@ const LoginComponent = () => {
               //  Alert.alert('Success', 'Login successful!');
                 navigation.navigate('Home');
             } else {
-                Alert.alert('Error', response.data.message);
+                Alert.alert('Error', response.data.message + API_ENDPOINT);
             }
         } catch (error) {
-            Alert.alert('Error', 'Login failed. Please try again.' + error);
-            console.error(error);
+            Alert.alert('Error', 'Login failed. Please try again.' + error + API_ENDPOINT);
+            console.error(error + API_ENDPOINT);
         }
     };
 

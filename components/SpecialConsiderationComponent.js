@@ -34,7 +34,7 @@ const SpecialConsiderationComponent = () => {
   console.log('Latitude:', latitude, longitude);
   const API_ENDPOINT = `${Config.API_URL}/auth/SpecialConsideration`;
   const handleAddSpecialConsideration = async () => {
-    if (!ownerID || !considerationType) {
+    if (!considerationType) {
       setMessage('Consideration Type, and Created By are required.');
       setIsError(true);
       return;
@@ -42,7 +42,7 @@ const SpecialConsiderationComponent = () => {
 
     const specialConsiderationData = {
       ownerID,
-      propertyID: 1,
+      propertyID,
       considerationType,
       description,
       latitude,
@@ -51,7 +51,7 @@ const SpecialConsiderationComponent = () => {
       
       modifiedBy,
     };
-
+console.log('Request Body:', specialConsiderationData);
     try {
       console.log('API_ENDPOINT:', API_ENDPOINT); 
       const response = await fetch(
@@ -84,7 +84,7 @@ const SpecialConsiderationComponent = () => {
   return (
     <ScrollView contentContainerStyle={AppStyles.container}>
       <Text style={AppStyles.heading}>Special Consideration Details</Text>
-      <Text style={AppStyles.label}>Welcome, {authState.user}, {} </Text>
+      <Text style={AppStyles.label}>Welcome, {authState.user}{} </Text>
       <Text style={AppStyles.label}>Consideration Type *</Text>
       <View style={AppStyles.pickerContainer}>
         <Picker
@@ -106,14 +106,6 @@ const SpecialConsiderationComponent = () => {
         placeholder="Enter Description"
         value={description}
         onChangeText={setDescription}
-      />
-
-      <Text style={AppStyles.label}>Modified By </Text>
-      <TextInput
-        style={AppStyles.input}
-        placeholder="Enter ModifiedBy"
-        value={modifiedBy}
-        onChangeText={setmodifiedBy}
       />
 
       <TouchableOpacity

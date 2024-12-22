@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }) => {
     });
 
     const login = async (token, user, ownerId, propertyID) => {
-        setAuthState({ isAuthenticated: true, token, user ,ownerId });
+        setAuthState({ isAuthenticated: true, token, user ,ownerId ,propertyID});
         await AsyncStorage.setItem('authToken', token);
         await AsyncStorage.setItem('user', JSON.stringify(user));
         await AsyncStorage.setItem('ownerId', ownerId);

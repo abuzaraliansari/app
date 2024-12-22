@@ -95,9 +95,10 @@ console.log('result:', result);
       if (response.status === 201) {
         //Alert.alert('Success', 'Property details submitted successfully.');
         //Ownere id baad mein change ker dena
-        login(authState.password, authState.user, 1, result.propertyID );
+        login(authState.password, authState.user, String(authState.ownerId), String(result.propertyID ));
         console.log('Property ID:', result.propertyID);
         console.log('HouseNumber ID:', result.HouseNumber);
+        console.log('Owner ID:', authState.ownerId);
         navigation.navigate('PropertyHouse',{ HouseNumber: result.HouseNumber ,  propertyID: result.propertyID});
       } else {
         throw new Error(result.error || 'Submission failed.');
@@ -121,6 +122,7 @@ console.log('result:', result);
         <Picker.Item label="Zone 1" value="1" />
         <Picker.Item label="Zone 2" value="2" />
         <Picker.Item label="Zone 3" value="3" />
+        <Picker.Item label="Zone 4" value="4" />
       </Picker>
 
       <Text style={AppStyles.label}>Locality</Text>

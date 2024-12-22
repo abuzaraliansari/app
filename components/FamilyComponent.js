@@ -83,7 +83,7 @@ const FamilyMember = () => {
   };
 
   const handleAddFamilyMember = () => {
-    navigation.navigate('PropertyScreenArea');
+    navigation.navigate('PropertyArea');
   };
 
   return (
@@ -158,12 +158,12 @@ const FamilyMember = () => {
           <TouchableOpacity
             style={AppStyles.button}
             onPress={handleSaveFamilyMember}>
-            <Text style={AppStyles.buttonText}>Save and Add Member</Text>
+            <Text style={AppStyles.buttonText}>Save Member</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[AppStyles.button, AppStyles.nextButton]}
             onPress={handleAddFamilyMember}>
-            <Text style={AppStyles.buttonText}>Save and Next</Text>
+            <Text style={AppStyles.buttonText}>Skip And Next</Text>
           </TouchableOpacity>
         </>
       )}

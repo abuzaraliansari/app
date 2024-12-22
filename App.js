@@ -15,6 +15,8 @@ import SpecialConsiderationScreen from './screens/SpecialConsiderationScreen';
 import LiveLocationScreen from './screens/LiveLocationScreen';
 import PropertyAreaComponent from './components/PropertyAreaComponent';
 
+import FinalScreen from './screens/FinalScreen';
+
 
 
 
@@ -44,6 +46,8 @@ const Stack = createStackNavigator();
         <Stack.Screen name="SpecialConsideration" component={SpecialConsiderationScreen} />
         <Stack.Screen name="FormWithPhoto" component={FormWithPhoto} />
         <Stack.Screen name="LiveLocation" component={LiveLocationScreen} />
+
+        <Stack.Screen name="Final" component={FinalScreen} />
       </Stack.Navigator>
     </NavigationContainer>
     </AppWrapper>

@@ -25,9 +25,10 @@ const fs = require('fs');
 const FormWithPhotoComponent = () => {
   const {authState} = useContext(AuthContext);
   const [photos, setPhotos] = useState([]);
-  const ownerID = authState.ownerId; // Example OwnerID
-  const propertyID = authState.propertyId;  // Example PropertyID
-  const createdBy = authState.user; // Example CreatedBy
+  const ownerID = authState.ownerId; 
+  const propertyID = authState.propertyID;  
+  const createdBy = authState.user;
+    const navigation = useNavigation();
   const API_ENDPOINT = `${Config.API_URL}/auth/upload`;
 
   // Function to request camera permission
@@ -116,13 +117,14 @@ const FormWithPhotoComponent = () => {
       const config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: 'http://192.168.29.56:3000/auth/upload',
+        url: API_ENDPOINT,
         headers: {
           'Content-Type': 'multipart/form-data',
         },
         data: data,
       };
       console.log('FormData:', photo.uri);
+      console.log('createdBy:', createdBy);
       const response = await axios.request(config);
       
       if (response.data.success) {
@@ -134,6 +136,9 @@ const FormWithPhotoComponent = () => {
       console.error('API error:', error);
       Alert.alert('Error', 'Failed to upload photo details.');
     }
+  };
+  const final = () => {
+    navigation.navigate('Final');
   };
   // Add a new photo slot
   const addPhotoSlot = () => {
@@ -170,7 +175,14 @@ const FormWithPhotoComponent = () => {
       <TouchableOpacity style={styles.addButton} onPress={addPhotoSlot}>
         <Text style={styles.addButtonText}>+ Add Another Photo</Text>
       </TouchableOpacity>
+
+      <TouchableOpacity
+            style={[AppStyles.button, AppStyles.nextButton]}
+            onPress={final}>
+            <Text style={AppStyles.buttonText}>Next</Text>
+          </TouchableOpacity>
     </ScrollView>
+    
   );
 };
 
