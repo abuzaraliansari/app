@@ -38,12 +38,18 @@ const PropertyHouseComponent = () => {
   const [floorCount, setFloorCount] = useState('');
   const [shopCount, setShopCount] = useState('');
   const [tenantCount, setTenantCount] = useState('');
-  const [waterHarvesting, setWaterHarvesting] = useState('');
-  const [submersible, setSubmersible] = useState('');
+  const [waterHarvesting, setWaterHarvesting] = useState('No');
+  const [submersible, setSubmersible] = useState('No');
   //const [Locality, setLocality] = useState('');
   const [houseNumber, SetHouseNumber] = useState(String(HouseNumber));
   const [bankAccountNumber, setBankAccountNumber] = useState('');
-  const [consent, setConsent] = useState('');
+  const [consent, setConsent] = useState('Yes');
+  const [HouseType, setHouseType] = useState('');
+  const [Area, setArea] = useState('');
+  const [OpenArea, setOpenArea] = useState('');
+  const [ConstructedArea, setConstructedArea] = useState('');
+  const [IsActive, setIsActive] = useState('');
+
   const createdBy = authState.user;
   // const [Zone, setZone] = useState('');
 
@@ -77,7 +83,12 @@ const PropertyHouseComponent = () => {
 
         houseNumber,
        bankAccountNumber,
-       consent
+       consent,
+       HouseType,
+       Area,
+       OpenArea,
+       ConstructedArea,
+       IsActive,
         };
 
       console.log('Request Body:', propertyDetails);
@@ -116,6 +127,41 @@ const PropertyHouseComponent = () => {
         onChangeText={SetHouseNumber}
 
         // editable={false} // Disabled for auto-fill
+      />
+
+<Text style={AppStyles.label}>House Type</Text>
+      <TextInput
+        style={AppStyles.input}
+        placeholder="Enter HouseType"
+        value={HouseType}
+        onChangeText={setHouseType}
+      />
+
+<Text style={AppStyles.label}>Area In Sq Meter</Text>
+      <TextInput
+        style={AppStyles.input}
+        placeholder="Enter Area"
+        value={Area}
+        onChangeText={setArea}
+        keyboardType="numeric"
+      />
+
+<Text style={AppStyles.label}>Open Area</Text>
+      <TextInput
+        style={AppStyles.input}
+        placeholder="Enter Open Area"
+        value={OpenArea}
+        onChangeText={setOpenArea}
+         keyboardType="numeric"
+      />
+
+<Text style={AppStyles.label}>Constructed Area</Text>
+      <TextInput
+        style={AppStyles.input}
+        placeholder="Enter Constructed Area"
+        value={ConstructedArea}
+        onChangeText={setConstructedArea}
+         keyboardType="numeric"
       />
 
       <Text style={AppStyles.label}>Property Mode *</Text>
@@ -238,26 +284,63 @@ const PropertyHouseComponent = () => {
         <Picker.Item label="10" value="10" />
       </Picker>
 
-      <Text style={AppStyles.label}>Water Harvesting</Text>
-      <View style={AppStyles.pickerContainer}>
-        <Picker
-          selectedValue={waterHarvesting}
-          onValueChange={itemValue => setWaterHarvesting(itemValue)}>
-          <Picker.Item label="Select Water Harvesting" value="No" />
-          <Picker.Item label="Yes" value="Yes" />
-          <Picker.Item label="No" value="No" />
-        </Picker>
+      <Text style={AppStyles.label}>Do You have Water Harvesting ?</Text>
+      <View style={styles.radioGroup}>
+        {/* Radio Button for "Yes" */}
+        <TouchableOpacity
+          style={styles.radioButton}
+          onPress={() => setWaterHarvesting('Yes')}>
+          <View
+            style={[
+              styles.radioCircle,
+              waterHarvesting === 'Yes' && styles.selectedCircle,
+            ]}
+          />
+          <Text style={styles.radioText}>Yes</Text>
+        </TouchableOpacity>
+
+        {/* Radio Button for "No" */}
+        <TouchableOpacity
+          style={styles.radioButton}
+          onPress={() => setWaterHarvesting('No')}>
+          <View
+            style={[
+              styles.radioCircle,
+              waterHarvesting === 'No' && styles.selectedCircle,
+            ]}
+          />
+          <Text style={styles.radioText}>No</Text>
+        </TouchableOpacity>
       </View>
 
-      <Text style={AppStyles.label}>Submersible</Text>
-      <View style={AppStyles.pickerContainer}>
-        <Picker
-          selectedValue={submersible}
-          onValueChange={itemValue => setSubmersible(itemValue)}>
-          <Picker.Item label="Select Submersible" value="No" />
-          <Picker.Item label="Yes" value="Yes" />
-          <Picker.Item label="No" value="No" />
-        </Picker>
+      <Text style={AppStyles.label}>Do You Have Submersible ?</Text>
+
+      <View style={styles.radioGroup}>
+        {/* Radio Button for "Yes" */}
+        <TouchableOpacity
+          style={styles.radioButton}
+          onPress={() => setSubmersible('Yes')}>
+          <View
+            style={[
+              styles.radioCircle,
+              submersible === 'Yes' && styles.selectedCircle,
+            ]}
+          />
+          <Text style={styles.radioText}>Yes</Text>
+        </TouchableOpacity>
+
+        {/* Radio Button for "No" */}
+        <TouchableOpacity
+          style={styles.radioButton}
+          onPress={() => setSubmersible('No')}>
+          <View
+            style={[
+              styles.radioCircle,
+              submersible === 'No' && styles.selectedCircle,
+            ]}
+          />
+          <Text style={styles.radioText}>No</Text>
+        </TouchableOpacity>
       </View>
       {/* <Text style={AppStyles.label}>Live Location</Text>
       <View style={AppStyles.liveLocationContainer}>
@@ -273,15 +356,33 @@ const PropertyHouseComponent = () => {
         keyboardType="numeric"
       />
 
-      <Text style={AppStyles.label}>Consent</Text>
-      <View style={AppStyles.pickerContainer}>
-        <Picker
-          selectedValue={consent}
-          onValueChange={itemValue => setConsent(itemValue)}>
-          <Picker.Item label="Select Consent" value="No" />
-          <Picker.Item label="Yes" value="Yes" />
-          <Picker.Item label="No" value="No" />
-        </Picker>
+      <Text style={AppStyles.label}>Do you give consent?</Text>
+      <View style={styles.radioGroup}>
+        {/* Radio Button for "Yes" */}
+        <TouchableOpacity
+          style={styles.radioButton}
+          onPress={() => setConsent('Yes')}>
+          <View
+            style={[
+              styles.radioCircle,
+              consent === 'Yes' && styles.selectedCircle,
+            ]}
+          />
+          <Text style={styles.radioText}>yes</Text>
+        </TouchableOpacity>
+
+        {/* Radio Button for "No" */}
+        <TouchableOpacity
+          style={styles.radioButton}
+          onPress={() => setConsent('No')}>
+          <View
+            style={[
+              styles.radioCircle,
+              consent === 'No' && styles.selectedCircle,
+            ]}
+          />
+          <Text style={styles.radioText}>No</Text>
+        </TouchableOpacity>
       </View>
 
       <TouchableOpacity
@@ -293,4 +394,48 @@ const PropertyHouseComponent = () => {
   );
 };
 
+
+const styles = StyleSheet.create({
+  container: {
+    marginVertical: 20,
+    padding: 16,
+  },
+  label: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  radioGroup: {
+    flexDirection: 'row',
+    alignItems: 'left',
+    //justifyContent: 'space-round',
+    
+  },
+  radioButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 20,
+  },
+  radioCircle: {
+    height: 20,
+    width: 20,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: '#007bff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 10,
+  },
+  selectedCircle: {
+    backgroundColor: '#007bff',
+  },
+  radioText: {
+    fontSize: 16,
+  },
+  selectedText: {
+    marginTop: 15,
+    fontSize: 16,
+    fontStyle: 'italic',
+  },
+});
 export default PropertyHouseComponent;

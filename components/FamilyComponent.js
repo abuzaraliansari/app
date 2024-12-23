@@ -115,7 +115,10 @@ const FamilyMember = () => {
         style={AppStyles.picker}
         onValueChange={itemValue => setAge(itemValue)}>
         <Picker.Item label="Select age" value="" />
-        <Picker.Item label="18-20" value="18-20" />
+        <Picker.Item label="01-05" value="05-10" />
+        <Picker.Item label="05-10" value="05-10" />
+        <Picker.Item label="10-16" value="10-16" />
+        <Picker.Item label="16-20" value="16-20" />
         <Picker.Item label="21-30" value="21-30" />
         <Picker.Item label="31-40" value="31-40" />
         <Picker.Item label="41-50" value="41-50" />

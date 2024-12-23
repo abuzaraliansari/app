@@ -232,31 +232,22 @@ const OwnerComponent = () => {
         <Picker.Item label="ST" value="ST" />
         <Picker.Item label="Other" value="Other" />
       </Picker>
-      <Text style={AppStyles.label}>Cast</Text>
+      <Text style={AppStyles.label}>Caste</Text>
       <TextInput
         style={AppStyles.input}
         value={Cast}
         onChangeText={setCast}
-        placeholder="Enter Cast"
+        placeholder="Enter Caste"
       />
       <Text style={AppStyles.label}>Number of Members</Text>
-      <Picker
-        selectedValue={NumberOfMembers}
-        onValueChange={itemValue => setNumberOfMembers(itemValue)}
-        style={AppStyles.picker}>
-        <Picker.Item label="Select Number Of Members" value="0" />
-        <Picker.Item label="0" value="0" />
-        <Picker.Item label="1" value="1" />
-        <Picker.Item label="2" value="2" />
-        <Picker.Item label="3" value="3" />
-        <Picker.Item label="4" value="4" />
-        <Picker.Item label="5" value="5" />
-        <Picker.Item label="6" value="6" />
-        <Picker.Item label="7" value="7" />
-        <Picker.Item label="8" value="8" />
-        <Picker.Item label="9" value="9" />
-        <Picker.Item label="10" value="10" />
-      </Picker>
+      <TextInput
+        style={AppStyles.input}
+        value={NumberOfMembers}
+        onChangeText={setNumberOfMembers}
+        keyboardType="numeric"
+        placeholder="Enter Number Of Members"
+      />
+      
 
       <Text style={AppStyles.label}>Email</Text>
       <TextInput
@@ -278,6 +269,7 @@ const OwnerComponent = () => {
         style={AppStyles.input}
         value={AdharNumber}
         onChangeText={setAdharNumber}
+        keyboardType="numeric"
         placeholder="Enter AdharNumber"
       />
 
