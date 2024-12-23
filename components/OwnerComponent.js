@@ -35,6 +35,9 @@ const OwnerComponent = () => {
   const [Email, setEmail] = useState('');
   const [PanNumber, setPanNumber] = useState('');
   const [AdharNumber, setAdharNumber] = useState('');
+  const [NumberOfMembers, setNumberOfMembers] = useState('');
+  const [Cast, setCast] = useState('');
+  const [IsActive, setAIsActive] = useState('');
   const navigation = useNavigation();
   const API_ENDPOINT = `${Config.API_URL}/auth/owner`;
 
@@ -66,6 +69,9 @@ const OwnerComponent = () => {
         Email,
         PanNumber,
         AdharNumber,
+        NumberOfMembers,
+        Cast,
+        IsActive,
       };
 
       console.log('API_ENDPOINT:', API_ENDPOINT); 
@@ -157,7 +163,7 @@ const OwnerComponent = () => {
         style={AppStyles.picker}
         onValueChange={itemValue => setAge(itemValue)}>
         <Picker.Item label="Select age" value="" />
-        <Picker.Item label="18-20" value="18-20" />
+        <Picker.Item label="16-20" value="16-20" />
         <Picker.Item label="21-30" value="21-30" />
         <Picker.Item label="31-40" value="31-40" />
         <Picker.Item label="41-50" value="41-50" />
@@ -178,7 +184,7 @@ const OwnerComponent = () => {
         <Picker.Item label="Other" value="O" />
       </Picker>
 
-      <Text style={AppStyles.label}>Income *</Text>
+      <Text style={AppStyles.label}>Income</Text>
       <Picker
         selectedValue={income}
         style={AppStyles.picker}
@@ -225,6 +231,31 @@ const OwnerComponent = () => {
         <Picker.Item label="SC" value="SC" />
         <Picker.Item label="ST" value="ST" />
         <Picker.Item label="Other" value="Other" />
+      </Picker>
+      <Text style={AppStyles.label}>Cast</Text>
+      <TextInput
+        style={AppStyles.input}
+        value={Cast}
+        onChangeText={setCast}
+        placeholder="Enter Cast"
+      />
+      <Text style={AppStyles.label}>Number of Members</Text>
+      <Picker
+        selectedValue={NumberOfMembers}
+        onValueChange={itemValue => setNumberOfMembers(itemValue)}
+        style={AppStyles.picker}>
+        <Picker.Item label="Select Number Of Members" value="0" />
+        <Picker.Item label="0" value="0" />
+        <Picker.Item label="1" value="1" />
+        <Picker.Item label="2" value="2" />
+        <Picker.Item label="3" value="3" />
+        <Picker.Item label="4" value="4" />
+        <Picker.Item label="5" value="5" />
+        <Picker.Item label="6" value="6" />
+        <Picker.Item label="7" value="7" />
+        <Picker.Item label="8" value="8" />
+        <Picker.Item label="9" value="9" />
+        <Picker.Item label="10" value="10" />
       </Picker>
 
       <Text style={AppStyles.label}>Email</Text>
