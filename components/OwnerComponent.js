@@ -32,6 +32,7 @@ const OwnerComponent = () => {
   const [religion, setReligion] = useState('');
   const [category, setCategory] = useState('');
   const createdBy = authState.user;
+  const token = authState.token;
   const [Email, setEmail] = useState('');
   const [PanNumber, setPanNumber] = useState('');
   const [AdharNumber, setAdharNumber] = useState('');
@@ -41,6 +42,8 @@ const OwnerComponent = () => {
   const navigation = useNavigation();
   const API_ENDPOINT = `${Config.API_URL}/auth/owner`;
 
+  console.log('token:', authState.token);
+  
   const validateAndSubmit = async () => {
     try {
       // Validation
@@ -78,11 +81,16 @@ const OwnerComponent = () => {
       // Simulate API call with axios
       const response = await axios.post(API_ENDPOINT, {
         ownerDetails,
-      });
+      },
+      {
+        headers: {
+          header_gkey: authState.token, // Replace 'your-header-value' with the actual value
+        },}
+    );
 
       if (response.status === 201) {
         //Alert.alert('Success', 'Owner details submitted successfully.');
-        login(authState.password, authState.user, response.data.ownerID);
+        login(authState.token, authState.user, response.data.ownerID);
         navigation.navigate('Family', {ownerID: response.data.ownerID}); // Adjust the navigation target if needed
       }// else {
       //   Alert.alert('Success', response.status + response.data);

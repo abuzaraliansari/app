@@ -23,7 +23,9 @@ const FamilyMember = () => {
   const [age, setAge] = useState('');
   const [gender, setGender] = useState('');
   const [occupation, setOccupation] = useState('');
+  const [IsActive, setIsActive] = useState('');
   const createdBy = authState.user;
+  const token = authState.token;
   const [message, setMessage] = useState('');
   const [isError, setIsError] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -40,6 +42,7 @@ const FamilyMember = () => {
       gender,
       occupation,
       createdBy,
+      IsActive,
     },
   };
 
@@ -58,11 +61,14 @@ const FamilyMember = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'header_gkey': authState.token,
         },
         body: JSON.stringify(familyMemberData),
+        
       });
 
       const data = await response.json();
+      //console.log('Response:', responseData);
       setLoading(false);
 
       if (response.status === 201) {

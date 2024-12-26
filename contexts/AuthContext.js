@@ -1,6 +1,8 @@
 import React, { createContext, useState, useEffect, useContext  } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import axios from 'axios';
+
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -14,7 +16,7 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (token, user, ownerId, propertyID) => {
         setAuthState({ isAuthenticated: true, token, user ,ownerId ,propertyID});
-        await AsyncStorage.setItem('authToken', token);
+        await AsyncStorage.setItem('token', token);
         await AsyncStorage.setItem('user', JSON.stringify(user));
         await AsyncStorage.setItem('ownerId', ownerId);
         await AsyncStorage.setItem('propertyID', propertyID);
@@ -41,17 +43,22 @@ export const AuthProvider = ({ children }) => {
 //     };
     const logout = async () => {
         setAuthState({ isAuthenticated: false, token: null, user: null });
-        await AsyncStorage.removeItem('authToken');
+        await AsyncStorage.removeItem('token');
         await AsyncStorage.removeItem('user');
+        await AsyncStorage.removeItem('ownerId');
+        await AsyncStorage.removeItem('propertyID');
     };
 
-    const loadToken = async () => {
-        const token = await AsyncStorage.getItem('authToken');
-        const user = JSON.parse(await AsyncStorage.getItem('user'));
-        if (token) {
-            setAuthState({ isAuthenticated: true, token, user });
-        }
-    };
+     const loadToken = async () => {
+         const token = await AsyncStorage.getItem('token');
+         const user = JSON.parse(await AsyncStorage.getItem('user'));
+        // const ownerId = await AsyncStorage.getItem('ownerId');
+        // const propertyID = await AsyncStorage.getItem('propertyID');
+         if (token) {
+             setAuthState({ isAuthenticated: true, token, user });
+         }
+     };
+
 
     useEffect(() => {
         loadToken();

@@ -24,6 +24,7 @@ const SpecialConsiderationComponent = () => {
   const [description, setDescription] = useState('');
   const createdBy = authState.user;
   const [modifiedBy, setmodifiedBy] = useState('');
+  const [IsActive, setIsActive] = useState('0');
   const [message, setMessage] = useState('');
   const [isError, setIsError] = useState(false);
   const navigation = useNavigation();
@@ -48,7 +49,7 @@ const SpecialConsiderationComponent = () => {
       latitude,
       longitude,
       createdBy,
-      
+      IsActive,
       modifiedBy,
     };
 console.log('Request Body:', specialConsiderationData);

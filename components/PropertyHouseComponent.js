@@ -45,7 +45,7 @@ const PropertyHouseComponent = () => {
   const [bankAccountNumber, setBankAccountNumber] = useState('');
   const [consent, setConsent] = useState('Yes');
   const [HouseType, setHouseType] = useState('');
-  const [Area, setArea] = useState('');
+ // const [Area, setArea] = useState('');
   const [OpenArea, setOpenArea] = useState('');
   const [ConstructedArea, setConstructedArea] = useState('');
   const [IsActive, setIsActive] = useState('');
@@ -85,7 +85,7 @@ const PropertyHouseComponent = () => {
        bankAccountNumber,
        consent,
        HouseType,
-       Area,
+       //Area,
        OpenArea,
        ConstructedArea,
        IsActive,
@@ -137,16 +137,16 @@ const PropertyHouseComponent = () => {
         onChangeText={setHouseType}
       />
 
-<Text style={AppStyles.label}>Area In Sq Meter</Text>
+{/* <Text style={AppStyles.label}>Area In Sq Meter</Text>
       <TextInput
         style={AppStyles.input}
         placeholder="Enter Area"
         value={Area}
         onChangeText={setArea}
         keyboardType="numeric"
-      />
+      /> */}
 
-<Text style={AppStyles.label}>Open Area</Text>
+<Text style={AppStyles.label}>Open Area In Sq Meter</Text>
       <TextInput
         style={AppStyles.input}
         placeholder="Enter Open Area"
@@ -155,7 +155,7 @@ const PropertyHouseComponent = () => {
          keyboardType="numeric"
       />
 
-<Text style={AppStyles.label}>Constructed Area</Text>
+<Text style={AppStyles.label}>Constructed Area In Sq Meter</Text>
       <TextInput
         style={AppStyles.input}
         placeholder="Enter Constructed Area"
@@ -356,7 +356,8 @@ const PropertyHouseComponent = () => {
         keyboardType="numeric"
       />
 
-      <Text style={AppStyles.label}>Do you give consent?</Text>
+      <Text style={AppStyles.label}>
+      Do you give consent to provide the above information?</Text>
       <View style={styles.radioGroup}>
         {/* Radio Button for "Yes" */}
         <TouchableOpacity

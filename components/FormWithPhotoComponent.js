@@ -25,6 +25,7 @@ const fs = require('fs');
 const FormWithPhotoComponent = () => {
   const {authState} = useContext(AuthContext);
   const [photos, setPhotos] = useState([]);
+  const [IsActive, setIsActive] = useState([]);
   const ownerID = authState.ownerId; 
   const propertyID = authState.propertyID;  
   const createdBy = authState.user;
