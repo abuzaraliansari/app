@@ -9,7 +9,8 @@ const LiveLocationComponent = () => {
   const [error, setError] = useState(null);
    const navigation = useNavigation();
 
-  useEffect(() => {
+   const fetchLocation = () => {
+    setError(null); // Clear previous errors
     Geolocation.getCurrentPosition(
       position => {
         if (position.coords.accuracy <= 20) {
@@ -23,12 +24,32 @@ const LiveLocationComponent = () => {
       },
       { enableHighAccuracy: true, timeout: 50000, maximumAge: 10000 }
     );
+  };
+
+  useEffect(() => {
+    fetchLocation(); // Fetch location on initial load
   }, []);
+
+  // useEffect(() => {
+  //   Geolocation.getCurrentPosition(
+  //     position => {
+  //       if (position.coords.accuracy <= 20) {
+  //         setLocation(position.coords);
+  //       } else {
+  //         setError('The location accuracy is insufficient. Please move to an open area.');
+  //       }
+  //     },
+  //     error => {
+  //       setError(error.message);
+  //     },
+  //     { enableHighAccuracy: true, timeout: 50000, maximumAge: 10000 }
+  //   );
+  // }, []);
   const addlocation = () => {
     if (location && location.accuracy <= 20) {
       console.log('Location submitted:', location);
       // Logic to handle submitting the location
-      navigation.navigate('SpecialConsideration', { latitude: location. latitude, longitude:location.longitude });
+      navigation.replace('SpecialConsideration', { latitude: location. latitude, longitude:location.longitude });
     } else {
       setError('The location accuracy is insufficient. Please move to an open area.');
     }
@@ -51,10 +72,15 @@ const LiveLocationComponent = () => {
           {error && <Text style={styles.error}>{error}</Text>}
         </View>
       )}
+       <TouchableOpacity style={styles.refreshButton} onPress={fetchLocation}>
+        <Text style={styles.refreshButtonText}>Refresh Location</Text>
+      </TouchableOpacity>
       
   <TouchableOpacity style={styles.addButton} onPress={addlocation}>
         <Text style={styles.addButtonText}> Submit Location</Text>
       </TouchableOpacity>
+
+     
       
     </View>
   );
@@ -80,6 +106,16 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   addButtonText: {
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+  },
+  refreshButton: {
+    backgroundColor: '#28A745',
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 10,
+  },
+  refreshButtonText: {
     color: '#FFFFFF',
     fontWeight: 'bold',
   },

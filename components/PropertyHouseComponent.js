@@ -50,6 +50,7 @@ const PropertyHouseComponent = () => {
   const [ConstructedArea, setConstructedArea] = useState('');
   const [IsActive, setIsActive] = useState('');
 
+  const token = authState.token;
   const createdBy = authState.user;
   // const [Zone, setZone] = useState('');
 
@@ -94,14 +95,17 @@ const PropertyHouseComponent = () => {
       console.log('Request Body:', propertyDetails);
       console.log('API_ENDPOINT:', API_ENDPOINT); 
       // Simulate API call with axios
-      const response = await axios.post(API_ENDPOINT, propertyDetails);
+      const response = await axios.post(API_ENDPOINT, propertyDetails,
+        {headers: {
+          header_gkey: authState.token, // Replace 'your-header-value' with the actual value
+        }});
 
      
       //const result = await response.json();
 
       if (response.status === 200) {
         //Alert.alert('Success', 'Property details submitted successfully.');
-        navigation.navigate('LiveLocation' ,{ propertyID: propertyID});
+        navigation.replace('LiveLocation' ,{ propertyID: propertyID});
   
       } else {
         throw new Error(result.error || 'Submission failed.');
@@ -130,12 +134,15 @@ const PropertyHouseComponent = () => {
       />
 
 <Text style={AppStyles.label}>House Type</Text>
-      <TextInput
-        style={AppStyles.input}
-        placeholder="Enter HouseType"
-        value={HouseType}
-        onChangeText={setHouseType}
-      />
+      <Picker
+        selectedValue={HouseType}
+        style={AppStyles.pickerContainer}
+        onValueChange={(itemValue) => setHouseType(itemValue)}
+      >
+        <Picker.Item label="Select House Type" value="" />
+        <Picker.Item label="Kutcha" value="Kutcha" />
+        <Picker.Item label="Pucca" value="Pucca" />
+      </Picker>
 
 {/* <Text style={AppStyles.label}>Area In Sq Meter</Text>
       <TextInput

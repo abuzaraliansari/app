@@ -29,9 +29,10 @@ const FormWithPhotoComponent = () => {
   const ownerID = authState.ownerId; 
   const propertyID = authState.propertyID;  
   const createdBy = authState.user;
-    const navigation = useNavigation();
+  const token = authState.token;
+  const navigation = useNavigation();
   const API_ENDPOINT = `${Config.API_URL}/auth/upload`;
-
+  const titles = ['Owner Photo', 'Property Photo 1', 'Property Photo 2'];
   // Function to request camera permission
   const requestCameraPermission = async () => {
     try {
@@ -121,6 +122,7 @@ const FormWithPhotoComponent = () => {
         url: API_ENDPOINT,
         headers: {
           'Content-Type': 'multipart/form-data',
+          'header_gkey': authState.token,
         },
         data: data,
       };
@@ -139,10 +141,14 @@ const FormWithPhotoComponent = () => {
     }
   };
   const final = () => {
-    navigation.navigate('Final');
+    navigation.replace('Final');
   };
   // Add a new photo slot
   const addPhotoSlot = () => {
+    if (photos.length >= 3) {
+      Alert.alert('Limit Reached', 'You can only add up to 3 photos.');
+      return;
+    }
     setPhotos([...photos, null]);
   };
 
@@ -151,7 +157,7 @@ const FormWithPhotoComponent = () => {
       <Text style={styles.title}>Capture and Upload Photos</Text>
       {photos.map((photo, index) => (
         <View key={index} style={styles.photoSection}>
-          <Text style={styles.label}>Photo {index + 1}</Text>
+          <Text style={styles.label}>{titles[index]}</Text>
           <View style={styles.photoContainer}>
             {photo ? (
               <Image source={{uri: photo.uri}} style={styles.photo} />
@@ -168,18 +174,38 @@ const FormWithPhotoComponent = () => {
             <TouchableOpacity
               style={styles.uploadButton}
               onPress={() => uploadPhotoDetails(photo)}>
-              <Text style={styles.buttonText}>Upload Details</Text>
+              <Text style={styles.buttonText}>Upload</Text>
             </TouchableOpacity>
           )}
         </View>
       ))}
+
+       {photos.length < 3 && (
       <TouchableOpacity style={styles.addButton} onPress={addPhotoSlot}>
-        <Text style={styles.addButtonText}>+ Add Another Photo</Text>
+        <Text style={styles.addButtonText}>+ Add Photo</Text>
       </TouchableOpacity>
+       )}
 
       <TouchableOpacity
             style={styles.nextButton}
-            onPress={final}>
+            onPress={() => {
+              // Check if all photo slots are filled
+              const allPhotosUploaded = photos.every(
+                photo => photo && photo.uri && photo.fileName && photo.fileSize,
+              );
+          
+              if (!allPhotosUploaded) {
+                Alert.alert(
+                  'Error',
+                  'Please upload all three photos (Owner Photo and two Property Photos) before proceeding.',
+                );
+
+              } else if (!ownerID || !propertyID) {
+                Alert.alert('Error', 'Missing Owner ID or Property ID.');
+              } else {
+                final(); // Navigate to the next page if all photos are uploaded
+              }
+            }}>
             <Text style={styles.buttonText}>Next</Text>
           </TouchableOpacity>
     </ScrollView>

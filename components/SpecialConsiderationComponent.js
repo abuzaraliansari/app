@@ -20,8 +20,9 @@ const SpecialConsiderationComponent = () => {
   const {authState} = useContext(AuthContext);
   const ownerID = authState.ownerId;
   const propertyID = authState.propertyID;
-  const [considerationType, setConsiderationType] = useState('');
+  const [considerationType, setConsiderationType] = useState('None');
   const [description, setDescription] = useState('');
+  const token = authState.token;
   const createdBy = authState.user;
   const [modifiedBy, setmodifiedBy] = useState('');
   const [IsActive, setIsActive] = useState('0');
@@ -61,6 +62,7 @@ console.log('Request Body:', specialConsiderationData);
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'header_gkey': authState.token,
           },
           body: JSON.stringify(specialConsiderationData),
         },
@@ -71,7 +73,7 @@ console.log('Request Body:', specialConsiderationData);
       if (response.status === 201) {
         //setMessage('Special consideration added successfully.');
         setIsError(false);
-        navigation.navigate('FormWithPhoto');
+        navigation.replace('FormWithPhoto');
       } else {
         setMessage(data.message || 'Failed to add special consideration.');
         setIsError(true);
@@ -92,7 +94,7 @@ console.log('Request Body:', specialConsiderationData);
           selectedValue={considerationType}
           onValueChange={itemValue => setConsiderationType(itemValue)}
           style={AppStyles.picker}>
-          <Picker.Item label="Select Consideration Type" value="" />
+          <Picker.Item label="Select Consideration Type" value="None" />
           <Picker.Item label="Senior Citizen" value="Senior Citizen" />
           <Picker.Item label="Freedom Fighter" value="Freedom Fighter" />
           <Picker.Item label="Armed Forces" value="Armed Forces" />

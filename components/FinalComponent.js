@@ -7,11 +7,11 @@ const FinalComponent = () => {
   const navigation = useNavigation();
 
   const navigateToLogin = () => {
-    navigation.navigate('Login');
+    navigation.replace('Login');
   };
 
   const navigateToProperty = () => {
-    navigation.navigate('Home');
+    navigation.replace('Home');
   };
 
   return (

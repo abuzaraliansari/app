@@ -61,7 +61,11 @@ const PropertyDetailsComponent = () => {
         console.log('API_ENDPOINTloc:', API_ENDPOINTloc);
         const response = await axios.post(API_ENDPOINTloc, {
           ZoneID: String(zone),
-        });
+        }
+        ,
+        {headers: {
+          header_gkey: authState.token, // Replace 'your-header-value' with the actual value
+        }});
         if (response.data?.locality) {
           setLocalities(response.data.locality);
         } else {
@@ -207,7 +211,7 @@ const PropertyDetailsComponent = () => {
 
       if (response.status === 201) {
         //Alert.alert('Success', 'Property details submitted successfully.');
-        navigation.navigate('SpecialConsideration');
+        navigation.replace('SpecialConsideration');
       } else {
         throw new Error(result.error || 'Submission failed.');
       }

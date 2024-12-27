@@ -34,18 +34,21 @@ const LoginComponent = () => {
                 username,
                 password,
             });
-
+console.log('response:', response.data);
             if (response.data.success) {
                 login(response.data.token, username,null, null);///-- need to reterive token
 
                 //  Alert.alert('Success', 'Login successful!');
-                navigation.navigate('Home');
+                navigation.replace('Home');
             } else {
+                console.log('response:', response.data.message);
                 Alert.alert('Error', response.data.message + API_ENDPOINT);
             }
         } catch (error) {
+            console.log('error:', error);
             Alert.alert('Error', 'Login failed. Please try again.' + error + API_ENDPOINT);
             console.error(error + API_ENDPOINT);
+        
         }
     };
 
@@ -126,6 +129,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         marginBottom: 15,
         backgroundColor: '#f9f9f9',
+        width: '60%', 
     },
     button: {
         backgroundColor: '#4CAF50',

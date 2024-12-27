@@ -47,7 +47,7 @@ const FamilyMember = () => {
   };
 
   const handleSaveFamilyMember = async () => {
-    if (!FirstName || !age || !gender || !occupation) {
+    if (!FirstName || !age || !gender) {
       setMessage('All fields are required.');
       setIsError(true);
       return;
@@ -92,7 +92,7 @@ const FamilyMember = () => {
   };
 
   const handleAddFamilyMember = () => {
-    navigation.navigate('PropertyArea');
+    navigation.replace('PropertyArea');
   };
 
   return (

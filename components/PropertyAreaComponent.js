@@ -30,7 +30,9 @@ const  PropertyAreaComponent= () => {
   
   const [galliNumber, setGalliNumber, handlegalliNumberBlur] = useState('');
  
+  
   const createdBy = authState.user;
+  const token = authState.token;
   const [colony, setColony] = useState('');
   const navigation = useNavigation();
   const [zone, setZone] = useState('');
@@ -51,7 +53,12 @@ const  PropertyAreaComponent= () => {
         console.log('API_ENDPOINTloc:', API_ENDPOINTloc);
         const response = await axios.post(API_ENDPOINTloc, {
           ZoneID: String(zone),
-        });
+
+        },
+        {headers: {
+          header_gkey: authState.token, // Replace 'your-header-value' with the actual value
+        }});
+
         if (response.data?.locality) {
           setLocalities(response.data.locality[0]);
         } else {
@@ -86,7 +93,9 @@ const  PropertyAreaComponent= () => {
       console.log('API_ENDPOINT:', API_ENDPOINT);
       const response = await fetch(API_ENDPOINT, {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: {'Content-Type': 'application/json',
+          'header_gkey': authState.token,
+        },
         body: JSON.stringify({PropertyDetails: propertyDetails}),
       });
 
@@ -95,11 +104,11 @@ console.log('result:', result);
       if (response.status === 201) {
         //Alert.alert('Success', 'Property details submitted successfully.');
         //Ownere id baad mein change ker dena
-        login(authState.password, authState.user, String(authState.ownerId), String(result.propertyID ));
+        login(authState.token, authState.user, String(authState.ownerId), String(result.propertyID ));
         console.log('Property ID:', result.propertyID);
         console.log('HouseNumber ID:', result.HouseNumber);
         console.log('Owner ID:', authState.ownerId);
-        navigation.navigate('PropertyHouse',{ HouseNumber: result.HouseNumber ,  propertyID: result.propertyID});
+        navigation.replace('PropertyHouse',{ HouseNumber: result.HouseNumber ,  propertyID: result.propertyID});
       } else {
         throw new Error(result.error || 'Submission failed.');
       }

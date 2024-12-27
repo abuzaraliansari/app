@@ -47,6 +47,8 @@ const OwnerComponent = () => {
   const validateAndSubmit = async () => {
     try {
       // Validation
+
+      
       if (!firstName || !lastName || !mobileNumber || !createdBy) {
         throw new Error(
           'First Name, Last Name, Mobile Number, and Created By are required fields.',
@@ -91,7 +93,7 @@ const OwnerComponent = () => {
       if (response.status === 201) {
         //Alert.alert('Success', 'Owner details submitted successfully.');
         login(authState.token, authState.user, response.data.ownerID);
-        navigation.navigate('Family', {ownerID: response.data.ownerID}); // Adjust the navigation target if needed
+        navigation.replace('Family', {ownerID: response.data.ownerID}); // Adjust the navigation target if needed
       }// else {
       //   Alert.alert('Success', response.status + response.data);
       // }
@@ -247,7 +249,7 @@ const OwnerComponent = () => {
         onChangeText={setCast}
         placeholder="Enter Caste"
       />
-      <Text style={AppStyles.label}>Number of Members</Text>
+      <Text style={AppStyles.label}>Number of Family Members</Text>
       <TextInput
         style={AppStyles.input}
         value={NumberOfMembers}
