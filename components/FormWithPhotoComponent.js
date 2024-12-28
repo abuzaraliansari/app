@@ -141,7 +141,7 @@ const FormWithPhotoComponent = () => {
     }
   };
   const final = () => {
-    navigation.replace('Final');
+    navigation.replace('dataScreen');
   };
   // Add a new photo slot
   const addPhotoSlot = () => {
@@ -152,6 +152,7 @@ const FormWithPhotoComponent = () => {
     setPhotos([...photos, null]);
   };
 
+  
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>Capture and Upload Photos</Text>

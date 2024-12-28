@@ -104,10 +104,11 @@ console.log('result:', result);
       if (response.status === 201) {
         //Alert.alert('Success', 'Property details submitted successfully.');
         //Ownere id baad mein change ker dena
-        login(authState.token, authState.user, String(authState.ownerId), String(result.propertyID ));
+        login(authState.token, authState.user, String(authState.ownerId), authState.MobileNumber, String(result.propertyID ));
         console.log('Property ID:', result.propertyID);
         console.log('HouseNumber ID:', result.HouseNumber);
         console.log('Owner ID:', authState.ownerId);
+        console.log('mobileNumber:', authState.MobileNumber);
         navigation.replace('PropertyHouse',{ HouseNumber: result.HouseNumber ,  propertyID: result.propertyID});
       } else {
         throw new Error(result.error || 'Submission failed.');

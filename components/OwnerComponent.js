@@ -91,8 +91,9 @@ const OwnerComponent = () => {
     );
 
       if (response.status === 201) {
-        //Alert.alert('Success', 'Owner details submitted successfully.');
-        login(authState.token, authState.user, response.data.ownerID);
+        Alert.alert(mobileNumber + ' Owner Details saved successfully.');
+        console.log('mobile:', mobileNumber);
+        login(authState.token, authState.user, response.data.ownerID,mobileNumber);
         navigation.replace('Family', {ownerID: response.data.ownerID}); // Adjust the navigation target if needed
       }// else {
       //   Alert.alert('Success', response.status + response.data);

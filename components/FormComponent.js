@@ -130,6 +130,8 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         backgroundColor: '#f9f9f9',
         width: '60%', 
+        textAlign: 'center',
+       
     },
     button: {
         backgroundColor: '#4CAF50',

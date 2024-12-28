@@ -11,15 +11,18 @@ export const AuthProvider = ({ children }) => {
         token: null,
         user: null,
         ownerId: null,
+        MobileNumber: null,
         propertyID: null,
     });
 
-    const login = async (token, user, ownerId, propertyID) => {
-        setAuthState({ isAuthenticated: true, token, user ,ownerId ,propertyID});
+    const login = async (token, user, ownerId, MobileNumber, propertyID) => {
+        setAuthState({ isAuthenticated: true, token, user ,ownerId , MobileNumber,propertyID});
         await AsyncStorage.setItem('token', token);
         await AsyncStorage.setItem('user', JSON.stringify(user));
         await AsyncStorage.setItem('ownerId', ownerId);
+        await AsyncStorage.setItem('MobileNumber', MobileNumber);
         await AsyncStorage.setItem('propertyID', propertyID);
+        
      
       
     };
@@ -47,6 +50,7 @@ export const AuthProvider = ({ children }) => {
         await AsyncStorage.removeItem('user');
         await AsyncStorage.removeItem('ownerId');
         await AsyncStorage.removeItem('propertyID');
+        await AsyncStorage.removeItem('MobileNumber');
     };
 
      const loadToken = async () => {

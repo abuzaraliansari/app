@@ -47,6 +47,7 @@ const FamilyMember = () => {
   };
 
   const handleSaveFamilyMember = async () => {
+    console.log('mobile:', authState.MobileNumber);
     if (!FirstName || !age || !gender) {
       setMessage('All fields are required.');
       setIsError(true);
@@ -56,6 +57,7 @@ const FamilyMember = () => {
     setLoading(true);
 
     try {
+      console.log('mobile:', authState.MobileNumber);
       console.log('API_ENDPOINT:', API_ENDPOINT); 
       const response = await fetch(API_ENDPOINT, {
         method: 'POST',
@@ -98,7 +100,7 @@ const FamilyMember = () => {
   return (
     <View style={AppStyles.container}>
       <Text style={AppStyles.header}>Add Family Member</Text>
-      <Text style={AppStyles.label}>Welcome, {authState.user}</Text>
+      <Text style={AppStyles.label}>Welcome, {authState.MobileNumber}</Text>
 
       <Text style={AppStyles.label}>First Name</Text>
       <TextInput
