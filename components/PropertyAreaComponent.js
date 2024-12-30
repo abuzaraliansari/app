@@ -151,12 +151,16 @@ console.log('result:', result);
       </Picker>
 
       <Text style={AppStyles.label}>Colony</Text>
-      <TextInput
-        style={AppStyles.input}
-        placeholder="Enter Colony"
-        value={colony}
-        onChangeText={setColony}
-      />
+      <Picker
+        selectedValue={colony}
+        onValueChange={itemValue => setColony(itemValue)}
+        style={AppStyles.picker}>
+        <Picker.Item label="Select Colony" value="" />
+        <Picker.Item label="Colony 1" value="Colony 1" />
+        <Picker.Item label="Colony 2" value="Colony 2" />
+        <Picker.Item label="Colony 3" value="Colony 3" />
+        <Picker.Item label="Colony 4" value="Colony 4" />
+      </Picker>
 
       <Text style={AppStyles.label}>Galli Number</Text>
       <TextInput

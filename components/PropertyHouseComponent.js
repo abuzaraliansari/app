@@ -33,11 +33,11 @@ const PropertyHouseComponent = () => {
  // const propertyID = authState.propertyID;
   //console.log('PropertyID:', propertyID);
   const [propertyMode, setPropertyMode] = useState('');
-  const [propertyAge, setPropertyAge] = useState('');
-  const [roomCount, setRoomCount] = useState('');
-  const [floorCount, setFloorCount] = useState('');
-  const [shopCount, setShopCount] = useState('');
-  const [tenantCount, setTenantCount] = useState('');
+  const [propertyAge, setPropertyAge] = useState('0');
+  const [roomCount, setRoomCount] = useState('0');
+  const [floorCount, setFloorCount] = useState('0');
+  const [shopCount, setShopCount] = useState('0');
+  const [tenantCount, setTenantCount] = useState('0');
   const [waterHarvesting, setWaterHarvesting] = useState('No');
   const [submersible, setSubmersible] = useState('No');
   //const [Locality, setLocality] = useState('');
@@ -140,7 +140,7 @@ const PropertyHouseComponent = () => {
         onValueChange={(itemValue) => setHouseType(itemValue)}
       >
         <Picker.Item label="Select House Type" value="" />
-        <Picker.Item label="Kutcha" value="Kutcha" />
+        <Picker.Item label="Kuchha" value="Kuchha" />
         <Picker.Item label="Pucca" value="Pucca" />
       </Picker>
 
