@@ -16,6 +16,7 @@ import {AuthContext} from '../contexts/AuthContext';
 import Config from 'react-native-config';
 import Geolocation from '@react-native-community/geolocation';
 import {PermissionsAndroid, Platform} from 'react-native';
+import { FormDataContext } from '../contexts/FormDataContext';
 import axios from 'axios';
 import { run } from 'jest';
 
@@ -23,6 +24,7 @@ const  PropertyAreaComponent= () => {
  
 
   const {authState} = useContext(AuthContext);
+  const { updateFormData } = useContext(FormDataContext);
 
   const {login} = useContext(AuthContext);
   //login('test', 'test', 1, 1);
@@ -73,55 +75,64 @@ const  PropertyAreaComponent= () => {
   }, [zone]);
 
   
-
-
-  const validateAndSubmit = async () => {
-    try {
-
-     
- 
-
-      const propertyDetails = {
-        ownerID,
-               locality,
-       
-        galliNumber,
-        createdBy,
-        zone,
-        colony,
-      };
-      console.log('API_ENDPOINT:', API_ENDPOINT);
-      const response = await fetch(API_ENDPOINT, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json',
-          'header_gkey': authState.token,
-        },
-        body: JSON.stringify({PropertyDetails: propertyDetails}),
-      });
-
-      const result = await response.json();
-console.log('result:', result);
-      if (response.status === 201) {
-        //Alert.alert('Success', 'Property details submitted successfully.');
-        //Ownere id baad mein change ker dena
-        login(authState.token, authState.user, String(authState.ownerId), authState.MobileNumber, String(result.propertyID ));
-        console.log('Property ID:', result.propertyID);
-        console.log('HouseNumber ID:', result.HouseNumber);
-        console.log('Owner ID:', authState.ownerId);
-        console.log('mobileNumber:', authState.MobileNumber);
-        navigation.replace('PropertyHouse',{ HouseNumber: result.HouseNumber ,  propertyID: result.propertyID});
-      } else {
-        throw new Error(result.error || 'Submission failed.');
-      }
-    } catch (error) {
-      Alert.alert('Error', error.message);
+const handleNext = () => {
+    if (!galliNumber || !colony || !zone || !locality) {
+      Alert.alert('Error', 'Please fill all the required fields.');
+      return;
     }
+
+    updateFormData({
+      galliNumber,
+      colony,
+      zone,
+      locality,
+    });
+
+    navigation.navigate('PropertyHouse'); // Navigate to the next form
   };
+
+//   const validateAndSubmit = async () => {
+//     try {
+//       const propertyDetails = {
+//         ownerID,
+//         locality,
+//         galliNumber,
+//         createdBy,
+//         zone,
+//         colony,
+//       };
+//       console.log('API_ENDPOINT:', API_ENDPOINT);
+//       const response = await fetch(API_ENDPOINT, {
+//         method: 'POST',
+//         headers: {'Content-Type': 'application/json',
+//           'header_gkey': authState.token,
+//         },
+//         body: JSON.stringify({PropertyDetails: propertyDetails}),
+//       });
+
+//       const result = await response.json();
+// console.log('result:', result);
+//       if (response.status === 201) {
+//         //Alert.alert('Success', 'Property details submitted successfully.');
+//         //Ownere id baad mein change ker dena
+//         login(authState.token, authState.user, String(authState.ownerId), authState.MobileNumber, String(result.propertyID ));
+//         console.log('Property ID:', result.propertyID);
+//         console.log('HouseNumber ID:', result.HouseNumber);
+//         console.log('Owner ID:', authState.ownerId);
+//         console.log('mobileNumber:', authState.MobileNumber);
+//         navigation.navigate('PropertyHouse',{ HouseNumber: result.HouseNumber ,  propertyID: result.propertyID});
+//       } else {
+//         throw new Error(result.error || 'Submission failed.');
+//       }
+//     } catch (error) {
+//       Alert.alert('Error', error.message);
+//     }
+//   };
 
   return (
     <ScrollView style={AppStyles.container}>
       <Text style={AppStyles.header}>Property Details</Text>
-      <Text style={AppStyles.label}>Welcome, {authState.user}</Text>
+      {/* <Text style={AppStyles.label}>Welcome, {authState.user}</Text> */}
 
       <Text style={AppStyles.label}>Zone</Text>
       <Picker
@@ -135,12 +146,12 @@ console.log('result:', result);
         <Picker.Item label="Zone 4" value="4" />
       </Picker>
 
-      <Text style={AppStyles.label}>Locality</Text>
+      <Text style={AppStyles.label}>Locality Ward Sankhya</Text>
       <Picker
         selectedValue={locality}
         onValueChange={itemValue => setLocality(itemValue)}
         style={AppStyles.picker}>
-        <Picker.Item label="Select Locality" value="" />
+        <Picker.Item label="Select Locality Ward" value="" />
         {localities.map(loc => (
           <Picker.Item
             key={loc.LocalityID}         // Use LocalityID as the key
@@ -174,7 +185,7 @@ console.log('result:', result);
       
       <TouchableOpacity
         style={[AppStyles.button, AppStyles.probutton]}
-        onPress={validateAndSubmit}>
+        onPress={handleNext}>
         <Text style={AppStyles.buttonText}>Save and Next</Text>
       </TouchableOpacity>
     </ScrollView>

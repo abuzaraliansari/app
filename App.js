@@ -18,12 +18,14 @@ import FormScreen from './screens/FormScreen';
 import OwnerScreen from './screens/OwnerScreen';
 import FamilyScreen from './screens/FamilyScreen';
 import FormWithPhoto from './screens/FormWithPhoto';
+import TenantAgreement from './screens/TenantAgreement';
 //import PropertyScreen from './screens/PropertyScreen';
 import PropertyScreenArea from './screens/PropertyScreenArea';
 import PropertyScreenHouse from './screens/PropertyScreenHouse';
 import SpecialConsiderationScreen from './screens/SpecialConsiderationScreen';
 import LiveLocationScreen from './screens/LiveLocationScreen';
 import PropertyAreaComponent from './components/PropertyAreaComponent';
+import { FormDataProvider } from './contexts/FormDataContext';
 
 
 import dataScreen from './screens/dataScreen';
@@ -41,6 +43,7 @@ const Stack = createStackNavigator();
 
 const App = () => (
   <AppWrapper>
+    <FormDataProvider>
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
 
@@ -96,7 +99,7 @@ const App = () => (
         />
         <Stack.Screen
           name="PropertyHouse"
-          component={PropertyScreenHouse}
+          component={TenantAgreement}
           options={({navigation}) => ({
             title: 'PropertyHouse',
             headerRight: () => (
@@ -183,6 +186,7 @@ const App = () => (
         
       </Stack.Navigator>
     </NavigationContainer>
+    </FormDataProvider>
   </AppWrapper>
 );
 

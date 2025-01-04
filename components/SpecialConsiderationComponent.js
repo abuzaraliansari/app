@@ -73,7 +73,7 @@ console.log('Request Body:', specialConsiderationData);
       if (response.status === 201) {
         //setMessage('Special consideration added successfully.');
         setIsError(false);
-        navigation.replace('FormWithPhoto');
+        navigation.navigate('FormWithPhoto');
       } else {
         setMessage(data.message || 'Failed to add special consideration.');
         setIsError(true);
@@ -87,7 +87,7 @@ console.log('Request Body:', specialConsiderationData);
   return (
     <ScrollView contentContainerStyle={AppStyles.container}>
       <Text style={AppStyles.heading}>Special Consideration Details</Text>
-      <Text style={AppStyles.label}>Welcome, {authState.user}{} </Text>
+      {/* <Text style={AppStyles.label}>Welcome, {authState.user}{} </Text> */}
       <Text style={AppStyles.label}>Consideration Type *</Text>
       <View style={AppStyles.pickerContainer}>
         <Picker

@@ -141,7 +141,7 @@ const FormWithPhotoComponent = () => {
     }
   };
   const final = () => {
-    navigation.replace('dataScreen');
+    navigation.navigate('dataScreen');
   };
   // Add a new photo slot
   const addPhotoSlot = () => {

@@ -5,6 +5,7 @@ import {
   Button,
   Text,
   StyleSheet,
+  Alert,
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
@@ -13,11 +14,13 @@ import {AuthContext} from '../contexts/AuthContext';
 import {Picker} from '@react-native-picker/picker';
 import AppStyles from '../styles/AppStyles';
 import Config from 'react-native-config';
+import { FormDataContext } from '../contexts/FormDataContext';
 
 const FamilyMember = () => {
   const {authState} = useContext(AuthContext);
 
   const ownerID = authState.ownerId;
+  const [Relation, setRelation] = useState('');
   const [FirstName, setFirstName] = useState('');
   const [LastName, setLastName] = useState('');
   const [age, setAge] = useState('');
@@ -29,78 +32,164 @@ const FamilyMember = () => {
   const [message, setMessage] = useState('');
   const [isError, setIsError] = useState(false);
   const [loading, setLoading] = useState(false);
-  const API_ENDPOINT = `${Config.API_URL}/auth/family`;
+  const { updateFormData, formData } = useContext(FormDataContext);
+  //const API_ENDPOINT = `${Config.API_URL}/auth/family`;
 
   const navigation = useNavigation();
 
-  const familyMemberData = {
-    familyMember: {
-      ownerID,
+  // const familyMemberData = {
+  //   familyMember: {
+  //     ownerID,
+  //     Relation,
+  //     FirstName,
+  //     LastName,
+  //     age,
+  //     gender,
+  //     occupation,
+  //     createdBy,
+  //     IsActive,
+  //   },
+  // };
+
+  // const handleSaveFamilyMember = async () => {
+  //   console.log('mobile:', authState.MobileNumber);
+  //   if (!Relation || !FirstName || !age || !gender) {
+  //     setMessage('Relation, FirstName, Age, Gender fields are required.');
+  //     setIsError(true);
+  //     return;
+  //   }
+
+  //   setLoading(true);
+
+  //   try {
+  //     console.log('mobile:', authState.MobileNumber);
+  //     console.log('API_ENDPOINT:', API_ENDPOINT); 
+  //     const response = await fetch(API_ENDPOINT, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'header_gkey': authState.token,
+  //       },
+  //       body: JSON.stringify(familyMemberData),
+        
+  //     });
+
+  //     const data = await response.json();
+  //     //console.log('Response:', responseData);
+  //     setLoading(false);
+
+  //     if (response.status === 201) {
+  //       setMessage('Family member saved successfully.');
+  //       setIsError(false);
+  //       // Clear fields for next family member entry
+  //       setRelation('');
+  //       setFirstName('');
+  //       setLastName('');
+  //       setAge('');
+  //       setGender('');
+  //       setOccupation('');
+  //     } else {
+  //       setMessage(data.message || 'Failed to save family member.');
+  //       setIsError(true);
+  //     }
+  //   } catch (err) {
+  //     setMessage('Error: ' + err.message);
+  //     setIsError(true);
+  //     setLoading(false);
+  //   }
+  // };
+
+  // const handleAddFamilyMember = () => {
+
+
+    const handleAddFamilyMember = () => {
+      console.log('mobile:', authState.MobileNumber);
+    if (!Relation || !FirstName || !age || !gender) {
+      setMessage('Relation, FirstName, Age, Gender fields are required.');
+      setIsError(true);
+      return;
+    }
+  
+    const newFamilyMember  ={
+      Relation,
       FirstName,
       LastName,
       age,
       gender,
-      occupation,
-      createdBy,
-      IsActive,
-    },
+      occupation
+    };
+
+    updateFormData({
+      familyMembers: [...(formData.familyMembers || []), newFamilyMember],
+    });
+
+    setRelation('');
+    setFirstName('');
+    setLastName('');
+    setAge('');
+    setGender('');
+    setOccupation('');
+    setMessage('Family member added successfully.');
+    setIsError(false);
   };
 
-  const handleSaveFamilyMember = async () => {
-    console.log('mobile:', authState.MobileNumber);
-    if (!FirstName || !age || !gender) {
-      setMessage('All fields are required.');
-      setIsError(true);
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      console.log('mobile:', authState.MobileNumber);
-      console.log('API_ENDPOINT:', API_ENDPOINT); 
-      const response = await fetch(API_ENDPOINT, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'header_gkey': authState.token,
-        },
-        body: JSON.stringify(familyMemberData),
-        
-      });
-
-      const data = await response.json();
-      //console.log('Response:', responseData);
-      setLoading(false);
-
-      if (response.status === 201) {
-        setMessage('Family member saved successfully.');
-        setIsError(false);
-        // Clear fields for next family member entry
-        setFirstName('');
-        setLastName('');
-        setAge('');
-        setGender('');
-        setOccupation('');
-      } else {
-        setMessage(data.message || 'Failed to save family member.');
-        setIsError(true);
-      }
-    } catch (err) {
-      setMessage('Error: ' + err.message);
-      setIsError(true);
-      setLoading(false);
-    }
-  };
-
-  const handleAddFamilyMember = () => {
-    navigation.replace('PropertyArea');
+      // updateFormData((prevData) => ({
+      //   ...prevData,
+      //   familyMembers: [
+      //     ...prevData.familyMember, {
+      //           ownerID,
+      //           Relation,
+      //           FirstName,
+      //           LastName,
+      //           age,
+      //           gender,
+      //           occupation,
+      //           createdBy,
+      //           IsActive,
+      //         },
+      //   ],
+      // }));
+  
+      // // Clear fields for next family member entry
+      // setRelation('');
+      //   setFirstName('');
+      //   setLastName('');
+      //   setAge('');
+      //   setGender('');
+      //   setOccupation('');
+  
+      const handleNext = () => {
+       
+console.log('familyMembers:', formData.familyMembers);
+    navigation.navigate('PropertyArea');
   };
 
   return (
     <View style={AppStyles.container}>
       <Text style={AppStyles.header}>Add Family Member</Text>
-      <Text style={AppStyles.label}>Welcome, {authState.MobileNumber}</Text>
+      {/* <Text style={AppStyles.label}>Welcome, {authState.MobileNumber}</Text> */}
+
+
+      <Text style={AppStyles.label}>Relation *</Text>
+      <Picker
+        selectedValue={Relation}
+        style={AppStyles.picker}
+        onValueChange={itemValue => setRelation(itemValue)}>
+        <Picker.Item label="Select Relation" value="" />
+        <Picker.Item label="Father" value="Father" />
+        <Picker.Item label="Mother" value="Mother" />
+        <Picker.Item label="Wife" value="Wife" />
+        <Picker.Item label="Husband" value="Husband" />
+        <Picker.Item label="Son" value="Son" />
+        <Picker.Item label="Daughter" value="Daughter" />
+        <Picker.Item label="Brother" value="Brother" />
+        <Picker.Item label="Sister" value="Sister" />
+        <Picker.Item label="Grandfather" value="Grandfather" />
+        <Picker.Item label="Grandmother" value="Grandmother" />
+        <Picker.Item label="Uncle" value="Uncle" />
+        <Picker.Item label="Aunt" value="Aunt" />
+        <Picker.Item label="Other" value="Other" />
+      </Picker>
 
       <Text style={AppStyles.label}>First Name</Text>
       <TextInput
@@ -178,12 +267,12 @@ const FamilyMember = () => {
         <>
           <TouchableOpacity
             style={AppStyles.button}
-            onPress={handleSaveFamilyMember}>
+            onPress={handleAddFamilyMember}>
             <Text style={AppStyles.buttonText}>Save Member</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[AppStyles.button, AppStyles.nextButton]}
-            onPress={handleAddFamilyMember}>
+            onPress={handleNext}>
             <Text style={AppStyles.buttonText}>Next</Text>
           </TouchableOpacity>
         </>

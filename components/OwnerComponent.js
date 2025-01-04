@@ -15,6 +15,7 @@ import {AuthContext} from '../contexts/AuthContext';
 import axios from 'axios';
 import AppStyles from '../styles/AppStyles';
 import Config from 'react-native-config';
+import { FormDataContext } from '../contexts/FormDataContext';
 
 
 const OwnerComponent = () => {
@@ -24,6 +25,7 @@ const OwnerComponent = () => {
   const [firstName, setFirstName] = useState('');
   const [middleName, setMiddleName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [FatherName, setFatherName] = useState('');
   const [mobileNumber, setMobileNumber] = useState('');
   const [occupation, setOccupation] = useState('');
   const [age, setAge] = useState('');
@@ -39,19 +41,28 @@ const OwnerComponent = () => {
   const [NumberOfMembers, setNumberOfMembers] = useState('');
   const [Cast, setCast] = useState('');
   const [IsActive, setAIsActive] = useState('');
-  const navigation = useNavigation();
+
+  const { updateFormData } = useContext(FormDataContext);
+  const navigation = useNavigation();12341
   const API_ENDPOINT = `${Config.API_URL}/auth/owner`;
 
   console.log('token:', authState.token);
+  console.log(updateFormData);
   
-  const validateAndSubmit = async () => {
-    try {
+  const handleNext = () => {
+    // try {
       // Validation
 
       
-      if (!firstName || !lastName || !mobileNumber || !createdBy) {
+      if (!firstName || !lastName || !mobileNumber || !createdBy || !FatherName) {
         throw new Error(
-          'First Name, Last Name, Mobile Number, and Created By are required fields.',
+          'First Name, Last Name, Mobile Number, Created By and FatherName are required fields.',
+        );
+      }
+
+      if (!age || !gender || !religion || !category || !AdharNumber) {
+        throw new Error(
+          'Age, Gender, Religion, Category, AdharNumber and FatherName are required fields.',
         );
       }
 
@@ -59,10 +70,24 @@ const OwnerComponent = () => {
         throw new Error("Gender must be 'M', 'F', or 'O'.");
       }
 
-      const ownerDetails = {
+      const emailRegex = /^[^\s@]+@gmail\.com$/;
+      if (Email.trim() === '') {
+        // Do not throw an error if the input is empty
+      } else if (!emailRegex.test(Email)) {
+        throw new Error('Invalid email format. Email must end with gmail.com.');
+      }
+      const aadharRegex = /^\d{12}$/;
+if (!aadharRegex.test(AdharNumber)) {
+  throw new Error('Invalid Aadhar number. It must be 12 digits.');
+}
+
+
+      //const ownerDetails = {
+        const ownerDetails ={
         firstName,
         middleName,
         lastName,
+        FatherName,
         mobileNumber,
         occupation,
         age,
@@ -78,37 +103,73 @@ const OwnerComponent = () => {
         Cast,
         IsActive,
       };
+      updateFormData(ownerDetails);
+//console.log('ownerDetails:', ownerDetails);
+//console.log('response:', response.data);
+console.log('Temporary saved data:', ownerDetails);
+console.log('ownerDetails:', updateFormData);
+console.log(updateFormData);
+      navigation.navigate('Family'); // Navigate to the next form
+    };
 
-      console.log('API_ENDPOINT:', API_ENDPOINT); 
-      // Simulate API call with axios
-      const response = await axios.post(API_ENDPOINT, {
-        ownerDetails,
-      },
-      {
-        headers: {
-          header_gkey: authState.token, // Replace 'your-header-value' with the actual value
-        },}
-    );
+  //     console.log('API_ENDPOINT:', API_ENDPOINT); 
+  //     // Simulate API call with axios
+  //     const response = await axios.post(API_ENDPOINT, {
+  //       ownerDetails,
+  //     },
+  //     {
+  //       headers: {
+  //         header_gkey: authState.token, // Replace 'your-header-value' with the actual value
+  //       },}
+  //   );
 
-      if (response.status === 201) {
-     // Alert.alert(mobileNumber + ' Owner Details saved successfully.');
-        console.log('mobile:', mobileNumber);
-        login(authState.token, authState.user, response.data.ownerID,mobileNumber);
-        navigation.replace('Family', {ownerID: response.data.ownerID}); // Adjust the navigation target if needed
-      }// else {
-      //   Alert.alert('Success', response.status + response.data);
-      // }
-    } catch (error) {
-      Alert.alert('Validation Error', error.message);
-    }
-  };
+  //     if (response.status === 201) {
+  //    // Alert.alert(mobileNumber + ' Owner Details saved successfully.');
+  //       console.log('mobile:', mobileNumber);
+  //       login(authState.token, authState.user, response.data.ownerID,mobileNumber);
+  //       navigation.navigate('Family', {ownerID: response.data.ownerID}); // Adjust the navigation target if needed
+  //     } else if (response.status === 450) {
+  //       const errorMessage = response.data.error; // Extract the error message from the response
+  //       Alert.alert('Error', errorMessage); // Show the specific error message
+  //     }
+      
+  //     // else {
+  //     //   Alert.alert('Success', response.status + response.data);
+  //     // }
+
+  //   // } catch (error) {
+  //   //   console.log(error.message);
+  //   //   console.log(error.response.data);
+  //   //   //Alert.alert(error.response.data);
+  //   //   Alert.alert('Validation Error', error.message);
+  //   // }
+
+  //   }
+  //   catch (error) {
+  //     let errorMessage = '';
+  
+  //     // Check if the error has a response and response data
+  //     if (error.response && error.response.data) {
+  //         errorMessage = error.response.data.error || error.response.data.message || 'An error occurred';
+  //     } else {
+  //         errorMessage = error.message || 'An error occurred';
+  //         //Alert.alert('Validation Error', error.message);
+  //     }
+  
+  //     // Log the error for debugging
+  //     console.error('Error:', errorMessage);
+  
+  //     // Show the alert with the error message
+  //     Alert.alert('Error', errorMessage);
+  // }
+  // };
 
   return (
     <ScrollView contentContainerStyle={AppStyles.container}>
       
 
       <Text style={AppStyles.heading}>Owner Details</Text>
-      <Text style={AppStyles.label}>Welcome, {authState.user}!</Text>
+      {/* <Text style={AppStyles.label}>Welcome, {authState.user}!</Text> */}
 
       <Text style={AppStyles.label}>First Name *</Text>
       <TextInput
@@ -132,6 +193,14 @@ const OwnerComponent = () => {
         value={lastName}
         onChangeText={setLastName}
         placeholder="Enter last name"
+      />
+
+<Text style={AppStyles.label}>Father Name *</Text>
+      <TextInput
+        style={AppStyles.input}
+        value={FatherName}
+        onChangeText={setFatherName}
+        placeholder="Enter FatherName"
       />
 
       <Text style={AppStyles.label}>Mobile Number *</Text>
@@ -218,7 +287,7 @@ const OwnerComponent = () => {
         />
         <Picker.Item label="10,000,000+" value="10,000,000+" />
       </Picker>
-      <Text style={AppStyles.label}>Religion</Text>
+      <Text style={AppStyles.label}>Religion *</Text>
       <Picker
         selectedValue={religion}
         style={AppStyles.picker}
@@ -231,7 +300,7 @@ const OwnerComponent = () => {
         <Picker.Item label="Other" value="Other" />
       </Picker>
 
-      <Text style={AppStyles.label}>Category</Text>
+      <Text style={AppStyles.label}>Category *</Text>
       <Picker
         selectedValue={category}
         style={AppStyles.picker}
@@ -243,13 +312,13 @@ const OwnerComponent = () => {
         <Picker.Item label="ST" value="ST" />
         <Picker.Item label="Other" value="Other" />
       </Picker>
-      <Text style={AppStyles.label}>Caste</Text>
+      {/* <Text style={AppStyles.label}>Caste</Text>
       <TextInput
         style={AppStyles.input}
         value={Cast}
         onChangeText={setCast}
         placeholder="Enter Caste"
-      />
+      /> */}
       <Text style={AppStyles.label}>Number of Family Members</Text>
       <TextInput
         style={AppStyles.input}
@@ -272,10 +341,10 @@ const OwnerComponent = () => {
       <TextInput
         style={AppStyles.input}
         value={PanNumber}
-        onChangeText={setPanNumber}
+        onChangeText={(text) => setPanNumber(text.toUpperCase())}
         placeholder="Enter PanNumber"
       />
-      <Text style={AppStyles.label}>AdharNumber</Text>
+      <Text style={AppStyles.label}>AdharNumber *</Text>
       <TextInput
         style={AppStyles.input}
         value={AdharNumber}
@@ -284,7 +353,7 @@ const OwnerComponent = () => {
         placeholder="Enter AdharNumber"
       />
 
-      <TouchableOpacity style={AppStyles.button} onPress={validateAndSubmit}>
+      <TouchableOpacity style={AppStyles.button} onPress={handleNext}>
         <Text style={AppStyles.buttonText}>Save and Next</Text>
       </TouchableOpacity>
     </ScrollView>

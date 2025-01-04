@@ -1,5 +1,6 @@
 import React, { useState, useContext  } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
+import { FormDataContext } from '../contexts/FormDataContext';
 import { useNavigation } from '@react-navigation/native';
 import {
     View,
@@ -20,6 +21,7 @@ const LoginComponent = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const { login } = useContext(AuthContext); 
+    const { updateFormData } = useContext(FormDataContext);
     const navigation = useNavigation();
     const API_ENDPOINT = `${Config.API_URL}/auth/login`;
     const handleLogin = async () => {
@@ -38,6 +40,13 @@ console.log('response:', response.data);
             if (response.data.success) {
                 login(response.data.token, username,null, null);///-- need to reterive token
 
+                updateFormData({
+                    token: response.data.token,
+                    username,
+                  });
+console.log('response:', response.data);
+console.log('response:', updateFormData);
+console.log('response:', username);
                 //  Alert.alert('Success', 'Login successful!');
                 navigation.replace('Home');
             } else {
@@ -131,6 +140,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#f9f9f9',
         width: '60%', 
         textAlign: 'center',
+        justifyContent: 'center',
+        position: 'fixed',
        
     },
     button: {

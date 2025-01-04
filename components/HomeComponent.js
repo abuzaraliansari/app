@@ -11,11 +11,11 @@ const HomeComponent = () => {
   const navigation = useNavigation();
   const createdBy = authState.user;
   const navigateToAddProperty = () => {
-    navigation.replace('Owner'); // Replace with your actual screen name
+    navigation.navigate('Owner'); // Replace with your actual screen name
   };
 
   const navigateToFindAndUpdate = () => {
-    navigation.replace('FindAndUpdate'); // Replace with your actual screen name
+    navigation.navigate('FindAndUpdate'); // Replace with your actual screen name
   };
 
   const navigateToLogout = () => {
