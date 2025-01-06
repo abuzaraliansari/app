@@ -30,7 +30,6 @@ const  PropertyAreaComponent= () => {
   //login('test', 'test', 1, 1);
   const ownerID = authState.ownerId;
   
- // const [galliNumber, setGalliNumber, handlegalliNumberBlur] = useState('');
   const [galliNumber, setGalliNumber] = useState('');
   
   const createdBy = authState.user;
@@ -101,7 +100,7 @@ const handleNext = async () => {
       zone,
       locality,
     });
-    console.log('Temporary Data:', formData); // Log the temporary data to verify
+    console.log('Area:', formData); // Log the temporary data to verify
 console.log('newHouseNumber:', newHouseNumber);
     navigation.navigate('PropertyHouse',{ newHouseNumber }); // Navigate to the next form
 
@@ -114,43 +113,6 @@ console.log('newHouseNumber:', newHouseNumber);
 }
   };
 
-//   const validateAndSubmit = async () => {
-//     try {
-//       const propertyDetails = {
-//         ownerID,
-//         locality,
-//         galliNumber,
-//         createdBy,
-//         zone,
-//         colony,
-//       };
-//       console.log('API_ENDPOINT:', API_ENDPOINT);
-//       const response = await fetch(API_ENDPOINT, {
-//         method: 'POST',
-//         headers: {'Content-Type': 'application/json',
-//           'header_gkey': authState.token,
-//         },
-//         body: JSON.stringify({PropertyDetails: propertyDetails}),
-//       });
-
-//       const result = await response.json();
-// console.log('result:', result);
-//       if (response.status === 201) {
-//         //Alert.alert('Success', 'Property details submitted successfully.');
-//         //Ownere id baad mein change ker dena
-//         login(authState.token, authState.user, String(authState.ownerId), authState.MobileNumber, String(result.propertyID ));
-//         console.log('Property ID:', result.propertyID);
-//         console.log('HouseNumber ID:', result.HouseNumber);
-//         console.log('Owner ID:', authState.ownerId);
-//         console.log('mobileNumber:', authState.MobileNumber);
-//         navigation.navigate('PropertyHouse',{ HouseNumber: result.HouseNumber ,  propertyID: result.propertyID});
-//       } else {
-//         throw new Error(result.error || 'Submission failed.');
-//       }
-//     } catch (error) {
-//       Alert.alert('Error', error.message);
-//     }
-//   };
 
   return (
     <ScrollView style={AppStyles.container}>

@@ -64,7 +64,7 @@ const AppStyles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 4,
   },
-  probutton:{
+  probutton: {
     marginBottom: 40,
   },
   nextButton: {
@@ -73,7 +73,6 @@ const AppStyles = StyleSheet.create({
   logoutButton: {
     backgroundColor: 'red',
   },
-
   buttonText: {
     color: '#fff',
     fontSize: 20,
@@ -84,7 +83,6 @@ const AppStyles = StyleSheet.create({
     marginTop: 15,
     fontSize: 20,
   },
-
   title: {
     fontSize: 24,
     fontWeight: 'bold',
@@ -99,8 +97,223 @@ const AppStyles = StyleSheet.create({
     marginVertical: 5,
     lineHeight: 22,
   },
+  // New styles for LoginComponent
+  loginBackground: {
+    resizeMode: 'cover',
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    height: '100%',
+  },
+  loginContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    paddingTop: '10%',
+    paddingBottom: '10%',
+    minHeight: '100%',
+  },
+  loginTitle: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    color: '#333',
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+  loginSubtitle: {
+    fontSize: 20,
+    color: '#555',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  loginInput: {
+    height: 50,
+    borderColor: '#ddd',
+    borderWidth: 3,
+    borderRadius: 8,
+    paddingHorizontal: 15,
+    fontSize: 20,
+    marginBottom: 15,
+    backgroundColor: '#f9f9f9',
+    width: '60%',
+    textAlign: 'center',
+    justifyContent: 'center',
+  },
+  loginButton: {
+    backgroundColor: '#4CAF50',
+    paddingVertical: 10,
+    borderRadius: 15,
+    alignItems: 'center',
+    marginTop: 20,
+    padding: 10,
+  },
+  loginButtonText: {
+    color: '#fff',
+    fontSize: 25,
+    fontWeight: 'bold',
+  },
+  loginLogo: {
+    width: 100,
+    height: 100,
+    marginBottom: 20,
+  },
+  // New styles for CustomButton
+  customButton: {
+    marginHorizontal: 10,
+    backgroundColor: '#e0e0e0',
+    borderColor: 'blue',
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+  },
+  customButtonText: {
+    color: 'black',
+    fontSize: 18,
+  },
 
-  
+   // New styles for PropertyHouseComponent
+  radioGroup: {
+    flexDirection: 'row',
+    alignItems: 'left',
+  },
+  radioButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 20,
+  },
+  radioCircle: {
+    height: 20,
+    width: 20,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: '#007bff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 10,
+  },
+  selectedCircle: {
+    backgroundColor: '#007bff',
+  },
+  radioText: {
+    fontSize: 16,
+  },
+  tenantContainer: {
+    marginBottom: 16,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+  },
+  documentButton: {
+    backgroundColor: '#007BFF',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  photoButton: {
+    backgroundColor: '#28A745',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  photoButtonText: {
+    color: '#fff',
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
+  photoText: {
+    color: 'black',
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
+  photoPreview: {
+    width: 100,
+    height: 100,
+    resizeMode: 'cover',
+    borderRadius: 5,
+    marginTop: 5,
+  },
+    // New styles for TestComponent
+    headerCenter: {
+      fontSize: 24,
+      fontWeight: 'bold',
+      marginBottom: 16,
+      color: '#333',
+      textAlign: 'center',
+    },
+    photoContainer: {
+      marginBottom: 20,
+      backgroundColor: '#fff',
+      padding: 10,
+      borderRadius: 10,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.2,
+      shadowRadius: 2,
+      elevation: 2,
+      alignItems: 'center',
+    },
+    photoText: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      marginBottom: 8,
+      color: '#555',
+      textAlign: 'center',
+    },
+    captureButton: {
+      backgroundColor: '#007bff',
+      paddingVertical: 10,
+      paddingHorizontal: 20,
+      borderRadius: 5,
+      marginBottom: 8,
+    },
+    tenantContainer: {
+      marginBottom: 20,
+      backgroundColor: '#fff',
+      padding: 10,
+      borderRadius: 10,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.2,
+      shadowRadius: 2,
+      elevation: 2,
+    },
+    documentButton: {
+      backgroundColor: '#007BFF',
+      padding: 10,
+      borderRadius: 5,
+      marginTop: 10,
+      alignSelf: 'center',
+    },
+    photoButtonText: {
+      color: '#FFFFFF',
+      fontWeight: 'bold',
+      textAlign: 'center',
+      fontSize: 16,
+    },
+    photoText: {
+      marginTop: 10,
+      color: '#555',
+      fontSize: 18,
+      textAlign: 'center',
+    },
+    submitButton: {
+      backgroundColor: '#007BFF',
+      padding: 10,
+      borderRadius: 5,
+      marginTop: 20,
+      alignSelf: 'center',
+    },
+    photoPreview: {
+      width: 100,
+      height: 100,
+      marginTop: 10,
+    },
 });
 
 export default AppStyles;

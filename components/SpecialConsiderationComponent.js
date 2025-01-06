@@ -39,64 +39,13 @@ const SpecialConsiderationComponent = () => {
   console.log('Latitude:', latitude, longitude);
   const API_ENDPOINT = `${Config.API_URL}/auth/SpecialConsideration`;
 
-
-
-//   const handleAddSpecialConsideration = async () => {
-//     if (!considerationType) {
-//       setMessage('Consideration Type, and Created By are required.');
-//       setIsError(true);
-//       return;
-//     }
-
-//     const specialConsiderationData = {
-//       ownerID,
-//       propertyID,
-//       considerationType,
-//       description,
-//       latitude,
-//       longitude,
-//       createdBy,
-//       IsActive,
-//       modifiedBy,
-//     };
-// console.log('Request Body:', specialConsiderationData);
-//     try {
-//       console.log('API_ENDPOINT:', API_ENDPOINT); 
-//       const response = await fetch(
-//         API_ENDPOINT,
-//         {
-//           method: 'POST',
-//           headers: {
-//             'Content-Type': 'application/json',
-//             'header_gkey': authState.token,
-//           },
-//           body: JSON.stringify(specialConsiderationData),
-//         },
-//       );
-
-//       const data = await response.json();
-
-//       if (response.status === 201) {
-//         //setMessage('Special consideration added successfully.');
-//         setIsError(false);
-//         navigation.navigate('FormWithPhoto');
-//       } else {
-//         setMessage(data.message || 'Failed to add special consideration.');
-//         setIsError(true);
-//       }
-//     } catch (err) {
-//       setMessage('Error: ' + err.message);
-//       setIsError(true);
-//     }
-//   };
-
 useEffect(() => {
   // Update the context with the latitude and longitude
   updateFormData({ latitude, longitude });
 }, [latitude, longitude]);
 
 const handleNext = () => {
-  if (!considerationType || !description) {
+  if (!considerationType ) {
     Alert.alert('Error', 'Please fill in the special consideration.');
     return;
   }
@@ -109,8 +58,8 @@ const handleNext = () => {
   // Navigate to the next form
 
   console.log('Latitude:', latitude, longitude);
-  console.log('Temporary Data:', formData); 
-  navigation.navigate('FormWithPhoto');
+  console.log('special:', formData); 
+  navigation.navigate('dataScreen');
 };
 
 

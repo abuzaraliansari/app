@@ -36,21 +36,6 @@ const LiveLocationComponent = () => {
     fetchLocation(); // Fetch location on initial load
   }, []);
 
-  // useEffect(() => {
-  //   Geolocation.getCurrentPosition(
-  //     position => {
-  //       if (position.coords.accuracy <= 20) {
-  //         setLocation(position.coords);
-  //       } else {
-  //         setError('The location accuracy is insufficient. Please move to an open area.');
-  //       }
-  //     },
-  //     error => {
-  //       setError(error.message);
-  //     },
-  //     { enableHighAccuracy: true, timeout: 50000, maximumAge: 10000 }
-  //   );
-  // }, []);
   const addlocation = () => {
     if (location && location.accuracy <= 20) {
       console.log('Location submitted:', location);

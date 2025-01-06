@@ -1,12 +1,12 @@
-import React from 'react';
-import { View } from 'react-native';
-import TestComponent from '../components/test';
+// import React from 'react';
+// import { View } from 'react-native';
+// import TestComponent from '../components/test';
 
-const test = () => (
-  <View>
-    <TestComponent />
-  </View>
+// const test = () => (
+//   <View>
+//     <TestComponent />
+//   </View>
   
-);
+// );
 
-export default test;
+// export default test;

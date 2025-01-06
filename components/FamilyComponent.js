@@ -37,71 +37,6 @@ const FamilyMember = () => {
 
   const navigation = useNavigation();
 
-  // const familyMemberData = {
-  //   familyMember: {
-  //     ownerID,
-  //     Relation,
-  //     FirstName,
-  //     LastName,
-  //     age,
-  //     gender,
-  //     occupation,
-  //     createdBy,
-  //     IsActive,
-  //   },
-  // };
-
-  // const handleSaveFamilyMember = async () => {
-  //   console.log('mobile:', authState.MobileNumber);
-  //   if (!Relation || !FirstName || !age || !gender) {
-  //     setMessage('Relation, FirstName, Age, Gender fields are required.');
-  //     setIsError(true);
-  //     return;
-  //   }
-
-  //   setLoading(true);
-
-  //   try {
-  //     console.log('mobile:', authState.MobileNumber);
-  //     console.log('API_ENDPOINT:', API_ENDPOINT); 
-  //     const response = await fetch(API_ENDPOINT, {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         'header_gkey': authState.token,
-  //       },
-  //       body: JSON.stringify(familyMemberData),
-        
-  //     });
-
-  //     const data = await response.json();
-  //     //console.log('Response:', responseData);
-  //     setLoading(false);
-
-  //     if (response.status === 201) {
-  //       setMessage('Family member saved successfully.');
-  //       setIsError(false);
-  //       // Clear fields for next family member entry
-  //       setRelation('');
-  //       setFirstName('');
-  //       setLastName('');
-  //       setAge('');
-  //       setGender('');
-  //       setOccupation('');
-  //     } else {
-  //       setMessage(data.message || 'Failed to save family member.');
-  //       setIsError(true);
-  //     }
-  //   } catch (err) {
-  //     setMessage('Error: ' + err.message);
-  //     setIsError(true);
-  //     setLoading(false);
-  //   }
-  // };
-
-  // const handleAddFamilyMember = () => {
-
-
     const handleAddFamilyMember = () => {
       console.log('mobile:', authState.MobileNumber);
     if (!Relation || !FirstName || !age || !gender) {
@@ -116,7 +51,8 @@ const FamilyMember = () => {
       LastName,
       age,
       gender,
-      occupation
+      occupation,
+      createdBy
     };
 
     updateFormData({
@@ -133,30 +69,6 @@ const FamilyMember = () => {
     setIsError(false);
   };
 
-      // updateFormData((prevData) => ({
-      //   ...prevData,
-      //   familyMembers: [
-      //     ...prevData.familyMember, {
-      //           ownerID,
-      //           Relation,
-      //           FirstName,
-      //           LastName,
-      //           age,
-      //           gender,
-      //           occupation,
-      //           createdBy,
-      //           IsActive,
-      //         },
-      //   ],
-      // }));
-  
-      // // Clear fields for next family member entry
-      // setRelation('');
-      //   setFirstName('');
-      //   setLastName('');
-      //   setAge('');
-      //   setGender('');
-      //   setOccupation('');
   
       const handleNext = () => {
        
@@ -167,8 +79,6 @@ console.log('familyMembers:', formData.familyMembers);
   return (
     <View style={AppStyles.container}>
       <Text style={AppStyles.header}>Add Family Member</Text>
-      {/* <Text style={AppStyles.label}>Welcome, {authState.MobileNumber}</Text> */}
-
 
       <Text style={AppStyles.label}>Relation *</Text>
       <Picker

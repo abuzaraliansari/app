@@ -60,181 +60,6 @@ const TenantAgreementComponent = () => {
   const DOCUMENT_API_ENDPOINT = `${Config.API_URL}/auth/uploadDoc`;
   
 
-  // const handleNameChange = (index, value) => {
-  //   const updatedTenants = [...tenants];
-  //   updatedTenants[index] = {...updatedTenants[index], name: value};
-  //   setTenants(updatedTenants);
-  // };
-
-
-
-
-// const handleDocumentPick = async index => {
-//     try {
-//       const result = await DocumentPicker.pickSingle({
-//         type: [DocumentPicker.types.images, DocumentPicker.types.pdf],
-//       });
-//       if (result) {
-//         const { name: documentName, size: documentSize, type: documentType, uri: documentUri } = result;
-
-//         // Log the details of the selected document
-//         console.log("Document Name:", documentName);
-//         console.log("Document Size:", documentSize);
-//         console.log("Document Type:", documentType);
-//         console.log("Document URI:", documentUri);
-
-//         const updatedTenants = [...tenants];
-//         updatedTenants[index] = {
-//           ...updatedTenants[index],
-//           document: {
-//             documentName,
-//             documentPath: documentUri,
-//             documentSize,
-//             documentType,
-//           },
-//         };
-//         setTenants(updatedTenants);
-//       }
-//     } catch (err) {
-//       if (DocumentPicker.isCancel(err)) {
-//         Alert.alert('Cancelled', 'Document selection was cancelled.');
-//       } else {
-//         Alert.alert('Error', 'Document selection failed.');
-//       }
-//     }
-//   };
-
-//   const renderTenantFields = () => {
-//     return Array.from({length: parseInt(tenantCount, 10)}, (_, index) => (
-//       <View key={index} style={styles.tenantContainer}>
-//         <Text style={styles.label}>Tenant {index + 1} Name</Text>
-//         <TextInput
-//           style={styles.input}
-//           placeholder={`Enter Tenant ${index + 1} Name`}
-//           value={tenants[index]?.name || ''}
-//           onChangeText={value => handleNameChange(index, value)}
-//         />
-       
-//         <TouchableOpacity
-//           style={styles.documentButton}
-//           onPress={() => handleDocumentPick(index)}>
-//           <Text style={styles.photoButtonText}>
-//             {tenants[index]?.document ? 'Change Document' : 'Upload Document'}
-//           </Text>
-//         </TouchableOpacity>
-//         {tenants[index]?.document && (
-//           <Text style={styles.photoText}>
-//             {/* Document: {tenants[index].document.split('/').pop()} */}
-//             Document: {tenants[index].document.documentName}
-//           </Text>
-//         )}
-//       </View>
-//     ));
-//   };
-
-//   const validateAndSubmit = async () => {
-//     try {
-//       if (!propertyMode || !HouseType) {
-//         throw new Error('All fields are required.');
-//       }
-
-//       const propertyDetails = {
-//         propertyID,
-//         propertyMode,
-//         propertyAge,
-//         OpenArea,
-//         ConstructedArea,
-//         tenantDetails: tenants,
-//         roomCount,
-//         floorCount,
-//         shopCount,
-//         tenantCount,
-//         TenantYearlyRent,
-//         waterHarvesting,
-//         submersible,
-//         houseNumber,
-//         bankAccountNumber,
-//         consent,
-//         HouseType,
-//         IsActive,
-//       };
-//       console.log('Request Body:', propertyDetails);
-//       console.log('API_ENDPOINT:', API_ENDPOINT);
-// //console.log(DOCUMENT_API_ENDPOINT);
-//       //   const response = await axios.post(API_ENDPOINT, propertyDetails, {
-//       //     headers: { Authorization: `Bearer ${authState.token}` },
-//       //   });
-
-//       const response = await axios.post(API_ENDPOINT, propertyDetails, {
-//         headers: {
-//           header_gkey: authState.token, // Replace 'your-header-value' with the actual value
-//         },
-//       });
-
-// //       if (response.status === 200) {
-// //         //Alert.alert('Success', 'Property details submitted successfully.');
-// //         navigation.navigate('LiveLocation', {propertyID: propertyID});
-// //       } else {
-// //         throw new Error(result.error || 'Submission failed.');
-// //       }
-// //     } catch (error) {
-// //       Alert.alert('Error', error.message);
-// //     }
-// //   };
-
-// if (response.status === 200) {
-//     // Submit tenant documents
-//     const data = new FormData();
-//     // data.append('file', {
-//     //     uri: document.documentPath,
-//     //     name: document.documentName,
-//     //     type: document.documentType,
-//     //   });
-//     // formData.append('ownerID', ownerID);
-//     // formData.append('propertyID', propertyID);
-//     // formData.append('createdBy', createdBy);
-//     // formData.append('tenantDetails', JSON.stringify(tenants));
-// data.append('ownerID', ownerID);
-// data.append('propertyID', propertyID);
-// data.append('createdBy', createdBy);
-// data.append('tenantDetails', JSON.stringify(tenants));
-//     for (const tenant of tenants) {
-//       if (tenant.document) {
-//         data.append('file', {
-//           uri: tenant.document.documentPath,
-//           name: tenant.document.documentName,
-//           type: tenant.document.documentType,
-//         });
-//       }
-//     }
-
-//     // const documentResponse = await axios.post(DOCUMENT_API_ENDPOINT, formData, {
-//     //   headers: {
-//     //     'Content-Type': 'multipart/form-data',
-//     //     header_gkey: authState.token,
-//     //   },
-//     // });
-// console.log('FormData:', data);
-// const documentResponse = await axios.post(DOCUMENT_API_ENDPOINT, data, {
-//         headers: {
-//           'Content-Type': 'multipart/form-data',
-//           header_gkey: authState.token,
-//         },
-//       });
-//       console.log('Document Response:', documentResponse.data);
-//     if (documentResponse.status === 201) {
-//       navigation.navigate('LiveLocation', { propertyID: propertyID });
-//     } else {
-//       throw new Error(documentResponse.data.message || 'Document submission failed.');
-//     }
-//   } else {
-//     throw new Error(propertyResponse.data.error || 'Property submission failed.');
-//   }
-// } catch (error) {
-//   Alert.alert('Error', error.message);
-// }
-// };
-
 const handleNext = () => {
   if (!propertyMode || !HouseType) {
     Alert.alert('Error', 'Please fill all the required fields.');
@@ -260,7 +85,7 @@ const handleNext = () => {
     consent,
     IsActive,
   });
-console.log('Temporary Data:', formData); // Log the temporary data to verify
+console.log('house', formData); // Log the temporary data to verify
   navigation.navigate('LiveLocation'); // Navigate to the next form
 };
 
@@ -289,15 +114,6 @@ console.log('Temporary Data:', formData); // Log the temporary data to verify
         <Picker.Item label="Pakka" value="Pakka" />
         <Picker.Item label="Khali plot" value="Khali plot" />
       </Picker>
-
-      {/* <Text style={AppStyles.label}>Area In Sq Meter</Text>
-      <TextInput
-        style={AppStyles.input}
-        placeholder="Enter Area"
-        value={Area}
-        onChangeText={setArea}
-        keyboardType="numeric"
-      /> */}
 
       <Text style={AppStyles.label}>Open Area In Sq Feet</Text>
       <TextInput
@@ -354,35 +170,6 @@ console.log('Temporary Data:', formData); // Log the temporary data to verify
         <Picker.Item label="150+" value="150+" />
       </Picker>
 
-      {/* <Text style={AppStyles.label}>Room Count</Text>
-      <Picker
-        selectedValue={roomCount}
-        onValueChange={itemValue => setRoomCount(itemValue)}
-        style={AppStyles.picker}>
-        <Picker.Item label="Select Room Count" value="0" />
-        <Picker.Item label="0" value="0" />
-        <Picker.Item label="1" value="1" />
-        <Picker.Item label="2" value="2" />
-        <Picker.Item label="3" value="3" />
-        <Picker.Item label="4" value="4" />
-        <Picker.Item label="5" value="5" />
-        <Picker.Item label="6" value="6" />
-        <Picker.Item label="7" value="7" />
-        <Picker.Item label="8" value="8" />
-        <Picker.Item label="9" value="9" />
-        <Picker.Item label="10" value="10" />
-        <Picker.Item label="11" value="11" />
-        <Picker.Item label="12" value="12" />
-        <Picker.Item label="13" value="13" />
-        <Picker.Item label="14" value="14" />
-        <Picker.Item label="15" value="15" />
-        <Picker.Item label="16" value="16" />
-        <Picker.Item label="17" value="17" />
-        <Picker.Item label="18" value="18" />
-        <Picker.Item label="19" value="19" />
-        <Picker.Item label="20" value="20" />
-      </Picker> */}
-
       <Text style={AppStyles.label}>Floor Count</Text>
       <Picker
         selectedValue={floorCount}
@@ -394,9 +181,6 @@ console.log('Temporary Data:', formData); // Log the temporary data to verify
         <Picker.Item label="2" value="2" />
         <Picker.Item label="3" value="3" />
         <Picker.Item label="4" value="4" />
-        {/* <Picker.Item label="5" value="5" />
-        <Picker.Item label="6" value="6" />
-        <Picker.Item label="7" value="7" /> */}
       </Picker>
 
       <Text style={AppStyles.label}>Shop Count</Text>
@@ -431,18 +215,11 @@ console.log('Temporary Data:', formData); // Log the temporary data to verify
         placeholder="Enter Number of Tenants"
         value={tenantCount}
         onChangeText={setTenantCount}
-        // onChangeText={value => {
-        //   setTenantCount(value);
-        //   setTenants(Array.from({length: parseInt(value, 10)}).map(() => ({})));
-        // }}
         keyboardType="numeric"
       />
 
-      {/* {renderTenantFields()} */}
-
       <Text style={AppStyles.label}>Do You have Water Harvesting ?</Text>
       <View style={styles.radioGroup}>
-        {/* Radio Button for "Yes" */}
         <TouchableOpacity
           style={styles.radioButton}
           onPress={() => setWaterHarvesting('Yes')}>
@@ -454,8 +231,6 @@ console.log('Temporary Data:', formData); // Log the temporary data to verify
           />
           <Text style={styles.radioText}>Yes</Text>
         </TouchableOpacity>
-
-        {/* Radio Button for "No" */}
         <TouchableOpacity
           style={styles.radioButton}
           onPress={() => setWaterHarvesting('No')}>
@@ -472,7 +247,6 @@ console.log('Temporary Data:', formData); // Log the temporary data to verify
       <Text style={AppStyles.label}>Do You Have Submersible ?</Text>
 
       <View style={styles.radioGroup}>
-        {/* Radio Button for "Yes" */}
         <TouchableOpacity
           style={styles.radioButton}
           onPress={() => setSubmersible('Yes')}>
@@ -484,8 +258,6 @@ console.log('Temporary Data:', formData); // Log the temporary data to verify
           />
           <Text style={styles.radioText}>Yes</Text>
         </TouchableOpacity>
-
-        {/* Radio Button for "No" */}
         <TouchableOpacity
           style={styles.radioButton}
           onPress={() => setSubmersible('No')}>
@@ -498,19 +270,6 @@ console.log('Temporary Data:', formData); // Log the temporary data to verify
           <Text style={styles.radioText}>No</Text>
         </TouchableOpacity>
       </View>
-      {/* <Text style={AppStyles.label}>Live Location</Text>
-      <View style={AppStyles.liveLocationContainer}>
-        <LiveLocationComponent />
-      </View> */}
-
-      {/* <Text style={AppStyles.label}>Bank Account Number</Text>
-      <TextInput
-        style={AppStyles.input}
-        placeholder="Enter Bank Account Number"
-        value={bankAccountNumber}
-        onChangeText={setBankAccountNumber}
-        keyboardType="numeric"
-      /> */}
 
       <Text style={AppStyles.label}>
         Do you give consent to provide the above information?
@@ -528,8 +287,6 @@ console.log('Temporary Data:', formData); // Log the temporary data to verify
           />
           <Text style={styles.radioText}>yes</Text>
         </TouchableOpacity>
-
-        {/* Radio Button for "No" */}
         <TouchableOpacity
           style={styles.radioButton}
           onPress={() => setConsent('No')}>

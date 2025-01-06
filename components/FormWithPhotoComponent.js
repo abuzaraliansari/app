@@ -1,62 +1,68 @@
-import React, {useState , useContext} from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import {
   View,
   Text,
-  Button,
-  Image,
-  StyleSheet,
-  PermissionsAndroid,
+  TextInput,
+  TouchableOpacity,
   Alert,
   ScrollView,
-  TouchableOpacity,
+  Animated,
+  Image,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {launchCamera} from 'react-native-image-picker';
+import { launchCamera } from 'react-native-image-picker';
 import axios from 'axios';
 import Config from 'react-native-config';
-import RNFS from 'react-native-fs';
-import {useNavigation} from '@react-navigation/native';
-import {AuthContext} from '../contexts/AuthContext';
-import {Picker} from '@react-native-picker/picker';
+import { useNavigation } from '@react-navigation/native';
+import { AuthContext } from '../contexts/AuthContext';
+import DocumentPicker from 'react-native-document-picker';
+import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import AppStyles from '../styles/AppStyles';
 
 const FormData = require('form-data');
-const fs = require('fs');
+
 const FormWithPhotoComponent = () => {
-  const {authState} = useContext(AuthContext);
+  const { authState } = useContext(AuthContext);
   const [photos, setPhotos] = useState([]);
-  const [IsActive, setIsActive] = useState([]);
-  const ownerID = authState.ownerId; 
-  const propertyID = authState.propertyID;  
-  const createdBy = authState.user;
+  const [tenantDocuments, setTenantDocuments] = useState([]);
+  const [tenantNames, setTenantNames] = useState([]);
+  const [tenantCount, setTenantCount] = useState('');
+  const [ownerID, setOwnerID] = useState('');
+  const [propertyID, setPropertyID] = useState('');
+  const [createdBy, setCreatedBy] = useState('');
+  const [hasPermission, setHasPermission] = useState(false);
+  const [fadeAnim] = useState(new Animated.Value(0));
+  const [error, setError] = useState('');
+
   const token = authState.token;
   const navigation = useNavigation();
-  const API_ENDPOINT = `${Config.API_URL}/auth/upload`;
-  const titles = ['Owner Photo', 'Property Photo 1', 'Property Photo 2'];
-  // Function to request camera permission
-  const requestCameraPermission = async () => {
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.CAMERA,
-        {
-          title: 'Camera Permission',
-          message: 'We need access to your camera to take photos.',
-          buttonNeutral: 'Ask Me Later',
-          buttonNegative: 'Cancel',
-          buttonPositive: 'OK',
-        },
-      );
-      return granted === PermissionsAndroid.RESULTS.GRANTED;
-    } catch (err) {
-      console.warn(err);
-      return false;
-    }
-  };
 
-  // Function to capture a photo
-  const capturePhoto = async index => {
-    const hasPermission = await requestCameraPermission();
+  const API_ENDPOINT_PHOTO = `${Config.API_URL}/auth/uploadFileMetadata`;
+  const API_ENDPOINT_DOCUMENT = `${Config.API_URL}/auth/uploadTenantDocuments`;
 
+  useEffect(() => {
+    const checkPermission = async () => {
+      const result = await check(PERMISSIONS.ANDROID.CAMERA);
+      if (result === RESULTS.GRANTED) {
+        setHasPermission(true);
+      } else {
+        const requestResult = await request(PERMISSIONS.ANDROID.CAMERA);
+        setHasPermission(requestResult === RESULTS.GRANTED);
+      }
+    };
+
+    checkPermission();
+  }, []);
+
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 1000,
+      useNativeDriver: true,
+    }).start();
+  }, [fadeAnim]);
+
+  const handleTakePhoto = async (index) => {
     if (!hasPermission) {
       Alert.alert(
         'Permission Denied',
@@ -70,15 +76,15 @@ const FormWithPhotoComponent = () => {
         mediaType: 'photo',
         saveToPhotos: true,
       },
-      async response => {
+      async (response) => {
         if (response.didCancel) {
           console.log('User cancelled camera');
         } else if (response.errorCode) {
           console.log('Camera error:', response.errorMessage);
-        } else {
-          const {uri, fileName, fileSize} = response.assets[0];
+        } else if (response.assets && response.assets.length > 0) {
+          const { uri, fileName, fileSize } = response.assets[0];
           const updatedPhotos = [...photos];
-          updatedPhotos[index] = {uri, fileName, fileSize};
+          updatedPhotos[index] = { uri, fileName, fileSize };
           setPhotos(updatedPhotos);
 
           // Save photo details locally
@@ -93,211 +99,214 @@ const FormWithPhotoComponent = () => {
             Alert.alert('Error', 'Failed to save photo locally.');
           }
         }
-      },
+      }
     );
   };
 
-  // Function to call the API to store photo details
-  const uploadPhotoDetails = async photo => {
-    if (!photo || !photo.uri || !photo.fileName || !photo.fileSize) {
-      Alert.alert('Error', 'Invalid photo data.');
-      return;
-    }
-
+  const handleDocumentPick = async (index) => {
     try {
-      const data = new FormData();
-      data.append('file', {
-        uri: photo.uri,
-        name: photo.fileName,
-        type: 'image/jpeg',
+      const result = await DocumentPicker.pickSingle({
+        type: [DocumentPicker.types.images, DocumentPicker.types.pdf],
+      });
+      if (result) {
+        const { name: documentName, size: documentSize, type: documentType, uri: documentUri } = result;
+
+        // Log the details of the selected document
+        console.log("Document Name:", documentName);
+        console.log("Document Size:", documentSize);
+        console.log("Document Type:", documentType);
+        console.log("Document URI:", documentUri);
+
+        const updatedTenantDocuments = [...tenantDocuments];
+        updatedTenantDocuments[index] = {
+          documentName,
+          documentPath: documentUri,
+          documentSize,
+          documentType,
+        };
+        setTenantDocuments(updatedTenantDocuments);
+      }
+    } catch (err) {
+      if (DocumentPicker.isCancel(err)) {
+        Alert.alert('Cancelled', 'Document selection was cancelled.');
+      } else {
+        Alert.alert('Error', 'Document selection failed.');
+      }
+    }
+  };
+
+  const renderTenantFields = () => {
+    return Array.from({ length: parseInt(tenantCount, 10) }, (_, index) => (
+      <View key={index} style={AppStyles.tenantContainer}>
+        <Text style={AppStyles.label}>Tenant {index + 1} Name</Text>
+        <TextInput
+          style={AppStyles.input}
+          placeholder={`Enter Tenant ${index + 1} Name`}
+          value={tenantNames[index] || ''}
+          onChangeText={value => handleNameChange(index, value)}
+        />
+
+        <TouchableOpacity
+          style={AppStyles.documentButton}
+          onPress={() => handleDocumentPick(index)}>
+          <Text style={AppStyles.photoButtonText}>
+            {tenantDocuments[index] ? 'Change Document' : 'Upload Document'}
+          </Text>
+        </TouchableOpacity>
+        {tenantDocuments[index] && (
+          <Text style={AppStyles.photoText}>
+            Document: {tenantDocuments[index].documentName}
+          </Text>
+        )}
+      </View>
+    ));
+  };
+
+  const handleNameChange = (index, value) => {
+    const updatedTenantNames = [...tenantNames];
+    updatedTenantNames[index] = value;
+    setTenantNames(updatedTenantNames);
+  };
+
+  const validateAndSubmit = async () => {
+    try {
+      if (photos.length < 3 || photos.some(photo => !photo.uri)) {
+        throw new Error('Please take all three photos.');
+      }
+
+      if (tenantNames.length < tenantCount || tenantDocuments.length < tenantCount ||
+          tenantNames.some(name => !name) || tenantDocuments.some(doc => !doc.documentPath)) {
+        throw new Error('Please provide names and documents for all tenants.');
+      }
+
+      console.log('Auth Token:', token);
+      // Submit photo details
+      const photoData = new FormData();
+      photoData.append('OwnerID', ownerID);
+      photoData.append('PropertyID', propertyID);
+      photoData.append('CreatedBy', createdBy);
+      photos.forEach((photo, index) => {
+        photoData.append('files', {
+          uri: photo.uri,
+          name: photo.fileName,
+          type: 'image/jpeg', // Adjust the type based on your file type
+        });
       });
 
-      data.append('ownerID', ownerID);
-      data.append('propertyID', propertyID);
-      data.append('createdBy', createdBy);
-      console.log('FormData:', photo.uri);
-      const config = {
-        method: 'post',
-        maxBodyLength: Infinity,
-        url: API_ENDPOINT,
+      console.log('Photo FormData:', photoData);
+      try {
+        console.log('Sending photo data to API:', photoData);
+        const photoResponse = await axios.post(API_ENDPOINT_PHOTO, photoData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (photoResponse.status !== 200) {
+          throw new Error(photoResponse.data.message || 'Photo submission failed.');
+        }
+      } catch (error) {
+        Alert.alert('Error', error.message);
+        console.error('Photo upload error:', error.response ? error.response.data : error.message);
+        throw new Error('Photo upload failed.');
+      }
+
+      // Submit tenant documents
+      const documentData = new FormData();
+      documentData.append('OwnerID', ownerID);
+      documentData.append('PropertyID', propertyID);
+      documentData.append('CreatedBy', createdBy);
+      documentData.append('tenantNames', JSON.stringify(tenantNames));
+      tenantDocuments.forEach((document, index) => {
+        documentData.append('files', {
+          uri: document.documentPath,
+          name: document.documentName,
+          type: document.documentType,
+        });
+      });
+
+      console.log('Document FormData:', documentData);
+      const documentResponse = await axios.post(API_ENDPOINT_DOCUMENT, documentData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          'header_gkey': authState.token,
+          Authorization: `Bearer ${token}`,
         },
-        data: data,
-      };
-      console.log('FormData:', photo.uri);
-      console.log('createdBy:', createdBy);
-      const response = await axios.request(config);
-      
-      if (response.data.success) {
-        Alert.alert('Success', 'Photo details uploaded successfully!');
-      } else {
-        Alert.alert('Error', 'Failed to upload photo details.');
+      });
+
+      if (documentResponse.status !== 200) {
+        throw new Error(documentResponse.data.message || 'Document submission failed.');
       }
+
+      navigation.navigate('FormWithPhoto', { propertyID: propertyID });
     } catch (error) {
-      console.error('API error:', error);
-      Alert.alert('Error', 'Failed to upload photo details.');
+      Alert.alert('Error', error.message);
     }
-  };
-  const final = () => {
-    navigation.navigate('dataScreen');
-  };
-  // Add a new photo slot
-  const addPhotoSlot = () => {
-    if (photos.length >= 3) {
-      Alert.alert('Limit Reached', 'You can only add up to 3 photos.');
-      return;
-    }
-    setPhotos([...photos, null]);
   };
 
-  
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Capture and Upload Photos</Text>
-      {photos.map((photo, index) => (
-        <View key={index} style={styles.photoSection}>
-          <Text style={styles.label}>{titles[index]}</Text>
-          <View style={styles.photoContainer}>
-            {photo ? (
-              <Image source={{uri: photo.uri}} style={styles.photo} />
-            ) : (
-              <Text style={styles.placeholder}>No photo selected</Text>
+    <ScrollView style={AppStyles.container}>
+      <Animated.View style={{ opacity: fadeAnim }}>
+        <Text style={AppStyles.headerCenter}>Upload Photos</Text>
+        {['Owner Photo', 'Property Photo 1', 'Property Photo 2'].map((title, index) => (
+          <View key={index} style={AppStyles.photoContainer}>
+            <Text style={AppStyles.photoText}>{title}</Text>
+            <TouchableOpacity
+              style={AppStyles.captureButton}
+              onPress={() => handleTakePhoto(index)}
+            >
+              <Text style={AppStyles.buttonText}>{photos[index] ? 'Change Photo' : 'Take Photo'}</Text>
+            </TouchableOpacity>
+            {photos[index]?.uri && (
+              <Image source={{ uri: photos[index].uri }} style={AppStyles.photoPreview} />
             )}
           </View>
-          <TouchableOpacity
-            style={styles.captureButton}
-            onPress={() => capturePhoto(index)}>
-            <Text style={styles.buttonText}>Capture Photo</Text>
-          </TouchableOpacity>
-          {photo && (
-            <TouchableOpacity
-              style={styles.uploadButton}
-              onPress={() => uploadPhotoDetails(photo)}>
-              <Text style={styles.buttonText}>Upload</Text>
-            </TouchableOpacity>
-          )}
-        </View>
-      ))}
+        ))}
 
-       {photos.length < 3 && (
-      <TouchableOpacity style={styles.addButton} onPress={addPhotoSlot}>
-        <Text style={styles.addButtonText}>+ Add Photo</Text>
-      </TouchableOpacity>
-       )}
+        <Text style={AppStyles.header}>Tenant Details</Text>
+        <TextInput
+          style={AppStyles.input}
+          placeholder="Enter Tenant Count"
+          value={tenantCount}
+          onChangeText={setTenantCount}
+          keyboardType="numeric"
+        />
 
-      <TouchableOpacity
-            style={styles.nextButton}
-            onPress={() => {
-              // Check if all photo slots are filled
-              const allPhotosUploaded = photos.every(
-                photo => photo && photo.uri && photo.fileName && photo.fileSize,
-              );
-          
-              if (!allPhotosUploaded) {
-                Alert.alert(
-                  'Error',
-                  'Please upload all three photos (Owner Photo and two Property Photos) before proceeding.',
-                );
+        {renderTenantFields()}
 
-              } else if (!ownerID || !propertyID) {
-                Alert.alert('Error', 'Missing Owner ID or Property ID.');
-              } else {
-                final(); // Navigate to the next page if all photos are uploaded
-              }
-            }}>
-            <Text style={styles.buttonText}>Next</Text>
-          </TouchableOpacity>
+        <Text style={AppStyles.header}>Owner ID</Text>
+        <TextInput
+          style={AppStyles.input}
+          placeholder="Enter Owner ID"
+          value={ownerID}
+          onChangeText={setOwnerID}
+        />
+
+        <Text style={AppStyles.header}>Property ID</Text>
+        <TextInput
+          style={AppStyles.input}
+          placeholder="Enter Property ID"
+          value={propertyID}
+          onChangeText={setPropertyID}
+        />
+
+        <Text style={AppStyles.header}>Created By</Text>
+        <TextInput
+          style={AppStyles.input}
+          placeholder="Enter Created By"
+          value={createdBy}
+          onChangeText={setCreatedBy}
+        />
+
+        <TouchableOpacity
+          style={[AppStyles.submitButton, { marginBottom: 50 }]}
+          onPress={validateAndSubmit}
+        >
+          <Text style={AppStyles.buttonText}>Submit</Text>
+        </TouchableOpacity>
+      </Animated.View>
     </ScrollView>
-    
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 16,
-    backgroundColor: '#f9f9f9',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 16,
-    color: '#333',
-  },
-  photoSection: {
-    marginBottom: 24,
-    alignItems: 'center',
-  },
-  label: {
-    fontSize: 16,
-    marginBottom: 8,
-    color: '#555',
-  },
-  photoContainer: {
-    width: 200,
-    height: 200,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 10,
-    backgroundColor: '#fff',
-    overflow: 'hidden',
-    marginBottom: 8,
-  },
-  photo: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
-  },
-  placeholder: {
-    color: '#888',
-  },
-  captureButton: {
-    backgroundColor: '#007bff',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    marginBottom: 8,
-  },
-  uploadButton: {
-    backgroundColor: '#28a745',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  addButton: {
-    marginVertical: 16,
-    backgroundColor: '#17a2b8',
-    paddingVertical: 12,
-    paddingHorizontal: 30,
-    borderRadius: 5,
-  },
-  addButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-
-  nextButton: {
-    marginVertical: 16,
-    backgroundColor: '#28a745',
-    paddingVertical: 12,
-    paddingHorizontal: 30,
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-});
 
 export default FormWithPhotoComponent;

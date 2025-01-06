@@ -14,49 +14,126 @@ const DisplayAllDetails = () => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.content}>
-        <Text style={styles.header}>Stored Details</Text>
+        <Text style={styles.header}>check Details</Text>
 
         {/* Owner Information Section */}
         <View style={styles.section}>
           <Text style={styles.sectionHeader}>Owner Info</Text>
           <View style={styles.table}>
-            <View style={styles.row}>
-              <Text style={styles.cellHeader}>Owner ID</Text>
-              <Text style={styles.cell}>{formData.ownerID || 'N/A'}</Text>
+          <View style={styles.row}>
+              <Text style={styles.cellHeader}>First Name</Text>
+              <Text style={styles.cell}>{formData.firstName || 'N/A'}</Text>
             </View>
             <View style={styles.row}>
-              <Text style={styles.cellHeader}>Property ID</Text>
-              <Text style={styles.cell}>{formData.propertyID || 'N/A'}</Text>
+              <Text style={styles.cellHeader}>Middle Name</Text>
+              <Text style={styles.cell}>{formData.middleName || 'N/A'}</Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.cellHeader}>last Name</Text>
+              <Text style={styles.cell}>{formData.lastName || 'N/A'}</Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.cellHeader}>Father Name</Text>
+              <Text style={styles.cell}>{formData.FatherName || 'N/A'}</Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.cellHeader}>Mobile Number</Text>
+              <Text style={styles.cell}>{formData.mobileNumber || 'N/A'}</Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.cellHeader}>Occupation</Text>
+              <Text style={styles.cell}>{formData.occupation || 'N/A'}</Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.cellHeader}>Age</Text>
+              <Text style={styles.cell}>{formData.age || 'N/A'}</Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.cellHeader}>Gender</Text>
+              <Text style={styles.cell}>{formData.gender || 'N/A'}</Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.cellHeader}>Income</Text>
+              <Text style={styles.cell}>{formData.income || 'N/A'}</Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.cellHeader}>Religion</Text>
+              <Text style={styles.cell}>{formData.religion || 'N/A'}</Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.cellHeader}>Category</Text>
+              <Text style={styles.cell}>{formData.category || 'N/A'}</Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.cellHeader}>Email</Text>
+              <Text style={styles.cell}>{formData.Email || 'N/A'}</Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.cellHeader}>Pan Card Number</Text>
+              <Text style={styles.cell}>{formData.PanNumber || 'N/A'}</Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.cellHeader}>Adhar Card Number</Text>
+              <Text style={styles.cell}>{formData.AdharNumber || 'N/A'}</Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.cellHeader}>Number Of Members</Text>
+              <Text style={styles.cell}>{formData.NumberOfMembers || 'N/A'}</Text>
             </View>
             <View style={styles.row}>
               <Text style={styles.cellHeader}>Created By</Text>
               <Text style={styles.cell}>{formData.createdBy || 'N/A'}</Text>
             </View>
-            <View style={styles.row}>
-              <Text style={styles.cellHeader}>Created By</Text>
-              <Text style={styles.cell}>{formData.AdharNumber || 'N/A'}</Text>
-            </View>
+            {/* Add more owner details here */}
           </View>
         </View>
 
-        {/* Photos Section */}
-        <View style={styles.section}>
-          <Text style={styles.sectionHeader}>Photos</Text>
-          {formData.photos && formData.photos.length > 0 ? (
-            formData.photos.map((photo, index) => (
-              <View key={index} style={styles.photoContainer}>
-                <Text style={styles.photoText}>Photo {index + 1}</Text>
-                {photo.uri && (
-                  <Image source={{ uri: photo.uri }} style={styles.photoPreview} />
-                )}
-              </View>
-            ))
-          ) : (
-            <Text style={styles.noDataText}>No photos available</Text>
-          )}
-        </View>
+{/* Family Members Section */}
+<View style={styles.section}>
+  <Text style={styles.sectionHeader}>Family Members</Text>
+  <View style={styles.table}>
+    {formData.familyMembers && formData.familyMembers.length > 0 ? (
+      formData.familyMembers.map((member, index) => (
+        <View key={index} style={styles.tenantContainer}>
+  <Text style={styles.label}>Family Member {index + 1}</Text>
+  
+  <View style={styles.row}>
+    <Text style={styles.cellHeader}>First Name</Text>
+    <Text style={styles.cell}>{member.FirstName || 'N/A'}</Text>
+  </View>
+  <View style={styles.row}>
+    <Text style={styles.cellHeader}>Last Name</Text>
+    <Text style={styles.cell}>{member.LastName || 'N/A'}</Text>
+  </View>
+  <View style={styles.row}>
+    <Text style={styles.cellHeader}>Age</Text>
+    <Text style={styles.cell}>{member.age || 'N/A'}</Text>
+  </View>
+  <View style={styles.row}>
+    <Text style={styles.cellHeader}>Gender</Text>
+    <Text style={styles.cell}>{member.gender || 'N/A'}</Text>
+  </View>
+  <View style={styles.row}>
+    <Text style={styles.cellHeader}>Occupation</Text>
+    <Text style={styles.cell}>{member.occupation || 'N/A'}</Text>
+  </View>
+  <View style={styles.row}>
+    <Text style={styles.cellHeader}>Relation</Text>
+    <Text style={styles.cell}>{member.Relation || 'N/A'}</Text>
+  </View>
+  <View style={styles.row}>
+    <Text style={styles.cellHeader}>Created By</Text>
+    <Text style={styles.cell}>{member.createdBy || 'N/A'}</Text>
+  </View>
+</View>
+      ))
+    ) : (
+      <Text style={styles.noDataText}>No family members available</Text>
+    )}
+  </View>
+</View>
 
-        {/* Family Members Section */}
+        {/* Family Members Section
         <View style={styles.section}>
           <Text style={styles.sectionHeader}>Family Members</Text>
           <View style={styles.table}>
@@ -75,34 +152,124 @@ const DisplayAllDetails = () => {
               <Text style={styles.noDataText}>No family members available</Text>
             )}
           </View>
-        </View>
+        </View> */}
 
-        {/* Property Area Section */}
-        <View style={styles.section}>
-          <Text style={styles.sectionHeader}>Property Area</Text>
-          <View style={styles.table}>
-            {/* Add property area details here */}
-            <Text style={styles.noDataText}>No property area details available</Text>
-          </View>
-        </View>
+{/* Property Area Section */}
+<View style={styles.section}>
+  <Text style={styles.sectionHeader}>Property Area</Text>
+  <View style={styles.table}>
+    <View style={styles.row}>
+      <Text style={styles.cellHeader}>Galli Number</Text>
+      <Text style={styles.cell}>{formData.galliNumber || 'N/A'}</Text>
+    </View>
+    <View style={styles.row}>
+      <Text style={styles.cellHeader}>Colony</Text>
+      <Text style={styles.cell}>{formData.colony || 'N/A'}</Text>
+    </View>
+    <View style={styles.row}>
+      <Text style={styles.cellHeader}>Zone</Text>
+      <Text style={styles.cell}>{formData.zone || 'N/A'}</Text>
+    </View>
+    <View style={styles.row}>
+      <Text style={styles.cellHeader}>Locality</Text>
+      <Text style={styles.cell}>{formData.locality || 'N/A'}</Text>
+    </View>
+  </View>
+</View>
 
-        {/* Tenant Agreement Section */}
-        <View style={styles.section}>
-          <Text style={styles.sectionHeader}>Tenant Agreement</Text>
-          <View style={styles.table}>
-            {/* Add tenant agreement details here */}
-            <Text style={styles.noDataText}>No tenant agreement details available</Text>
-          </View>
-        </View>
+{/* Property House Section */}
+<View style={styles.section}>
+  <Text style={styles.sectionHeader}>Property House</Text>
+  <View style={styles.table}>
+    <View style={styles.row}>
+      <Text style={styles.cellHeader}>Property Mode</Text>
+      <Text style={styles.cell}>{formData.propertyMode || 'N/A'}</Text>
+    </View>
+    <View style={styles.row}>
+      <Text style={styles.cellHeader}>Property Age</Text>
+      <Text style={styles.cell}>{formData.propertyAge || 'N/A'}</Text>
+    </View>
+    <View style={styles.row}>
+      <Text style={styles.cellHeader}>Room Count</Text>
+      <Text style={styles.cell}>{formData.roomCount || 'N/A'}</Text>
+    </View>
+    <View style={styles.row}>
+      <Text style={styles.cellHeader}>Floor Count</Text>
+      <Text style={styles.cell}>{formData.floorCount || 'N/A'}</Text>
+    </View>
+    <View style={styles.row}>
+      <Text style={styles.cellHeader}>Shop Count</Text>
+      <Text style={styles.cell}>{formData.shopCount || 'N/A'}</Text>
+    </View>
+    <View style={styles.row}>
+      <Text style={styles.cellHeader}>Open Area</Text>
+      <Text style={styles.cell}>{formData.OpenArea || 'N/A'}</Text>
+    </View>
+    <View style={styles.row}>
+      <Text style={styles.cellHeader}>Constructed Area</Text>
+      <Text style={styles.cell}>{formData.ConstructedArea || 'N/A'}</Text>
+    </View>
+    <View style={styles.row}>
+      <Text style={styles.cellHeader}>Tenants</Text>
+      <Text style={styles.cell}>{formData.tenants ? formData.tenants.length : 'N/A'}</Text>
+    </View>
+    <View style={styles.row}>
+      <Text style={styles.cellHeader}>Tenant Count</Text>
+      <Text style={styles.cell}>{formData.tenantCount || 'N/A'}</Text>
+    </View>
+    <View style={styles.row}>
+      <Text style={styles.cellHeader}>Tenant Yearly Rent</Text>
+      <Text style={styles.cell}>{formData.TenantYearlyRent || 'N/A'}</Text>
+    </View>
+    <View style={styles.row}>
+      <Text style={styles.cellHeader}>House Type</Text>
+      <Text style={styles.cell}>{formData.HouseType || 'N/A'}</Text>
+    </View>
+    <View style={styles.row}>
+      <Text style={styles.cellHeader}>House Number</Text>
+      <Text style={styles.cell}>{formData.houseNumber || 'N/A'}</Text>
+    </View>
+    <View style={styles.row}>
+      <Text style={styles.cellHeader}>Water Harvesting</Text>
+      <Text style={styles.cell}>{formData.waterHarvesting || 'N/A'}</Text>
+    </View>
+    <View style={styles.row}>
+      <Text style={styles.cellHeader}>Submersible</Text>
+      <Text style={styles.cell}>{formData.submersible || 'N/A'}</Text>
+    </View>
+    {/* <View style={styles.row}>
+      <Text style={styles.cellHeader}>Bank Account Number</Text>
+      <Text style={styles.cell}>{formData.bankAccountNumber || 'N/A'}</Text>
+    </View> */}
+    <View style={styles.row}>
+      <Text style={styles.cellHeader}>Consent</Text>
+      <Text style={styles.cell}>{formData.consent || 'N/A'}</Text>
+    </View>
+  </View>
+</View>
 
         {/* Special Considerations Section */}
-        <View style={styles.section}>
-          <Text style={styles.sectionHeader}>Special Considerations</Text>
-          <View style={styles.table}>
-            {/* Add special considerations details here */}
-            <Text style={styles.noDataText}>No special considerations available</Text>
-          </View>
-        </View>
+<View style={styles.section}>
+  <Text style={styles.sectionHeader}>Special Considerations</Text>
+  <View style={styles.table}>
+    <View style={styles.row}>
+      <Text style={styles.cellHeader}>Consideration Type</Text>
+      <Text style={styles.cell}>{formData.considerationType || 'N/A'}</Text>
+    </View>
+    <View style={styles.row}>
+      <Text style={styles.cellHeader}>Description</Text>
+      <Text style={styles.cell}>{formData.description || 'N/A'}</Text>
+    </View>
+    <View style={styles.row}>
+      <Text style={styles.cellHeader}>Latitude</Text>
+      <Text style={styles.cell}>{formData.latitude || 'N/A'}</Text>
+    </View>
+    <View style={styles.row}>
+      <Text style={styles.cellHeader}>Longitude</Text>
+      <Text style={styles.cell}>{formData.longitude || 'N/A'}</Text>
+    </View>
+  </View>
+</View>
       </View>
     </ScrollView>
   );
@@ -118,10 +285,13 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   header: {
-    fontSize: 24,
+    fontSize: 35,
     fontWeight: 'bold',
     marginBottom: 16,
     color: '#333',
+    alignItems: 'center',
+    justifyContent: 'center',
+  
   },
   section: {
     marginBottom: 20,
@@ -130,7 +300,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   sectionHeader: {
-    fontSize: 20,
+    fontSize: 30,
     fontWeight: 'bold',
     marginBottom: 8,
   },
@@ -150,12 +320,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     width: '50%',
     paddingHorizontal: 8,
-    fontSize: 16,
+    fontSize: 19,
   },
   cell: {
     width: '50%',
     paddingHorizontal: 8,
-    fontSize: 16,
+    fontSize: 18,
   },
   photoContainer: {
     marginBottom: 20,
@@ -190,8 +360,10 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   label: {
-    fontSize: 16,
+    fontSize: 20,
+    fontWeight: 'bold',
     marginBottom: 8,
+    
     color: '#555',
   },
   noDataText: {
