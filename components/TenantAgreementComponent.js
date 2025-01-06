@@ -18,6 +18,8 @@ import axios from 'axios';
 import {launchCamera} from 'react-native-image-picker';
 import DocumentPicker from 'react-native-document-picker';
 
+import { FormDataContext } from '../contexts/FormDataContext';
+
 const TenantAgreementComponent = () => {
   //     console.log('owner', authState.ownerId);
   //   console.log('createdby', authState.user);
@@ -25,10 +27,12 @@ const TenantAgreementComponent = () => {
   //   console.log('3', authState.token)
 
   const {authState} = useContext(AuthContext);
+  const { updateFormData, formData } = useContext(FormDataContext);
+
   const navigation = useNavigation();
   const route = useRoute();
-  const {HouseNumber, propertyID} = route.params;
-  console.log('HouseNumber reterived:', HouseNumber);
+  const {newHouseNumber, propertyID} = route.params;
+  console.log('HouseNumber reterived:', newHouseNumber);
   const FormData = require('form-data');
   const ownerID = authState.ownerId;
   const [propertyMode, setPropertyMode] = useState('');
@@ -44,7 +48,7 @@ const TenantAgreementComponent = () => {
   const [HouseType, setHouseType] = useState('');
   const [waterHarvesting, setWaterHarvesting] = useState('No');
   const [submersible, setSubmersible] = useState('No');
-  const [houseNumber, SetHouseNumber] = useState(String(HouseNumber));
+  const [houseNumber, SetHouseNumber] = useState(String(newHouseNumber));
   const [bankAccountNumber, setBankAccountNumber] = useState('');
   const [consent, setConsent] = useState('Yes');
   const [IsActive, setIsActive] = useState('');
@@ -56,197 +60,208 @@ const TenantAgreementComponent = () => {
   const DOCUMENT_API_ENDPOINT = `${Config.API_URL}/auth/uploadDoc`;
   
 
-  const handleNameChange = (index, value) => {
-    const updatedTenants = [...tenants];
-    updatedTenants[index] = {...updatedTenants[index], name: value};
-    setTenants(updatedTenants);
-  };
+  // const handleNameChange = (index, value) => {
+  //   const updatedTenants = [...tenants];
+  //   updatedTenants[index] = {...updatedTenants[index], name: value};
+  //   setTenants(updatedTenants);
+  // };
 
-//   const handleDocumentPick = async index => {
+
+
+
+// const handleDocumentPick = async index => {
 //     try {
 //       const result = await DocumentPicker.pickSingle({
 //         type: [DocumentPicker.types.images, DocumentPicker.types.pdf],
 //       });
 //       if (result) {
 //         const { name: documentName, size: documentSize, type: documentType, uri: documentUri } = result;
-  
+
 //         // Log the details of the selected document
 //         console.log("Document Name:", documentName);
 //         console.log("Document Size:", documentSize);
 //         console.log("Document Type:", documentType);
 //         console.log("Document URI:", documentUri);
-  
+
 //         const updatedTenants = [...tenants];
 //         updatedTenants[index] = {
 //           ...updatedTenants[index],
-//           document: documentUri,
+//           document: {
+//             documentName,
+//             documentPath: documentUri,
+//             documentSize,
+//             documentType,
+//           },
 //         };
-
-
-const handleDocumentPick = async index => {
-    try {
-      const result = await DocumentPicker.pickSingle({
-        type: [DocumentPicker.types.images, DocumentPicker.types.pdf],
-      });
-      if (result) {
-        const { name: documentName, size: documentSize, type: documentType, uri: documentUri } = result;
-
-        // Log the details of the selected document
-        console.log("Document Name:", documentName);
-        console.log("Document Size:", documentSize);
-        console.log("Document Type:", documentType);
-        console.log("Document URI:", documentUri);
-
-        const updatedTenants = [...tenants];
-        updatedTenants[index] = {
-          ...updatedTenants[index],
-          document: {
-            documentName,
-            documentPath: documentUri,
-            documentSize,
-            documentType,
-          },
-        };
-        setTenants(updatedTenants);
-      }
-    } catch (err) {
-      if (DocumentPicker.isCancel(err)) {
-        Alert.alert('Cancelled', 'Document selection was cancelled.');
-      } else {
-        Alert.alert('Error', 'Document selection failed.');
-      }
-    }
-  };
-
-  const renderTenantFields = () => {
-    return Array.from({length: parseInt(tenantCount, 10)}, (_, index) => (
-      <View key={index} style={styles.tenantContainer}>
-        <Text style={styles.label}>Tenant {index + 1} Name</Text>
-        <TextInput
-          style={styles.input}
-          placeholder={`Enter Tenant ${index + 1} Name`}
-          value={tenants[index]?.name || ''}
-          onChangeText={value => handleNameChange(index, value)}
-        />
-       
-        <TouchableOpacity
-          style={styles.documentButton}
-          onPress={() => handleDocumentPick(index)}>
-          <Text style={styles.photoButtonText}>
-            {tenants[index]?.document ? 'Change Document' : 'Upload Document'}
-          </Text>
-        </TouchableOpacity>
-        {tenants[index]?.document && (
-          <Text style={styles.photoText}>
-            {/* Document: {tenants[index].document.split('/').pop()} */}
-            Document: {tenants[index].document.documentName}
-          </Text>
-        )}
-      </View>
-    ));
-  };
-
-  const validateAndSubmit = async () => {
-    try {
-      if (!propertyMode || !HouseType) {
-        throw new Error('All fields are required.');
-      }
-
-      const propertyDetails = {
-        propertyID,
-        propertyMode,
-        propertyAge,
-        OpenArea,
-        ConstructedArea,
-        tenantDetails: tenants,
-        roomCount,
-        floorCount,
-        shopCount,
-        tenantCount,
-        TenantYearlyRent,
-        waterHarvesting,
-        submersible,
-        houseNumber,
-        bankAccountNumber,
-        consent,
-        HouseType,
-        IsActive,
-      };
-      console.log('Request Body:', propertyDetails);
-      console.log('API_ENDPOINT:', API_ENDPOINT);
-//console.log(DOCUMENT_API_ENDPOINT);
-      //   const response = await axios.post(API_ENDPOINT, propertyDetails, {
-      //     headers: { Authorization: `Bearer ${authState.token}` },
-      //   });
-
-      const response = await axios.post(API_ENDPOINT, propertyDetails, {
-        headers: {
-          header_gkey: authState.token, // Replace 'your-header-value' with the actual value
-        },
-      });
-
-//       if (response.status === 200) {
-//         //Alert.alert('Success', 'Property details submitted successfully.');
-//         navigation.navigate('LiveLocation', {propertyID: propertyID});
-//       } else {
-//         throw new Error(result.error || 'Submission failed.');
+//         setTenants(updatedTenants);
 //       }
-//     } catch (error) {
-//       Alert.alert('Error', error.message);
+//     } catch (err) {
+//       if (DocumentPicker.isCancel(err)) {
+//         Alert.alert('Cancelled', 'Document selection was cancelled.');
+//       } else {
+//         Alert.alert('Error', 'Document selection failed.');
+//       }
 //     }
 //   };
 
-if (response.status === 200) {
-    // Submit tenant documents
-    const data = new FormData();
-    // data.append('file', {
-    //     uri: document.documentPath,
-    //     name: document.documentName,
-    //     type: document.documentType,
-    //   });
-    // formData.append('ownerID', ownerID);
-    // formData.append('propertyID', propertyID);
-    // formData.append('createdBy', createdBy);
-    // formData.append('tenantDetails', JSON.stringify(tenants));
-data.append('ownerID', ownerID);
-data.append('propertyID', propertyID);
-data.append('createdBy', createdBy);
-data.append('tenantDetails', JSON.stringify(tenants));
-    for (const tenant of tenants) {
-      if (tenant.document) {
-        data.append('file', {
-          uri: tenant.document.documentPath,
-          name: tenant.document.documentName,
-          type: tenant.document.documentType,
-        });
-      }
-    }
+//   const renderTenantFields = () => {
+//     return Array.from({length: parseInt(tenantCount, 10)}, (_, index) => (
+//       <View key={index} style={styles.tenantContainer}>
+//         <Text style={styles.label}>Tenant {index + 1} Name</Text>
+//         <TextInput
+//           style={styles.input}
+//           placeholder={`Enter Tenant ${index + 1} Name`}
+//           value={tenants[index]?.name || ''}
+//           onChangeText={value => handleNameChange(index, value)}
+//         />
+       
+//         <TouchableOpacity
+//           style={styles.documentButton}
+//           onPress={() => handleDocumentPick(index)}>
+//           <Text style={styles.photoButtonText}>
+//             {tenants[index]?.document ? 'Change Document' : 'Upload Document'}
+//           </Text>
+//         </TouchableOpacity>
+//         {tenants[index]?.document && (
+//           <Text style={styles.photoText}>
+//             {/* Document: {tenants[index].document.split('/').pop()} */}
+//             Document: {tenants[index].document.documentName}
+//           </Text>
+//         )}
+//       </View>
+//     ));
+//   };
 
-    // const documentResponse = await axios.post(DOCUMENT_API_ENDPOINT, formData, {
-    //   headers: {
-    //     'Content-Type': 'multipart/form-data',
-    //     header_gkey: authState.token,
-    //   },
-    // });
-console.log('FormData:', data);
-const documentResponse = await axios.post(DOCUMENT_API_ENDPOINT, data, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          header_gkey: authState.token,
-        },
-      });
-      console.log('Document Response:', documentResponse.data);
-    if (documentResponse.status === 201) {
-      navigation.navigate('LiveLocation', { propertyID: propertyID });
-    } else {
-      throw new Error(documentResponse.data.message || 'Document submission failed.');
-    }
-  } else {
-    throw new Error(propertyResponse.data.error || 'Property submission failed.');
+//   const validateAndSubmit = async () => {
+//     try {
+//       if (!propertyMode || !HouseType) {
+//         throw new Error('All fields are required.');
+//       }
+
+//       const propertyDetails = {
+//         propertyID,
+//         propertyMode,
+//         propertyAge,
+//         OpenArea,
+//         ConstructedArea,
+//         tenantDetails: tenants,
+//         roomCount,
+//         floorCount,
+//         shopCount,
+//         tenantCount,
+//         TenantYearlyRent,
+//         waterHarvesting,
+//         submersible,
+//         houseNumber,
+//         bankAccountNumber,
+//         consent,
+//         HouseType,
+//         IsActive,
+//       };
+//       console.log('Request Body:', propertyDetails);
+//       console.log('API_ENDPOINT:', API_ENDPOINT);
+// //console.log(DOCUMENT_API_ENDPOINT);
+//       //   const response = await axios.post(API_ENDPOINT, propertyDetails, {
+//       //     headers: { Authorization: `Bearer ${authState.token}` },
+//       //   });
+
+//       const response = await axios.post(API_ENDPOINT, propertyDetails, {
+//         headers: {
+//           header_gkey: authState.token, // Replace 'your-header-value' with the actual value
+//         },
+//       });
+
+// //       if (response.status === 200) {
+// //         //Alert.alert('Success', 'Property details submitted successfully.');
+// //         navigation.navigate('LiveLocation', {propertyID: propertyID});
+// //       } else {
+// //         throw new Error(result.error || 'Submission failed.');
+// //       }
+// //     } catch (error) {
+// //       Alert.alert('Error', error.message);
+// //     }
+// //   };
+
+// if (response.status === 200) {
+//     // Submit tenant documents
+//     const data = new FormData();
+//     // data.append('file', {
+//     //     uri: document.documentPath,
+//     //     name: document.documentName,
+//     //     type: document.documentType,
+//     //   });
+//     // formData.append('ownerID', ownerID);
+//     // formData.append('propertyID', propertyID);
+//     // formData.append('createdBy', createdBy);
+//     // formData.append('tenantDetails', JSON.stringify(tenants));
+// data.append('ownerID', ownerID);
+// data.append('propertyID', propertyID);
+// data.append('createdBy', createdBy);
+// data.append('tenantDetails', JSON.stringify(tenants));
+//     for (const tenant of tenants) {
+//       if (tenant.document) {
+//         data.append('file', {
+//           uri: tenant.document.documentPath,
+//           name: tenant.document.documentName,
+//           type: tenant.document.documentType,
+//         });
+//       }
+//     }
+
+//     // const documentResponse = await axios.post(DOCUMENT_API_ENDPOINT, formData, {
+//     //   headers: {
+//     //     'Content-Type': 'multipart/form-data',
+//     //     header_gkey: authState.token,
+//     //   },
+//     // });
+// console.log('FormData:', data);
+// const documentResponse = await axios.post(DOCUMENT_API_ENDPOINT, data, {
+//         headers: {
+//           'Content-Type': 'multipart/form-data',
+//           header_gkey: authState.token,
+//         },
+//       });
+//       console.log('Document Response:', documentResponse.data);
+//     if (documentResponse.status === 201) {
+//       navigation.navigate('LiveLocation', { propertyID: propertyID });
+//     } else {
+//       throw new Error(documentResponse.data.message || 'Document submission failed.');
+//     }
+//   } else {
+//     throw new Error(propertyResponse.data.error || 'Property submission failed.');
+//   }
+// } catch (error) {
+//   Alert.alert('Error', error.message);
+// }
+// };
+
+const handleNext = () => {
+  if (!propertyMode || !HouseType) {
+    Alert.alert('Error', 'Please fill all the required fields.');
+    return;
   }
-} catch (error) {
-  Alert.alert('Error', error.message);
-}
+
+  updateFormData({
+    propertyMode,
+    propertyAge,
+    roomCount,
+    floorCount,
+    shopCount,
+    OpenArea,
+    ConstructedArea,
+    tenants,
+    tenantCount,
+    TenantYearlyRent,
+    HouseType,
+    waterHarvesting,
+    submersible,
+    houseNumber,
+    bankAccountNumber,
+    consent,
+    IsActive,
+  });
+console.log('Temporary Data:', formData); // Log the temporary data to verify
+  navigation.navigate('LiveLocation'); // Navigate to the next form
 };
 
 
@@ -415,14 +430,15 @@ const documentResponse = await axios.post(DOCUMENT_API_ENDPOINT, data, {
         style={AppStyles.input}
         placeholder="Enter Number of Tenants"
         value={tenantCount}
-        onChangeText={value => {
-          setTenantCount(value);
-          setTenants(Array.from({length: parseInt(value, 10)}).map(() => ({})));
-        }}
+        onChangeText={setTenantCount}
+        // onChangeText={value => {
+        //   setTenantCount(value);
+        //   setTenants(Array.from({length: parseInt(value, 10)}).map(() => ({})));
+        // }}
         keyboardType="numeric"
       />
 
-      {renderTenantFields()}
+      {/* {renderTenantFields()} */}
 
       <Text style={AppStyles.label}>Do You have Water Harvesting ?</Text>
       <View style={styles.radioGroup}>
@@ -527,7 +543,7 @@ const documentResponse = await axios.post(DOCUMENT_API_ENDPOINT, data, {
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity style={AppStyles.button} onPress={validateAndSubmit}>
+      <TouchableOpacity style={AppStyles.button} onPress={handleNext}>
         <Text style={AppStyles.buttonText}>Submit</Text>
       </TouchableOpacity>
     </ScrollView>

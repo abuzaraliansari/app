@@ -26,9 +26,11 @@ import SpecialConsiderationScreen from './screens/SpecialConsiderationScreen';
 import LiveLocationScreen from './screens/LiveLocationScreen';
 import PropertyAreaComponent from './components/PropertyAreaComponent';
 import { FormDataProvider } from './contexts/FormDataContext';
+import TestComponent from './components/test';
 
 
 import dataScreen from './screens/dataScreen';
+import DisplayAllDetails from './screens/DisplayAllDetails';
 
 
 import FinalScreen from './screens/FinalScreen';
@@ -48,7 +50,7 @@ const App = () => (
       <Stack.Navigator initialRouteName="Login">
 
 
-        <Stack.Screen name="Login" component={FormScreen}/>
+        <Stack.Screen name="Login" component={TestComponent}/>
 
         
 <Stack.Screen name="Home" component={HomeScreen} /> 
@@ -70,7 +72,7 @@ const App = () => (
         />
         <Stack.Screen
           name="Family"
-          component={FamilyScreen}
+          component={DisplayAllDetails}
           options={({navigation}) => ({
             title: 'Family',
             headerRight: () => (
@@ -127,7 +129,7 @@ const App = () => (
         />
         <Stack.Screen
           name="FormWithPhoto"
-          component={FormWithPhoto}
+          component={TestComponent}
           options={({navigation}) => ({
             title: 'FormWithPhoto',
             headerRight: () => (

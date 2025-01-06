@@ -3,8 +3,13 @@ import { View, Text, Button, StyleSheet , TouchableOpacity } from 'react-native'
 import Geolocation from '@react-native-community/geolocation';
 import Config from 'react-native-config';
 import {useNavigation} from '@react-navigation/native';
+import { AuthContext } from '../contexts/AuthContext';
+import { FormDataContext } from '../contexts/FormDataContext';
 
 const LiveLocationComponent = () => {
+
+  //const { authState } = useContext(AuthContext);
+ // const { updateFormData, formData } = useContext(FormDataContext);
   const [location, setLocation] = useState(null);
   const [error, setError] = useState(null);
    const navigation = useNavigation();
@@ -15,6 +20,7 @@ const LiveLocationComponent = () => {
       position => {
         if (position.coords.accuracy <= 20) {
           setLocation(position.coords);
+         // updateFormData(position.coords);
         } else {
           setError('The location accuracy is insufficient. Please move to an open area.');
         }

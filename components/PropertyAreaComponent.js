@@ -24,14 +24,14 @@ const  PropertyAreaComponent= () => {
  
 
   const {authState} = useContext(AuthContext);
-  const { updateFormData } = useContext(FormDataContext);
+  const { updateFormData , formData } = useContext(FormDataContext);
 
   const {login} = useContext(AuthContext);
   //login('test', 'test', 1, 1);
   const ownerID = authState.ownerId;
   
-  const [galliNumber, setGalliNumber, handlegalliNumberBlur] = useState('');
- 
+ // const [galliNumber, setGalliNumber, handlegalliNumberBlur] = useState('');
+  const [galliNumber, setGalliNumber] = useState('');
   
   const createdBy = authState.user;
   const token = authState.token;
@@ -43,6 +43,7 @@ const  PropertyAreaComponent= () => {
   const [selectedLocality, setSelectedLocality] = useState('');
   const API_ENDPOINTloc = `${Config.API_URL}/auth/Locality`;
   const API_ENDPOINT = `${Config.API_URL}/auth/PropertyDetails1`;
+  const API_ENDPOINTnewHouseNumber = `${Config.API_URL}/auth/getMaxHouseNumber`;
 
 
   const zoneID = 4;
@@ -75,11 +76,24 @@ const  PropertyAreaComponent= () => {
   }, [zone]);
 
   
-const handleNext = () => {
+const handleNext = async () => {
     if (!galliNumber || !colony || !zone || !locality) {
       Alert.alert('Error', 'Please fill all the required fields.');
       return;
     }
+
+    try {
+      const response = await axios.post(API_ENDPOINTnewHouseNumber, {
+        zone,
+        galliNumber,
+      }, {
+        headers: {
+          header_gkey: authState.token,
+        },
+      });
+
+      if (response.status === 200 && response.data.success) {
+        const newHouseNumber = response.data.newHouseNumber;
 
     updateFormData({
       galliNumber,
@@ -87,8 +101,17 @@ const handleNext = () => {
       zone,
       locality,
     });
+    console.log('Temporary Data:', formData); // Log the temporary data to verify
+console.log('newHouseNumber:', newHouseNumber);
+    navigation.navigate('PropertyHouse',{ newHouseNumber }); // Navigate to the next form
 
-    navigation.navigate('PropertyHouse'); // Navigate to the next form
+  } else {
+    Alert.alert('Error', 'Failed to fetch new house number.');
+  }
+} catch (error) {
+  console.error('Error fetching new house number:', error);
+  Alert.alert('Error', 'Failed to fetch new house number.');
+}
   };
 
 //   const validateAndSubmit = async () => {

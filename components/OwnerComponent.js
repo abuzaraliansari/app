@@ -55,31 +55,31 @@ const OwnerComponent = () => {
 
       
       if (!firstName || !lastName || !mobileNumber || !createdBy || !FatherName) {
-        throw new Error(
-          'First Name, Last Name, Mobile Number, Created By and FatherName are required fields.',
-        );
+        Alert.alert('Error', 'First Name, Last Name, Mobile Number, Created By, and Father Name are required fields.');
+        return;
       }
-
+  
       if (!age || !gender || !religion || !category || !AdharNumber) {
-        throw new Error(
-          'Age, Gender, Religion, Category, AdharNumber and FatherName are required fields.',
-        );
+        Alert.alert('Error', 'Age, Gender, Religion, Category, and Aadhar Number are required fields.');
+        return;
       }
-
+  
       if (!['M', 'F', 'O'].includes(gender)) {
-        throw new Error("Gender must be 'M', 'F', or 'O'.");
+        Alert.alert('Error', "Gender must be 'M', 'F', or 'O'.");
+        return;
       }
-
+  
       const emailRegex = /^[^\s@]+@gmail\.com$/;
-      if (Email.trim() === '') {
-        // Do not throw an error if the input is empty
-      } else if (!emailRegex.test(Email)) {
-        throw new Error('Invalid email format. Email must end with gmail.com.');
+      if (Email.trim() !== '' && !emailRegex.test(Email)) {
+        Alert.alert('Error', 'Invalid email format. Email must end with gmail.com.');
+        return;
       }
+  
       const aadharRegex = /^\d{12}$/;
-if (!aadharRegex.test(AdharNumber)) {
-  throw new Error('Invalid Aadhar number. It must be 12 digits.');
-}
+      if (!aadharRegex.test(AdharNumber)) {
+        Alert.alert('Invalid Aadhar number', 'It must be 12 digits.');
+        return; // Prevent navigation if the Aadhar number is not valid
+      }
 
 
       //const ownerDetails = {
