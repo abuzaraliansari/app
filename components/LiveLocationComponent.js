@@ -40,7 +40,7 @@ const LiveLocationComponent = () => {
     if (location && location.accuracy <= 20) {
       console.log('Location submitted:', location);
       // Logic to handle submitting the location
-      navigation.navigate('SpecialConsideration', { latitude: location. latitude, longitude:location.longitude });
+      navigation.navigate('Consideration', { latitude: location. latitude, longitude:location.longitude });
     } else {
       setError('The location accuracy is insufficient. Please move to an open area.');
     }

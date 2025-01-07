@@ -154,10 +154,10 @@ const App = () => (
             })}
           />
           <Stack.Screen
-            name="SpecialConsideration"
+            name="Consideration"
             component={SpecialConsiderationScreen}
             options={({ navigation }) => ({
-              title: 'SpecialConsideration',
+              title: 'Consideration',
               headerLeft: () => (
                 <CustomButton
                   onPress={() => navigation.replace('Home')}

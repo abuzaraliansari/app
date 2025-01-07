@@ -42,7 +42,7 @@ const PropertyHouseComponent = () => {
   const [consent, setConsent] = useState('Yes');
   const [IsActive, setIsActive] = useState('');
   const token = authState.token;
-  const createdBy = authState.user;
+  const CreatedBy = authState.user;
 
   const API_ENDPOINT = `${Config.API_URL}/auth/PropertyDetailsHouse`;
   const DOCUMENT_API_ENDPOINT = `${Config.API_URL}/auth/uploadDoc`;
@@ -69,24 +69,31 @@ const PropertyHouseComponent = () => {
       return;
     }
 
-    updateFormData({
-      propertyMode,
+    const propertyDetails = {
+    propertyMode,
       propertyAge,
       roomCount,
       floorCount,
       shopCount,
-      OpenArea,
-      ConstructedArea,
-      tenants,
       tenantCount,
       TenantYearlyRent,
-      HouseType,
       waterHarvesting,
       submersible,
+      zone: formData.propertyDetails?.zone || '',
+      locality: formData.propertyDetails?.locality || '',
+      colony: formData.propertyDetails?.colony || '',
+      galliNumber: formData.propertyDetails?.galliNumber || '',
       houseNumber,
+      HouseType,
+      OpenArea,
+      ConstructedArea,
       bankAccountNumber,
       consent,
-      IsActive,
+      CreatedBy: CreatedBy,
+    };
+
+    updateFormData({
+      propertyDetails,
     });
     navigation.navigate('LiveLocation');
   };

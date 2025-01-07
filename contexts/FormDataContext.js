@@ -4,8 +4,10 @@ export const FormDataContext = createContext();
 
 export const FormDataProvider = ({ children }) => {
   const [formData, setFormData] = useState({
+    ownerDetails: {},
+    familyMembers: [],
     propertyDetails: {},
-    tenantDetails: [],
+    specialConsideration: {}
   });
 
   const updateFormData = (newData) => {

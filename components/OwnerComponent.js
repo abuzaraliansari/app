@@ -33,7 +33,7 @@ const OwnerComponent = () => {
   const [income, setIncome] = useState('');
   const [religion, setReligion] = useState('');
   const [category, setCategory] = useState('');
-  const createdBy = authState.user;
+  const CreatedBy = authState.user;
   const token = authState.token;
   const [Email, setEmail] = useState('');
   const [PanNumber, setPanNumber] = useState('');
@@ -50,7 +50,7 @@ const OwnerComponent = () => {
   
   const handleNext = () => {
    
-      if (!firstName || !lastName || !mobileNumber || !createdBy || !FatherName) {
+      if (!firstName || !lastName || !mobileNumber || !CreatedBy || !FatherName) {
         Alert.alert('Error', 'First Name, Last Name, Mobile Number, Created By, and Father Name are required fields.');
         return;
       }
@@ -91,15 +91,18 @@ const OwnerComponent = () => {
         income,
         religion,
         category,
-        createdBy,
+        CreatedBy,
         Email,
         PanNumber,
         AdharNumber,
         NumberOfMembers,
-        Cast,
-        IsActive,
       };
-      updateFormData(ownerDetails);
+      updateFormData({   
+        ownerDetails,
+        familyMembers: [],
+        propertyDetails: {},
+        specialConsideration: {}
+      });
 console.log('Temporary saved data:', ownerDetails);
       navigation.navigate('Family'); 
     };
@@ -251,7 +254,7 @@ console.log('Temporary saved data:', ownerDetails);
         <Picker.Item label="ST" value="ST" />
         <Picker.Item label="Other" value="Other" />
       </Picker>
-      
+
       <Text style={AppStyles.label}>Number of Family Members</Text>
       <TextInput
         style={AppStyles.input}

@@ -32,7 +32,7 @@ const  PropertyAreaComponent= () => {
   
   const [galliNumber, setGalliNumber] = useState('');
   
-  const createdBy = authState.user;
+  const CreatedBy = authState.user;
   const token = authState.token;
   const [colony, setColony] = useState('');
   const navigation = useNavigation();
@@ -93,13 +93,32 @@ const handleNext = async () => {
 
       if (response.status === 200 && response.data.success) {
         const newHouseNumber = response.data.newHouseNumber;
+        const propertyDetails = {
+          propertyMode: formData.propertyDetails?.propertyMode || '',
+          propertyAge: formData.propertyDetails?.propertyAge || '',
+          roomCount: formData.propertyDetails?.roomCount || '',
+          floorCount: formData.propertyDetails?.floorCount || '',
+          shopCount: formData.propertyDetails?.shopCount || '',
+          tenantCount: formData.propertyDetails?.tenantCount || '',
+          TenantYearlyRent: formData.propertyDetails?.TenantYearlyRent || '',
+          waterHarvesting: formData.propertyDetails?.waterHarvesting || '',
+          submersible: formData.propertyDetails?.submersible || '',
+          zone,
+          locality,
+          colony,
+          galliNumber,
+          houseNumber: newHouseNumber,
+          HouseType: formData.propertyDetails?.HouseType || '',
+          OpenArea: formData.propertyDetails?.OpenArea || '',
+          ConstructedArea: formData.propertyDetails?.ConstructedArea || '',
+          bankAccountNumber: formData.propertyDetails?.bankAccountNumber || '',
+          consent: formData.propertyDetails?.consent || '',
+          CreatedBy: authState.user,
+        };
 
-    updateFormData({
-      galliNumber,
-      colony,
-      zone,
-      locality,
-    });
+        updateFormData({
+          propertyDetails,
+        });
     console.log('Area:', formData); // Log the temporary data to verify
 console.log('newHouseNumber:', newHouseNumber);
     navigation.navigate('PropertyHouse',{ newHouseNumber }); // Navigate to the next form

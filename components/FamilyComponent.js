@@ -27,7 +27,7 @@ const FamilyMember = () => {
   const [gender, setGender] = useState('');
   const [occupation, setOccupation] = useState('');
   const [IsActive, setIsActive] = useState('');
-  const createdBy = authState.user;
+  const CreatedBy = authState.user;
   const token = authState.token;
   const [message, setMessage] = useState('');
   const [isError, setIsError] = useState(false);
@@ -52,7 +52,6 @@ const FamilyMember = () => {
       age,
       gender,
       occupation,
-      createdBy
     };
 
     updateFormData({

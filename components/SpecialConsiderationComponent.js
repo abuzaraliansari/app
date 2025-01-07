@@ -27,7 +27,7 @@ const SpecialConsiderationComponent = () => {
   const [considerationType, setConsiderationType] = useState('None');
   const [description, setDescription] = useState('');
   const token = authState.token;
-  const createdBy = authState.user;
+  const CreatedBy = authState.user;
   const [modifiedBy, setmodifiedBy] = useState('');
   const [IsActive, setIsActive] = useState('0');
   const [message, setMessage] = useState('');
@@ -39,28 +39,31 @@ const SpecialConsiderationComponent = () => {
   console.log('Latitude:', latitude, longitude);
   const API_ENDPOINT = `${Config.API_URL}/auth/SpecialConsideration`;
 
-useEffect(() => {
-  // Update the context with the latitude and longitude
-  updateFormData({ latitude, longitude });
-}, [latitude, longitude]);
 
-const handleNext = () => {
-  if (!considerationType ) {
-    Alert.alert('Error', 'Please fill in the special consideration.');
-    return;
-  }
+  useEffect(() => {
+    // Update the context with the latitude, longitude, considerationType, and description
+    updateFormData({
+      specialConsideration: {
+        ...formData.specialConsideration,
+        latitude,
+        longitude,
+        considerationType,
+        description,
+        CreatedBy: CreatedBy,
+      },
+    });
+  }, [latitude, longitude, considerationType, description]);
 
-  updateFormData({
-    considerationType,
-    description,
-  });
+  const handleNext = () => {
+    if (!considerationType) {
+      Alert.alert('Error', 'Please fill in the special consideration.');
+      return;
+    }
 
-  // Navigate to the next form
-
-  console.log('Latitude:', latitude, longitude);
-  console.log('special:', formData); 
-  navigation.navigate('dataScreen');
-};
+    console.log('Special Consideration:', formData.specialConsideration);
+    console.log('data:', formData); // Log the temporary data to verify
+    navigation.navigate('dataScreen');
+  };
 
 
   return (
