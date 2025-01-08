@@ -13,7 +13,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { launchCamera } from 'react-native-image-picker';
 import axios from 'axios';
 import Config from 'react-native-config';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+
 import { AuthContext } from '../contexts/AuthContext';
 import DocumentPicker from 'react-native-document-picker';
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
@@ -22,14 +23,15 @@ import AppStyles from '../styles/AppStyles';
 const FormData = require('form-data');
 
 const FormWithPhotoComponent = () => {
+
+  const route = useRoute();
+  const { ownerID, propertyID, tenantCount, CreatedBy } = route.params;
+
   const { authState } = useContext(AuthContext);
+  const {login} = useContext(AuthContext);
   const [photos, setPhotos] = useState([]);
   const [tenantDocuments, setTenantDocuments] = useState([]);
   const [tenantNames, setTenantNames] = useState([]);
-  const [tenantCount, setTenantCount] = useState('');
-  const [ownerID, setOwnerID] = useState('');
-  const [propertyID, setPropertyID] = useState('');
-  const [createdBy, setCreatedBy] = useState('');
   const [hasPermission, setHasPermission] = useState(false);
   const [fadeAnim] = useState(new Animated.Value(0));
   const [error, setError] = useState('');
@@ -40,6 +42,11 @@ const FormWithPhotoComponent = () => {
   const API_ENDPOINT_PHOTO = `${Config.API_URL}/auth/uploadFileMetadata`;
   const API_ENDPOINT_DOCUMENT = `${Config.API_URL}/auth/uploadTenantDocuments`;
 
+
+  console.log(ownerID);
+  console.log(propertyID);
+  console.log(tenantCount);
+  console.log(CreatedBy);
   useEffect(() => {
     const checkPermission = async () => {
       const result = await check(PERMISSIONS.ANDROID.CAMERA);
@@ -184,7 +191,7 @@ const FormWithPhotoComponent = () => {
       const photoData = new FormData();
       photoData.append('OwnerID', ownerID);
       photoData.append('PropertyID', propertyID);
-      photoData.append('CreatedBy', createdBy);
+      photoData.append('CreatedBy', CreatedBy);
       photos.forEach((photo, index) => {
         photoData.append('files', {
           uri: photo.uri,
@@ -216,7 +223,7 @@ const FormWithPhotoComponent = () => {
       const documentData = new FormData();
       documentData.append('OwnerID', ownerID);
       documentData.append('PropertyID', propertyID);
-      documentData.append('CreatedBy', createdBy);
+      documentData.append('CreatedBy', CreatedBy);
       documentData.append('tenantNames', JSON.stringify(tenantNames));
       tenantDocuments.forEach((document, index) => {
         documentData.append('files', {
@@ -268,8 +275,6 @@ const FormWithPhotoComponent = () => {
           style={AppStyles.input}
           placeholder="Enter Tenant Count"
           value={tenantCount}
-          onChangeText={setTenantCount}
-          keyboardType="numeric"
         />
 
         {renderTenantFields()}
@@ -279,7 +284,6 @@ const FormWithPhotoComponent = () => {
           style={AppStyles.input}
           placeholder="Enter Owner ID"
           value={ownerID}
-          onChangeText={setOwnerID}
         />
 
         <Text style={AppStyles.header}>Property ID</Text>
@@ -287,15 +291,13 @@ const FormWithPhotoComponent = () => {
           style={AppStyles.input}
           placeholder="Enter Property ID"
           value={propertyID}
-          onChangeText={setPropertyID}
         />
 
         <Text style={AppStyles.header}>Created By</Text>
         <TextInput
           style={AppStyles.input}
           placeholder="Enter Created By"
-          value={createdBy}
-          onChangeText={setCreatedBy}
+          value={CreatedBy}
         />
 
         <TouchableOpacity

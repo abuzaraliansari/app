@@ -39,12 +39,14 @@ const DisplayAllDetails = () => {
 
       const requestBody = {
         ownerDetails: formData.ownerDetails,
-        familyMembers: formData.familyMembers,
+        familyMembers: Array.isArray(formData.familyMembers)
+        ? formData.familyMembers
+        : [formData.familyMembers], 
         propertyDetails: formData.propertyDetails,
         specialConsideration: formData.specialConsideration,
       };
 
-      console.log('Request Body:', JSON.stringify(requestBody, null, 2));
+      console.log('Request Body:', JSON.stringify(requestBody));
 
       const response = await fetch(`${Config.API_URL}/auth/addOwnerProperty`, {
         method: 'POST',
@@ -56,23 +58,31 @@ const DisplayAllDetails = () => {
       });
 
       const data = await response.json();
+      console.log('API Response:', data);
+console.log(data.ownerID);
+console.log(data.propertyID);
 
-      if (!data.success) {
-        throw new Error(data.message);
-      }
 
-      // Navigate to the next page with the required data
-      navigation.navigate('FormWithPhoto', {
-        ownerID: data.ownerID,
-        propertyID: data.propertyID,
-        tenantCount: formData.propertyDetails.tenantCount,
-        CreatedBy: formData.ownerDetails.CreatedBy,
-      });
-    } catch (error) {
-      setErrorMessage(error.message);
-      Alert.alert('Error', error.message);
-    }
-  };
+if (response.ok && data.success) {
+  const { ownerID, propertyID } = data;
+  console.log('OwnerID:', ownerID); // Log the generated ownerID
+  console.log('PropertyID:', propertyID); // Log the generated propertyID
+
+  // Navigate to the next screen
+  navigation.navigate('FormWithPhoto', {
+    ownerID,
+    propertyID,
+    tenantCount: formData.propertyDetails.tenantCount,
+    CreatedBy: formData.ownerDetails.CreatedBy,
+  });
+} else {
+  throw new Error(data.message || 'Failed to create owner and property');
+}
+} catch (error) {
+setErrorMessage(error.message);
+Alert.alert('Error', error.message);
+}
+};
 
   return (
     <ScrollView style={AppStyles.displayContainer}>
@@ -145,7 +155,7 @@ const DisplayAllDetails = () => {
           </View>
           <View style={AppStyles.displayRow}>
             <Text style={AppStyles.displayCellHeader}>Created By</Text>
-            <Text style={AppStyles.displayCell}>{formData.ownerDetails.createdBy || 'N/A'}</Text>
+            <Text style={AppStyles.displayCell}>{formData.ownerDetails.CreatedBy || 'N/A'}</Text>
           </View>
         </View>
       </View>
@@ -184,7 +194,7 @@ const DisplayAllDetails = () => {
                 </View>
                 <View style={AppStyles.displayRow}>
                   <Text style={AppStyles.displayCellHeader}>Created By</Text>
-                  <Text style={AppStyles.displayCell}>{formData.ownerDetails.createdBy || 'N/A'}</Text>
+                  <Text style={AppStyles.displayCell}>{formData.ownerDetails.CreatedBy || 'N/A'}</Text>
                 </View>
               </View>
             ))
