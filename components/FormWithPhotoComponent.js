@@ -35,7 +35,10 @@ const FormWithPhotoComponent = () => {
   const [hasPermission, setHasPermission] = useState(false);
   const [fadeAnim] = useState(new Animated.Value(0));
   const [error, setError] = useState('');
-
+const [OwnerID, SetOwnerID] = useState(String(ownerID));
+const [PropertyID, SetpropertyID] = useState(String(propertyID));
+const [TenantCount, SettenantCount] = useState(String(tenantCount));
+const [createdBy, SetCreatedBy] = useState(String(CreatedBy));
   const token = authState.token;
   const navigation = useNavigation();
 
@@ -43,10 +46,10 @@ const FormWithPhotoComponent = () => {
   const API_ENDPOINT_DOCUMENT = `${Config.API_URL}/auth/uploadTenantDocuments`;
 
 
-  console.log(ownerID);
-  console.log(propertyID);
-  console.log(tenantCount);
-  console.log(CreatedBy);
+  console.log(OwnerID);
+  console.log(PropertyID);
+  console.log(TenantCount);
+  console.log(createdBy);
   useEffect(() => {
     const checkPermission = async () => {
       const result = await check(PERMISSIONS.ANDROID.CAMERA);
@@ -143,7 +146,7 @@ const FormWithPhotoComponent = () => {
   };
 
   const renderTenantFields = () => {
-    return Array.from({ length: parseInt(tenantCount, 10) }, (_, index) => (
+    return Array.from({ length: parseInt(TenantCount, 10) }, (_, index) => (
       <View key={index} style={AppStyles.tenantContainer}>
         <Text style={AppStyles.label}>Tenant {index + 1} Name</Text>
         <TextInput
@@ -181,7 +184,7 @@ const FormWithPhotoComponent = () => {
         throw new Error('Please take all three photos.');
       }
 
-      if (tenantNames.length < tenantCount || tenantDocuments.length < tenantCount ||
+      if (tenantNames.length < TenantCount || tenantDocuments.length < TenantCount ||
           tenantNames.some(name => !name) || tenantDocuments.some(doc => !doc.documentPath)) {
         throw new Error('Please provide names and documents for all tenants.');
       }
@@ -189,9 +192,9 @@ const FormWithPhotoComponent = () => {
       console.log('Auth Token:', token);
       // Submit photo details
       const photoData = new FormData();
-      photoData.append('OwnerID', ownerID);
-      photoData.append('PropertyID', propertyID);
-      photoData.append('CreatedBy', CreatedBy);
+      photoData.append('OwnerID', OwnerID);
+      photoData.append('PropertyID', PropertyID);
+      photoData.append('CreatedBy', createdBy);
       photos.forEach((photo, index) => {
         photoData.append('files', {
           uri: photo.uri,
@@ -221,9 +224,9 @@ const FormWithPhotoComponent = () => {
 
       // Submit tenant documents
       const documentData = new FormData();
-      documentData.append('OwnerID', ownerID);
-      documentData.append('PropertyID', propertyID);
-      documentData.append('CreatedBy', CreatedBy);
+      documentData.append('OwnerID', OwnerID);
+      documentData.append('PropertyID', PropertyID);
+      documentData.append('CreatedBy', createdBy);
       documentData.append('tenantNames', JSON.stringify(tenantNames));
       tenantDocuments.forEach((document, index) => {
         documentData.append('files', {
@@ -245,12 +248,14 @@ const FormWithPhotoComponent = () => {
         throw new Error(documentResponse.data.message || 'Document submission failed.');
       }
 
-      navigation.navigate('FormWithPhoto', { propertyID: propertyID });
+      navigation.navigate('Final', { propertyID: PropertyID });
     } catch (error) {
       Alert.alert('Error', error.message);
     }
   };
-
+console.log(OwnerID, PropertyID, TenantCount, createdBy);
+console.log("see",ownerID, propertyID, tenantCount, CreatedBy);
+console.log("hello", OwnerID);
   return (
     <ScrollView style={AppStyles.container}>
       <Animated.View style={{ opacity: fadeAnim }}>
@@ -274,31 +279,19 @@ const FormWithPhotoComponent = () => {
         <TextInput
           style={AppStyles.input}
           placeholder="Enter Tenant Count"
-          value={tenantCount}
+          defaultValue={TenantCount}
         />
 
         {renderTenantFields()}
 
-        <Text style={AppStyles.header}>Owner ID</Text>
-        <TextInput
-          style={AppStyles.input}
-          placeholder="Enter Owner ID"
-          value={ownerID}
-        />
+        {/* <Text style={AppStyles.header}>Owner ID</Text>
+<Text style={AppStyles.input}>{OwnerID}</Text>
 
-        <Text style={AppStyles.header}>Property ID</Text>
-        <TextInput
-          style={AppStyles.input}
-          placeholder="Enter Property ID"
-          value={propertyID}
-        />
+<Text style={AppStyles.header}>Property ID</Text>
+<Text style={AppStyles.input}>{PropertyID}</Text>
 
-        <Text style={AppStyles.header}>Created By</Text>
-        <TextInput
-          style={AppStyles.input}
-          placeholder="Enter Created By"
-          value={CreatedBy}
-        />
+<Text style={AppStyles.header}>Created By,{ownerID}</Text>
+<Text style={AppStyles.input}>{createdBy}</Text> */}
 
         <TouchableOpacity
           style={[AppStyles.submitButton, { marginBottom: 50 }]}

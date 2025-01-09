@@ -211,7 +211,7 @@ const PropertyDetailsComponent = () => {
 
       if (response.status === 201) {
         //Alert.alert('Success', 'Property details submitted successfully.');
-        navigation.navigate('SpecialConsideration');
+        navigation.replace('SpecialConsideration');
       } else {
         throw new Error(result.error || 'Submission failed.');
       }

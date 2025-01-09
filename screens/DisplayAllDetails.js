@@ -122,6 +122,10 @@ Alert.alert('Error', error.message);
             <Text style={AppStyles.displayCell}>{formData.ownerDetails.age || 'N/A'}</Text>
           </View>
           <View style={AppStyles.displayRow}>
+            <Text style={AppStyles.displayCellHeader}>DOB</Text>
+            <Text style={AppStyles.displayCell}>{formData.ownerDetails.DOB || 'N/A'}</Text>
+          </View>
+          <View style={AppStyles.displayRow}>
             <Text style={AppStyles.displayCellHeader}>Gender</Text>
             <Text style={AppStyles.displayCell}>{formData.ownerDetails.gender || 'N/A'}</Text>
           </View>
@@ -181,12 +185,20 @@ Alert.alert('Error', error.message);
                   <Text style={AppStyles.displayCell}>{member.age || 'N/A'}</Text>
                 </View>
                 <View style={AppStyles.displayRow}>
+                  <Text style={AppStyles.displayCellHeader}>DOB</Text>
+                  <Text style={AppStyles.displayCell}>{member.DOB || 'N/A'}</Text>
+                </View>
+                <View style={AppStyles.displayRow}>
                   <Text style={AppStyles.displayCellHeader}>Gender</Text>
                   <Text style={AppStyles.displayCell}>{member.gender || 'N/A'}</Text>
                 </View>
                 <View style={AppStyles.displayRow}>
                   <Text style={AppStyles.displayCellHeader}>Occupation</Text>
                   <Text style={AppStyles.displayCell}>{member.occupation || 'N/A'}</Text>
+                </View>
+                <View style={AppStyles.displayRow}>
+                  <Text style={AppStyles.displayCellHeader}>Income</Text>
+                  <Text style={AppStyles.displayCell}>{member.Income || 'N/A'}</Text>
                 </View>
                 <View style={AppStyles.displayRow}>
                   <Text style={AppStyles.displayCellHeader}>Relation</Text>
@@ -247,6 +259,10 @@ Alert.alert('Error', error.message);
             <View style={AppStyles.displayRow}>
               <Text style={AppStyles.displayCellHeader}>Shop Count</Text>
               <Text style={AppStyles.displayCell}>{formData.propertyDetails.shopCount || 'N/A'}</Text>
+            </View>
+            <View style={AppStyles.displayRow}>
+              <Text style={AppStyles.displayCellHeader}>Shop Area</Text>
+              <Text style={AppStyles.displayCell}>{formData.propertyDetails.ShopArea || 'N/A'}</Text>
             </View>
             <View style={AppStyles.displayRow}>
               <Text style={AppStyles.displayCellHeader}>Open Area</Text>

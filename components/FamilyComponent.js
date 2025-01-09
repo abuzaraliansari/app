@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, { useState, useContext } from 'react';
 import {
   View,
   TextInput,
@@ -8,16 +8,18 @@ import {
   Alert,
   TouchableOpacity,
   ActivityIndicator,
+  Platform,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {AuthContext} from '../contexts/AuthContext';
-import {Picker} from '@react-native-picker/picker';
+import { useNavigation } from '@react-navigation/native';
+import { AuthContext } from '../contexts/AuthContext';
+import { Picker } from '@react-native-picker/picker';
 import AppStyles from '../styles/AppStyles';
 import Config from 'react-native-config';
 import { FormDataContext } from '../contexts/FormDataContext';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const FamilyMember = () => {
-  const {authState} = useContext(AuthContext);
+  const { authState } = useContext(AuthContext);
 
   const ownerID = authState.ownerId;
   const [Relation, setRelation] = useState('');
@@ -26,6 +28,7 @@ const FamilyMember = () => {
   const [age, setAge] = useState('');
   const [gender, setGender] = useState('');
   const [occupation, setOccupation] = useState('');
+  const [Income, setIncome] = useState('');
   const [IsActive, setIsActive] = useState('');
   const CreatedBy = authState.user;
   const token = authState.token;
@@ -33,25 +36,29 @@ const FamilyMember = () => {
   const [isError, setIsError] = useState(false);
   const [loading, setLoading] = useState(false);
   const { updateFormData, formData } = useContext(FormDataContext);
-  //const API_ENDPOINT = `${Config.API_URL}/auth/family`;
+  const [DOB, setDob] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   const navigation = useNavigation();
 
-    const handleAddFamilyMember = () => {
-      console.log('mobile:', authState.MobileNumber);
+  const handleAddFamilyMember = () => {
+    console.log('mobile:', authState.MobileNumber);
     if (!Relation || !FirstName || !age || !gender) {
       setMessage('Relation, FirstName, Age, Gender fields are required.');
       setIsError(true);
       return;
     }
-  
-    const newFamilyMember  ={
+
+    const newFamilyMember = {
       Relation,
       FirstName,
       LastName,
       age,
+      DOB,
       gender,
       occupation,
+      Income,
+      DOB: DOB.toISOString().split('T')[0], // Format the date as YYYY-MM-DD
     };
 
     updateFormData({
@@ -64,15 +71,25 @@ const FamilyMember = () => {
     setAge('');
     setGender('');
     setOccupation('');
+    setIncome('');
+    setDob(new Date());
     setMessage('Family member added successfully.');
     setIsError(false);
   };
 
-  
-      const handleNext = () => {
-       
-console.log('familyMembers:', formData.familyMembers);
-    navigation.navigate('PropertyArea');
+  const handleNext = () => {
+    console.log('familyMembers:', formData.familyMembers);
+    navigation.replace('PropertyArea');
+  };
+
+  const showDatePickerHandler = () => {
+    setShowDatePicker(true);
+  };
+
+  const onDateChange = (event, selectedDate) => {
+    const currentDate = selectedDate || DOB;
+    setShowDatePicker(Platform.OS === 'ios');
+    setDob(currentDate);
   };
 
   return (
@@ -115,13 +132,14 @@ console.log('familyMembers:', formData.familyMembers);
         value={LastName}
         onChangeText={setLastName}
       />
+
       <Text style={AppStyles.label}>Age *</Text>
       <Picker
         selectedValue={age}
         style={AppStyles.picker}
         onValueChange={itemValue => setAge(itemValue)}>
         <Picker.Item label="Select age" value="" />
-        <Picker.Item label="01-05" value="05-10" />
+        <Picker.Item label="01-05" value="01-05" />
         <Picker.Item label="05-10" value="05-10" />
         <Picker.Item label="10-16" value="10-16" />
         <Picker.Item label="16-20" value="16-20" />
@@ -134,6 +152,20 @@ console.log('familyMembers:', formData.familyMembers);
         <Picker.Item label="81-90" value="81-90" />
         <Picker.Item label="90+" value="90+" />
       </Picker>
+
+      <Text style={AppStyles.label}>Date of Birth *</Text>
+      <TouchableOpacity onPress={showDatePickerHandler} style={AppStyles.input}>
+        <Text>{DOB.toDateString()}</Text>
+      </TouchableOpacity>
+      {showDatePicker && (
+        <DateTimePicker
+          value={DOB}
+          mode="date"
+          display="default"
+          onChange={onDateChange}
+        />
+      )}
+
       <Text style={AppStyles.label}>Gender *</Text>
       <Picker
         selectedValue={gender}
@@ -169,6 +201,29 @@ console.log('familyMembers:', formData.familyMembers);
         <Picker.Item label="Freelancer" value="Freelancer" />
         <Picker.Item label="Others" value="Others" />
       </Picker>
+      <Text style={AppStyles.label}>Income</Text>
+      <Picker
+        selectedValue={Income}
+        style={AppStyles.picker}
+        onValueChange={itemValue => setIncome(itemValue)}>
+        <Picker.Item label="Select an Income range" value="0" />
+        <Picker.Item label="Below 10,000" value="Below 10,000" />
+        <Picker.Item label="10,000 - 20,000" value="10,000 - 20,000" />
+        <Picker.Item label="20,001 - 30,000" value="20,001 - 30,000" />
+        <Picker.Item label="30,001 - 40,000" value="30,001 - 40,000" />
+        <Picker.Item label="40,001 - 50,000" value="40,001 - 50,000" />
+        <Picker.Item label="50,001 - 100,000" value="50,001 - 100,000" />
+        <Picker.Item label="100,001 - 200,000" value="100,001 - 200,000" />
+        <Picker.Item label="200,001 - 300,000" value="200,001 - 300,000" />
+        <Picker.Item label="300,001 - 400,000" value="300,001 - 400,000" />
+        <Picker.Item label="400,001 - 500,000" value="400,001 - 500,000" />
+        <Picker.Item label="500,001 - 1,000,000" value="500,001 - 1,000,000" />
+        <Picker.Item
+          label="1,000,001 - 10,000,000"
+          value="1,000,001 - 10,000,000"
+        />
+        <Picker.Item label="10,000,000+" value="10,000,000+" />
+        </Picker>
 
       {loading ? (
         <ActivityIndicator size="large" color="#1E90FF" />
@@ -188,7 +243,7 @@ console.log('familyMembers:', formData.familyMembers);
       )}
 
       {message && (
-        <Text style={[AppStyles.message, {color: isError ? 'red' : 'green'}]}>
+        <Text style={[AppStyles.message, { color: isError ? 'red' : 'green' }]}>
           {message}
         </Text>
       )}

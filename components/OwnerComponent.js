@@ -9,6 +9,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  Platform,
 } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import {AuthContext} from '../contexts/AuthContext';
@@ -16,6 +17,8 @@ import axios from 'axios';
 import AppStyles from '../styles/AppStyles';
 import Config from 'react-native-config';
 import { FormDataContext } from '../contexts/FormDataContext';
+import DateTimePicker from '@react-native-community/datetimepicker';
+
 
 
 const OwnerComponent = () => {
@@ -41,7 +44,10 @@ const OwnerComponent = () => {
   const [NumberOfMembers, setNumberOfMembers] = useState('');
   const [Cast, setCast] = useState('');
   const [IsActive, setAIsActive] = useState('');
+  const [DOB, setDob] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
+  
   const { updateFormData } = useContext(FormDataContext);
   const navigation = useNavigation();12341
   const API_ENDPOINT = `${Config.API_URL}/auth/owner`;
@@ -87,6 +93,7 @@ const OwnerComponent = () => {
         mobileNumber,
         occupation,
         age,
+        DOB,
         gender,
         income,
         religion,
@@ -96,6 +103,7 @@ const OwnerComponent = () => {
         PanNumber,
         AdharNumber,
         NumberOfMembers,
+        DOB: DOB.toISOString().split('T')[0], // Format the date as YYYY-MM-DD
       };
       updateFormData({   
         ownerDetails,
@@ -104,8 +112,18 @@ const OwnerComponent = () => {
         specialConsideration: {}
       });
 console.log('Temporary saved data:', ownerDetails);
-      navigation.navigate('Family'); 
+      navigation.replace('Family'); 
     };
+    const showDatePickerHandler = () => {
+      setShowDatePicker(true);
+    };
+  
+    const onDateChange = (event, selectedDate) => {
+      const currentDate = selectedDate || DOB;
+      setShowDatePicker(Platform.OS === 'ios');
+      setDob(currentDate);
+    };
+  
 
   return (
     <ScrollView contentContainerStyle={AppStyles.container}>
@@ -195,6 +213,19 @@ console.log('Temporary saved data:', ownerDetails);
         <Picker.Item label="81-90" value="81-90" />
         <Picker.Item label="90+" value="90+" />
       </Picker>
+      <Text style={AppStyles.label}>Date of Birth *</Text>
+      <TouchableOpacity onPress={showDatePickerHandler} style={AppStyles.input}>
+        <Text>{DOB.toDateString()}</Text>
+      </TouchableOpacity>
+      {showDatePicker && (
+        <DateTimePicker
+          value={DOB}
+          mode="date"
+          display="default"
+          onChange={onDateChange}
+        />
+      )}
+
       <Text style={AppStyles.label}>Gender *</Text>
       <Picker
         selectedValue={gender}
@@ -280,7 +311,7 @@ console.log('Temporary saved data:', ownerDetails);
         onChangeText={(text) => setPanNumber(text.toUpperCase())}
         placeholder="Enter PanNumber"
       />
-      <Text style={AppStyles.label}>AdharNumber *</Text>
+      <Text style={AppStyles.label}>Adhar Number *</Text>
       <TextInput
         style={AppStyles.input}
         value={AdharNumber}
@@ -288,6 +319,7 @@ console.log('Temporary saved data:', ownerDetails);
         keyboardType="numeric"
         placeholder="Enter AdharNumber"
       />
+      
 
       <TouchableOpacity style={AppStyles.button} onPress={handleNext}>
         <Text style={AppStyles.buttonText}>Save and Next</Text>

@@ -99,6 +99,7 @@ const handleNext = async () => {
           roomCount: formData.propertyDetails?.roomCount || '',
           floorCount: formData.propertyDetails?.floorCount || '',
           shopCount: formData.propertyDetails?.shopCount || '',
+          ShopArea: formData.propertyDetails?.ShopArea || '',
           tenantCount: formData.propertyDetails?.tenantCount || '',
           TenantYearlyRent: formData.propertyDetails?.TenantYearlyRent || '',
           waterHarvesting: formData.propertyDetails?.waterHarvesting || '',
@@ -121,7 +122,7 @@ const handleNext = async () => {
         });
     console.log('Area:', formData); // Log the temporary data to verify
 console.log('newHouseNumber:', newHouseNumber);
-    navigation.navigate('PropertyHouse',{ newHouseNumber }); // Navigate to the next form
+    navigation.replace('PropertyHouse',{ newHouseNumber }); // Navigate to the next form
 
   } else {
     Alert.alert('Error', 'Failed to fetch new house number.');

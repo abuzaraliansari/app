@@ -29,6 +29,7 @@ const PropertyHouseComponent = () => {
   const [roomCount, setRoomCount] = useState('0');
   const [floorCount, setFloorCount] = useState('0');
   const [shopCount, setShopCount] = useState('0');
+  const [ShopArea, setShopArea] = useState('0');
   const [OpenArea, setOpenArea] = useState('');
   const [ConstructedArea, setConstructedArea] = useState('');
   const [tenants, setTenants] = useState([]);
@@ -75,6 +76,7 @@ const PropertyHouseComponent = () => {
       roomCount,
       floorCount,
       shopCount,
+      ShopArea,
       tenantCount,
       TenantYearlyRent,
       waterHarvesting,
@@ -95,7 +97,7 @@ const PropertyHouseComponent = () => {
     updateFormData({
       propertyDetails,
     });
-    navigation.navigate('LiveLocation');
+    navigation.replace('LiveLocation');
   };
 
   return (
@@ -119,6 +121,7 @@ const PropertyHouseComponent = () => {
         <Picker.Item label="Kuchha" value="Kuchha" />
         <Picker.Item label="Pakka" value="Pakka" />
         <Picker.Item label="Khali plot" value="Khali plot" />
+        <Picker.Item label="Semi-pakka" value="Semi-pakka" />
       </Picker>
 
       <Text style={AppStyles.label}>Open Area In Sq Feet</Text>
@@ -148,6 +151,7 @@ const PropertyHouseComponent = () => {
           <Picker.Item label="Select Property Mode" value="" />
           <Picker.Item label="Residential" value="Residential" />
           <Picker.Item label="Commercial" value="Commercial" />
+          <Picker.Item label="both Commercial & Residential" value="both Commercial & Residential" />
         </Picker>
       </View>
 
@@ -211,6 +215,15 @@ const PropertyHouseComponent = () => {
         <Picker.Item label="9" value="9" />
         <Picker.Item label="10" value="10" />
       </Picker>
+
+      <Text style={AppStyles.label}>Total Shop Area In Sq Feet</Text>
+      <TextInput
+        style={AppStyles.input}
+        placeholder="Enter Open Shop Area"
+        value={ShopArea}
+        onChangeText={setShopArea}
+        keyboardType="numeric"
+      />
 
       <Text style={AppStyles.label}>Tenant Yearly Rent</Text>
       <TextInput
