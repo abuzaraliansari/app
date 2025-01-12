@@ -11,7 +11,7 @@ const HomeComponent = () => {
   const navigation = useNavigation();
   const createdBy = authState.user;
   const navigateToAddProperty = () => {
-    navigation.replace('Owner'); // Replace with your actual screen name
+    navigation.navigate('Owner', { source: 'Home' }); // Pass the source parameter
   };
 
   const navigateToFindAndUpdate = () => {

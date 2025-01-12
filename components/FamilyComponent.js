@@ -10,7 +10,7 @@ import {
   ActivityIndicator,
   Platform,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation ,useRoute } from '@react-navigation/native';
 import { AuthContext } from '../contexts/AuthContext';
 import { Picker } from '@react-native-picker/picker';
 import AppStyles from '../styles/AppStyles';
@@ -20,7 +20,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 
 const FamilyMember = () => {
   const { authState } = useContext(AuthContext);
-
+  const route = useRoute();
   const ownerID = authState.ownerId;
   const [Relation, setRelation] = useState('');
   const [FirstName, setFirstName] = useState('');
@@ -36,15 +36,25 @@ const FamilyMember = () => {
   const [isError, setIsError] = useState(false);
   const [loading, setLoading] = useState(false);
   const { updateFormData, formData } = useContext(FormDataContext);
-  const [DOB, setDob] = useState(new Date());
+  const [DOB, setDob] = useState(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   const navigation = useNavigation();
 
+  const {NumberOfMembers} = route.params; 
+  console.log('members:', NumberOfMembers);
   const handleAddFamilyMember = () => {
     console.log('mobile:', authState.MobileNumber);
+    console.log('members:', NumberOfMembers);
+
     if (!Relation || !FirstName || !age || !gender) {
       setMessage('Relation, FirstName, Age, Gender fields are required.');
+      setIsError(true);
+      return;
+    }
+
+    if (formData.familyMembers && formData.familyMembers.length >= NumberOfMembers) {
+      setMessage('You have reached the limit of family members.');
       setIsError(true);
       return;
     }
@@ -58,7 +68,7 @@ const FamilyMember = () => {
       gender,
       occupation,
       Income,
-      DOB: DOB.toISOString().split('T')[0], // Format the date as YYYY-MM-DD
+      DOB: DOB ? DOB.toISOString().split('T')[0] : null, // Format the date as YYYY-MM-DD
     };
 
     updateFormData({
@@ -72,14 +82,14 @@ const FamilyMember = () => {
     setGender('');
     setOccupation('');
     setIncome('');
-    setDob(new Date());
+    setDob('');
     setMessage('Family member added successfully.');
     setIsError(false);
   };
 
   const handleNext = () => {
     console.log('familyMembers:', formData.familyMembers);
-    navigation.replace('PropertyArea');
+    navigation.navigate('PropertyArea');
   };
 
   const showDatePickerHandler = () => {
@@ -87,7 +97,7 @@ const FamilyMember = () => {
   };
 
   const onDateChange = (event, selectedDate) => {
-    const currentDate = selectedDate || DOB;
+    const currentDate = selectedDate;
     setShowDatePicker(Platform.OS === 'ios');
     setDob(currentDate);
   };
@@ -117,7 +127,7 @@ const FamilyMember = () => {
         <Picker.Item label="Other" value="Other" />
       </Picker>
 
-      <Text style={AppStyles.label}>First Name</Text>
+      <Text style={AppStyles.label}>First Name *</Text>
       <TextInput
         style={AppStyles.input}
         placeholder="Enter Name"
@@ -125,7 +135,7 @@ const FamilyMember = () => {
         onChangeText={setFirstName}
       />
 
-      <Text style={AppStyles.label}>Last Name</Text>
+      <Text style={AppStyles.label}>Last Name *</Text>
       <TextInput
         style={AppStyles.input}
         placeholder="Enter Last Name"
@@ -155,11 +165,11 @@ const FamilyMember = () => {
 
       <Text style={AppStyles.label}>Date of Birth *</Text>
       <TouchableOpacity onPress={showDatePickerHandler} style={AppStyles.input}>
-        <Text>{DOB.toDateString()}</Text>
+        <Text>{DOB ? DOB.toDateString() : 'Select Date of Birth'}</Text>
       </TouchableOpacity>
       {showDatePicker && (
         <DateTimePicker
-          value={DOB}
+          value={DOB || new Date()}
           mode="date"
           display="default"
           onChange={onDateChange}

@@ -97,7 +97,7 @@ const PropertyHouseComponent = () => {
     updateFormData({
       propertyDetails,
     });
-    navigation.replace('LiveLocation');
+    navigation.navigate('LiveLocation');
   };
 
   return (

@@ -49,7 +49,7 @@ const LoginComponent = () => {
         });
         console.log('response:', response.data);
         console.log('response:', username);
-        navigation.replace('Home');
+        navigation.navigate('Home');
       } else {
         console.log('response:', response.data.message);
         Alert.alert('Error', response.data.message);

@@ -1,5 +1,5 @@
-import React, {useState, useContext} from 'react';
-import {useNavigation} from '@react-navigation/native';
+import React, { useState, useContext, useEffect } from 'react';
+import {useNavigation, useRoute } from '@react-navigation/native';
 import {
   View,
   Text,
@@ -24,7 +24,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 const OwnerComponent = () => {
   const {authState} = useContext(AuthContext);
   const {login} = useContext(AuthContext);
-
+  const { formData, updateFormData } = useContext(FormDataContext);
   const [firstName, setFirstName] = useState('');
   const [middleName, setMiddleName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -44,18 +44,60 @@ const OwnerComponent = () => {
   const [NumberOfMembers, setNumberOfMembers] = useState('');
   const [Cast, setCast] = useState('');
   const [IsActive, setAIsActive] = useState('');
-  const [DOB, setDob] = useState(new Date());
+  const [DOB, setDob] = useState(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
-
-  
-  const { updateFormData } = useContext(FormDataContext);
-  const navigation = useNavigation();12341
+  const route = useRoute();
+  const source = route.params?.source; // Get the source parameter
+  const navigation = useNavigation();
   const API_ENDPOINT = `${Config.API_URL}/auth/owner`;
 
   console.log('token:', authState.token);
+
+  useEffect(() => {
+    if (source === 'AllDetails' && formData.ownerDetails) {
+      const {
+        firstName,
+        middleName,
+        lastName,
+        FatherName,
+        mobileNumber,
+        occupation,
+        age,
+        DOB,
+        gender,
+        income,
+        religion,
+        category,
+        Email,
+        PanNumber,
+        AdharNumber,
+        NumberOfMembers,
+      } = formData.ownerDetails;
+
+      setFirstName(firstName || '');
+      setMiddleName(middleName || '');
+      setLastName(lastName || '');
+      setFatherName(FatherName || '');
+      setMobileNumber(mobileNumber || '');
+      setOccupation(occupation || '');
+      setAge(age || '');
+      setDob(DOB ? new Date(DOB) : null);
+      setGender(gender || '');
+      setIncome(income || '');
+      setReligion(religion || '');
+      setCategory(category || '');
+      setEmail(Email || '');
+      setPanNumber(PanNumber || '');
+      setAdharNumber(AdharNumber || '');
+      setNumberOfMembers(NumberOfMembers || '');
+    }
+  }, [source, formData.ownerDetails]);
+
   
   const handleNext = () => {
-   
+    console.log('handleNext called');
+    console.log('source:', source);
+
       if (!firstName || !lastName || !mobileNumber || !CreatedBy || !FatherName) {
         Alert.alert('Error', 'First Name, Last Name, Mobile Number, Created By, and Father Name are required fields.');
         return;
@@ -76,7 +118,11 @@ const OwnerComponent = () => {
         Alert.alert('Error', 'Invalid email format. Email must end with gmail.com.');
         return;
       }
-  
+      const mobileRegex = /^\d{10}$/;
+      if (!mobileRegex.test(mobileNumber)) {
+        Alert.alert('Invalid Mobile number', 'It must be 10 digits.');
+        return; 
+      }
       const aadharRegex = /^\d{12}$/;
       if (!aadharRegex.test(AdharNumber)) {
         Alert.alert('Invalid Aadhar number', 'It must be 12 digits.');
@@ -103,17 +149,35 @@ const OwnerComponent = () => {
         PanNumber,
         AdharNumber,
         NumberOfMembers,
-        DOB: DOB.toISOString().split('T')[0], // Format the date as YYYY-MM-DD
+        DOB: DOB ? DOB.toISOString().split('T')[0] : null, // Format the date as YYYY-MM-DD
       };
-      updateFormData({   
+
+
+      updateFormData({
         ownerDetails,
-        familyMembers: [],
-        propertyDetails: {},
-        specialConsideration: {}
+        familyMembers: formData.familyMembers || [],
+        propertyDetails: formData.propertyDetails || {},
+        specialConsideration: formData.specialConsideration || {},
       });
+
 console.log('Temporary saved data:', ownerDetails);
-      navigation.replace('Family'); 
-    };
+
+console.log('Temporary saved data:', ownerDetails.NumberOfMembers);
+
+      // navigation.navigate('Family' ,{NumberOfMembers}); 
+
+   // Conditionally navigate based on the source
+   if (source === 'Home') {
+    console.log('Navigating to Family');
+    navigation.navigate('Family', { NumberOfMembers });
+  } else if (source === 'AllDetails') {
+    console.log('Navigating to AllDetails');
+    navigation.navigate('AllDetails');
+  } else {
+    console.log('Source is not recognized');
+  }
+};
+    
     const showDatePickerHandler = () => {
       setShowDatePicker(true);
     };
@@ -215,11 +279,11 @@ console.log('Temporary saved data:', ownerDetails);
       </Picker>
       <Text style={AppStyles.label}>Date of Birth *</Text>
       <TouchableOpacity onPress={showDatePickerHandler} style={AppStyles.input}>
-        <Text>{DOB.toDateString()}</Text>
+        <Text>{DOB ? DOB.toDateString() : 'Select Date of Birth'}</Text>
       </TouchableOpacity>
       {showDatePicker && (
         <DateTimePicker
-          value={DOB}
+          value={DOB || new Date()}
           mode="date"
           display="default"
           onChange={onDateChange}

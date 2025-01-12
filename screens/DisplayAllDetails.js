@@ -4,6 +4,7 @@ import {
   Text,
   StyleSheet,
   ScrollView,
+  TouchableOpacity,
   Image,
   Button,
   Alert,
@@ -27,9 +28,9 @@ const DisplayAllDetails = () => {
       if (!formData.ownerDetails) {
         throw new Error('Owner details are required');
       }
-      if (!formData.familyMembers) {
-        throw new Error('Family members are required');
-      }
+      // if (!formData.familyMembers) {
+      //   throw new Error('Family members are required');
+      // }
       if (!formData.propertyDetails) {
         throw new Error('Property details are required');
       }
@@ -162,6 +163,11 @@ Alert.alert('Error', error.message);
             <Text style={AppStyles.displayCell}>{formData.ownerDetails.CreatedBy || 'N/A'}</Text>
           </View>
         </View>
+        <TouchableOpacity
+            style={AppStyles.button}
+            onPress={() => navigation.navigate('Owner')}>
+            <Text style={AppStyles.buttonText}>Edit Owner</Text>
+          </TouchableOpacity>
       </View>
 
       {/* Family Members Section */}

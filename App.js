@@ -6,6 +6,7 @@ import OwnerScreen from './screens/OwnerScreen';
 import DisplayAllDetails from './screens/DisplayAllDetails';
 import { FormDataProvider } from './contexts/FormDataContext';
 import { AuthProvider } from './contexts/AuthContext';
+import OwnerComponent from './components/OwnerComponent';
 import AppStyles from './styles/AppStyles';
 import {
   View,
@@ -60,7 +61,7 @@ const App = () => (
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen
             name="Owner"
-            component={OwnerScreen}
+            component={OwnerComponent}
             options={({ navigation }) => ({
               title: 'Owner',
               headerLeft: () => (
@@ -82,6 +83,25 @@ const App = () => (
             component={FamilyScreen}
             options={({ navigation }) => ({
               title: 'Family',
+              headerLeft: () => (
+                <CustomButton
+                  onPress={() => navigation.replace('Home')}
+                  title="Home"
+                />
+              ),
+              headerRight: () => (
+                <CustomButton
+                  onPress={() => navigation.goBack()}
+                  title="Back"
+                />
+              ),
+            })}
+          />
+           <Stack.Screen
+            name="FamilyData"
+            component={dataScreen}
+            options={({ navigation }) => ({
+              title: 'FamilyData',
               headerLeft: () => (
                 <CustomButton
                   onPress={() => navigation.replace('Home')}
@@ -192,10 +212,10 @@ const App = () => (
             })}
           />
           <Stack.Screen
-            name="dataScreen"
+            name="AllDetails"
             component={DisplayAllDetails}
             options={({ navigation }) => ({
-              title: 'dataScreen',
+              title: 'AllDetails',
               headerLeft: () => (
                 <CustomButton
                   onPress={() => navigation.replace('Home')}
@@ -210,7 +230,8 @@ const App = () => (
               ),
             })}
           />
-          <Stack.Screen
+          <Stack.Screen name="Final" component={FinalScreen} />
+          {/* <Stack.Screen
             name="Final"
             component={FinalScreen}
             options={({ navigation }) => ({
@@ -228,7 +249,7 @@ const App = () => (
                 />
               ),
             })}
-          />
+          /> */}
         </Stack.Navigator>
       </NavigationContainer>
     </FormDataProvider>

@@ -62,7 +62,7 @@ const SpecialConsiderationComponent = () => {
 
     console.log('Special Consideration:', formData.specialConsideration);
     console.log('data:', formData); // Log the temporary data to verify
-    navigation.replace('dataScreen');
+    navigation.replace('AllDetails');
   };
 
 
