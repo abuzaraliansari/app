@@ -36,6 +36,7 @@ const SpecialConsiderationComponent = () => {
 
   const route = useRoute(); // Access the route object
   const { latitude, longitude  } = route.params; 
+  const source = route.params?.source; 
   console.log('Latitude:', latitude, longitude);
   const API_ENDPOINT = `${Config.API_URL}/auth/SpecialConsideration`;
 

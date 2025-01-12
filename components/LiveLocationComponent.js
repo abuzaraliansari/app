@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Button, StyleSheet , TouchableOpacity } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
 import Config from 'react-native-config';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation , useRoute} from '@react-navigation/native';
 import { AuthContext } from '../contexts/AuthContext';
 import { FormDataContext } from '../contexts/FormDataContext';
 
@@ -13,6 +13,8 @@ const LiveLocationComponent = () => {
   const [location, setLocation] = useState(null);
   const [error, setError] = useState(null);
    const navigation = useNavigation();
+   const route = useRoute();
+   const source = route.params?.source; 
 
    const fetchLocation = () => {
     setError(null); // Clear previous errors
@@ -40,7 +42,7 @@ const LiveLocationComponent = () => {
     if (location && location.accuracy <= 20) {
       console.log('Location submitted:', location);
       // Logic to handle submitting the location
-      navigation.navigate('Consideration', { latitude: location. latitude, longitude:location.longitude });
+      navigation.navigate('Consideration', { latitude: location. latitude, longitude:location.longitude , source: 'Home' });
     } else {
       setError('The location accuracy is insufficient. Please move to an open area.');
     }

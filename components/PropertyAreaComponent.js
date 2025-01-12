@@ -8,7 +8,7 @@ import {
   StyleSheet,
   ScrollView,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation , useRoute} from '@react-navigation/native';
 import {Picker} from '@react-native-picker/picker';
 import AppStyles from '../styles/AppStyles';
 import {AuthContext} from '../contexts/AuthContext';
@@ -35,6 +35,8 @@ const PropertyAreaComponent = () => {
   const [localities, setLocalities] = useState([]);
   const [Colonies, setColonies] = useState([]);
   const [selectedLocality, setSelectedLocality] = useState('');
+  const route = useRoute();
+  const source = route.params?.source; 
   const API_ENDPOINTloc = `${Config.API_URL}/auth/Locality`;
   const API_ENDPOINTcol = `${Config.API_URL}/auth/Colony`;
   const AddColony = `${Config.API_URL}/auth/AddColony`;
@@ -43,6 +45,24 @@ const PropertyAreaComponent = () => {
 
   const zoneID = 4;
   const colonyID = 4;
+
+
+
+  useEffect(() => {
+    if (source === 'AllDetails' && formData.propertyDetails) {
+      const {
+        galliNumber,
+        colony,
+        zone,
+        locality,
+      } = formData.propertyDetails;
+
+      setGalliNumber(galliNumber || '');
+      setColony(colony || '');
+      setZone(zone || '');
+      setLocality(locality || '');
+    }
+  }, [source, formData.propertyDetails]);
 
   useEffect(() => {
     const fetchLocalities = async zoneId => {
@@ -177,7 +197,17 @@ console.log('response:', response);
         });
         console.log('Area:', formData);
         console.log('newHouseNumber:', newHouseNumber);
-        navigation.navigate('PropertyHouse', { newHouseNumber });
+        // navigation.navigate('PropertyHouse', { newHouseNumber } , { source: 'Home' });
+
+        if (source === 'Home') {
+          console.log('Navigating to PropertyHouse');
+          navigation.navigate('PropertyHouse', { newHouseNumber, source: 'Home' });
+        } else if (source === 'AllDetails') {
+          console.log('Navigating to AllDetails');
+          navigation.navigate('PropertyHouse', { newHouseNumber, source: 'AllDetails' });
+        } else {
+          console.log('Source is not recognized');
+        }
       } else {
         Alert.alert('Error', 'Failed to fetch new house number.');
       }

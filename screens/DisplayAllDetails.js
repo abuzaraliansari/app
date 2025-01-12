@@ -165,7 +165,7 @@ Alert.alert('Error', error.message);
         </View>
         <TouchableOpacity
             style={AppStyles.button}
-            onPress={() => navigation.navigate('Owner')}>
+            onPress={() => navigation.navigate('Owner', { source: 'AllDetails' })}>
             <Text style={AppStyles.buttonText}>Edit Owner</Text>
           </TouchableOpacity>
       </View>
@@ -214,11 +214,18 @@ Alert.alert('Error', error.message);
                   <Text style={AppStyles.displayCellHeader}>Created By</Text>
                   <Text style={AppStyles.displayCell}>{formData.ownerDetails.CreatedBy || 'N/A'}</Text>
                 </View>
+               
               </View>
+              
             ))
           ) : (
             <Text style={AppStyles.displayNoDataText}>No family members available</Text>
           )}
+           <TouchableOpacity
+            style={AppStyles.button}
+            onPress={() => navigation.navigate('FamilyData', { source: 'AllDetails' })}>
+            <Text style={AppStyles.buttonText}>Edit Family</Text>
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -303,6 +310,11 @@ Alert.alert('Error', error.message);
             <Text style={AppStyles.displayCell}>{formData.propertyDetails.CreatedBy || 'N/A'}</Text>
           </View>
           </View>
+          <TouchableOpacity
+            style={AppStyles.button}
+            onPress={() => navigation.navigate('PropertyArea', { source: 'AllDetails' })}>
+            <Text style={AppStyles.buttonText}>Edit Property Area</Text>
+          </TouchableOpacity>
         </View>
 
         {/* Special Considerations Section */}
@@ -329,6 +341,11 @@ Alert.alert('Error', error.message);
             <Text style={AppStyles.displayCellHeader}>Created By</Text>
             <Text style={AppStyles.displayCell}>{formData.specialConsideration.CreatedBy || 'N/A'}</Text>
           </View>
+          <TouchableOpacity
+            style={AppStyles.button}
+            onPress={() => navigation.navigate('LiveLocation', { source: 'AllDetails' })}>
+            <Text style={AppStyles.buttonText}>Edit Special Consideration</Text>
+          </TouchableOpacity>
           </View>
         </View>
         <Button title="Submit" onPress={handleSubmit} />

@@ -25,10 +25,24 @@ const OwnerDetailsScreen = () => {
   const { authState } = useContext(AuthContext);
   const CreatedBy = authState.user;
   const navigation = useNavigation();
+  const route = useRoute();
+  const source = route.params?.source; 
 
   const handleNext = () => {
-    navigation.navigate('LiveLocation'); // Replace 'NextPage' with the actual route name of the next page
+    
+    //navigation.navigate('PropertyArea', { source: 'Home' }); // Replace 'NextPage' with the actual route name of the next page
+    if (source === 'Home') {
+      console.log('Navigating to Family');
+      navigation.navigate('PropertyArea', { source: 'Home' });
+    } else if (source === 'AllDetails') {
+      console.log('Navigating to AllDetails');
+      navigation.navigate('AllDetails');
+    } else {
+      console.log('Source is not recognized');
+    }
   };
+
+
 
   return (
     <ScrollView style={AppStyles.displayContainer}>
@@ -78,6 +92,11 @@ const OwnerDetailsScreen = () => {
                     <Text style={AppStyles.displayCellHeader}>Created By</Text>
                     <Text style={AppStyles.displayCell}>{CreatedBy || 'N/A'}</Text>
                   </View>
+                  <TouchableOpacity
+                    style={AppStyles.button}
+                    onPress={() => navigation.navigate('Family', { source: 'AllDetails', index })}>
+                    <Text style={AppStyles.buttonText}>Edit Family Member</Text>
+                  </TouchableOpacity>
                 </View>
               ))
             ) : (

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect }  from 'react';
 import {
   View,
   TextInput,
@@ -21,6 +21,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 const FamilyMember = () => {
   const { authState } = useContext(AuthContext);
   const route = useRoute();
+  const source = route.params?.source; 
   const ownerID = authState.ownerId;
   const [Relation, setRelation] = useState('');
   const [FirstName, setFirstName] = useState('');
@@ -41,8 +42,26 @@ const FamilyMember = () => {
 
   const navigation = useNavigation();
 
-  const {NumberOfMembers} = route.params; 
+  const { NumberOfMembers, index } = route.params || {}; // Get the index parameter if passed
+
   console.log('members:', NumberOfMembers);
+
+
+  useEffect(() => {
+    if (index !== undefined && formData.familyMembers && formData.familyMembers[index]) {
+      const member = formData.familyMembers[index];
+      setRelation(member.Relation || '');
+      setFirstName(member.FirstName || '');
+      setLastName(member.LastName || '');
+      setAge(member.age || '');
+      setGender(member.gender || '');
+      setOccupation(member.occupation || '');
+      setIncome(member.Income || '');
+      setDob(member.DOB ? new Date(member.DOB) : null);
+    }
+  }, [index, formData.familyMembers]);
+
+
   const handleAddFamilyMember = () => {
     console.log('mobile:', authState.MobileNumber);
     console.log('members:', NumberOfMembers);
@@ -71,9 +90,23 @@ const FamilyMember = () => {
       DOB: DOB ? DOB.toISOString().split('T')[0] : null, // Format the date as YYYY-MM-DD
     };
 
+    let updatedFamilyMembers;
+    if (index !== undefined && formData.familyMembers && formData.familyMembers[index]) {
+      updatedFamilyMembers = formData.familyMembers.map((member, i) =>
+        i === index ? newFamilyMember : member
+      );
+    } else {
+      updatedFamilyMembers = [...(formData.familyMembers || []), newFamilyMember];
+    }
+
+    // updateFormData({
+    //   familyMembers: [...(formData.familyMembers || []), newFamilyMember],
+    // });
+
     updateFormData({
-      familyMembers: [...(formData.familyMembers || []), newFamilyMember],
+      familyMembers: updatedFamilyMembers,
     });
+
 
     setRelation('');
     setFirstName('');
@@ -89,7 +122,15 @@ const FamilyMember = () => {
 
   const handleNext = () => {
     console.log('familyMembers:', formData.familyMembers);
-    navigation.navigate('PropertyArea');
+    if (source === 'Home') {
+      console.log('Navigating to Family');
+      navigation.navigate('FamilyData', { NumberOfMembers });
+    } else if (source === 'AllDetails') {
+      console.log('Navigating to AllDetails');
+      navigation.navigate('AllDetails', { source: 'AllDetails' });
+    } else {
+      console.log('Source is not recognized');
+    }
   };
 
   const showDatePickerHandler = () => {

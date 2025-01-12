@@ -21,6 +21,7 @@ const PropertyHouseComponent = () => {
 
   const navigation = useNavigation();
   const route = useRoute();
+  const source = route.params?.source; 
   const { newHouseNumber, propertyID } = route.params;
   const FormData = require('form-data');
   const ownerID = authState.ownerId;
@@ -97,7 +98,16 @@ const PropertyHouseComponent = () => {
     updateFormData({
       propertyDetails,
     });
-    navigation.navigate('LiveLocation');
+    //navigation.navigate('LiveLocation');
+    if (source === 'Home') {
+      console.log('Navigating to Family');
+      navigation.navigate('LiveLocation', {source: 'Home' });
+    } else if (source === 'AllDetails') {
+      console.log('Navigating to AllDetails');
+      navigation.navigate('AllDetails');
+    } else {
+      console.log('Source is not recognized');
+    }
   };
 
   return (
