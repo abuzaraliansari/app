@@ -10,11 +10,13 @@ import {
 import AppStyles from '../styles/AppStyles';
 import axios from 'axios';
 import Config from 'react-native-config';
+import { useNavigation } from '@react-navigation/native';
 
 const Find = () => {
   const [mobileNumber, setMobileNumber] = useState('');
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
+    const navigation = useNavigation();
 
   const handleSearch = async () => {
     if (!mobileNumber) {
@@ -25,7 +27,7 @@ const Find = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post(`${Config.API_URL}/data`, {
+      const response = await axios.post(`${Config.API_URL}/auth/data`, {
         MobileNumber: mobileNumber,
       });
 
@@ -41,9 +43,9 @@ const Find = () => {
       setLoading(false);
     }
   };
-
+console.log('response32',data);
   return (
-    <ScrollView style={AppStyles.container}>
+    <ScrollView style={AppStyles.containerfind}>
       <View style={AppStyles.content}>
         <Text style={AppStyles.header}>Find Owner Details</Text>
         <TextInput
@@ -65,7 +67,8 @@ const Find = () => {
           <View style={AppStyles.displayContent}>
             <Text style={AppStyles.displayHeader}>Owner Info</Text>
             <View style={AppStyles.displayTable}>
-              <View style={AppStyles.displayRow}>
+              
+            <View style={AppStyles.displayRow}>
                 <Text style={AppStyles.displayCellHeader}>First Name</Text>
                 <Text style={AppStyles.displayCell}>{data.owner.FirstName || 'N/A'}</Text>
               </View>
@@ -78,6 +81,10 @@ const Find = () => {
                 <Text style={AppStyles.displayCell}>{data.owner.LastName || 'N/A'}</Text>
               </View>
               <View style={AppStyles.displayRow}>
+                <Text style={AppStyles.displayCellHeader}>Father Name</Text>
+                <Text style={AppStyles.displayCell}>{data.owner.FatherName || 'N/A'}</Text>
+              </View>
+              <View style={AppStyles.displayRow}>
                 <Text style={AppStyles.displayCellHeader}>Mobile Number</Text>
                 <Text style={AppStyles.displayCell}>{data.owner.MobileNumber || 'N/A'}</Text>
               </View>
@@ -88,6 +95,10 @@ const Find = () => {
               <View style={AppStyles.displayRow}>
                 <Text style={AppStyles.displayCellHeader}>Age</Text>
                 <Text style={AppStyles.displayCell}>{data.owner.Age || 'N/A'}</Text>
+              </View>
+              <View style={AppStyles.displayRow}>
+                <Text style={AppStyles.displayCellHeader}>DOB</Text>
+                <Text style={AppStyles.displayCell}>{data.owner.DOB || 'N/A'}</Text>
               </View>
               <View style={AppStyles.displayRow}>
                 <Text style={AppStyles.displayCellHeader}>Gender</Text>
@@ -121,6 +132,19 @@ const Find = () => {
                 <Text style={AppStyles.displayCellHeader}>Number Of Members</Text>
                 <Text style={AppStyles.displayCell}>{data.owner.NumberOfMembers || 'N/A'}</Text>
               </View>
+              <View style={AppStyles.displayRow}>
+                <Text style={AppStyles.displayCellHeader}>Created By</Text>
+                <Text style={AppStyles.displayCell}>{data.owner.CreatedBy || 'N/A'}</Text>
+              </View>
+              <View style={AppStyles.displayRow}>
+                <Text style={AppStyles.displayCellHeader}>Modified By</Text>
+                <Text style={AppStyles.displayCell}>{data.owner.ModifiedBy || 'N/A'}</Text>
+              </View>
+              <TouchableOpacity
+            style={AppStyles.button}
+            onPress={() => navigation.navigate('UpdateOwner', { owner: data.owner  ,source: 'AllDetails' })}>
+            <Text style={AppStyles.buttonText}>Edit Owner</Text>
+          </TouchableOpacity>
             </View>
 
             <Text style={AppStyles.displayHeader}>Family Members</Text>
@@ -129,6 +153,10 @@ const Find = () => {
                 data.familyMembers.map((member, index) => (
                   <View key={index} style={AppStyles.displayTenantContainer}>
                     <Text style={AppStyles.displayLabel}>Family Member {index + 1}</Text>
+                    <View style={AppStyles.displayRow}>
+                      <Text style={AppStyles.displayCellHeader}>Relation</Text>
+                      <Text style={AppStyles.displayCell}>{member.Relation || 'N/A'}</Text>
+                    </View>
                     <View style={AppStyles.displayRow}>
                       <Text style={AppStyles.displayCellHeader}>First Name</Text>
                       <Text style={AppStyles.displayCell}>{member.FirstName || 'N/A'}</Text>
@@ -142,6 +170,10 @@ const Find = () => {
                       <Text style={AppStyles.displayCell}>{member.Age || 'N/A'}</Text>
                     </View>
                     <View style={AppStyles.displayRow}>
+                      <Text style={AppStyles.displayCellHeader}>DOB</Text>
+                      <Text style={AppStyles.displayCell}>{member.DOB || 'N/A'}</Text>
+                    </View>
+                    <View style={AppStyles.displayRow}>
                       <Text style={AppStyles.displayCellHeader}>Gender</Text>
                       <Text style={AppStyles.displayCell}>{member.Gender || 'N/A'}</Text>
                     </View>
@@ -149,6 +181,25 @@ const Find = () => {
                       <Text style={AppStyles.displayCellHeader}>Occupation</Text>
                       <Text style={AppStyles.displayCell}>{member.Occupation || 'N/A'}</Text>
                     </View>
+                    <View style={AppStyles.displayRow}>
+                      <Text style={AppStyles.displayCellHeader}>Income</Text>
+                      <Text style={AppStyles.displayCell}>{member.Income || 'N/A'}</Text>
+                    </View>
+                    <View style={AppStyles.displayRow}>
+                      <Text style={AppStyles.displayCellHeader}>Created By</Text>
+                      <Text style={AppStyles.displayCell}>{member.CreatedBy || 'N/A'}</Text>
+                    </View>
+                    <View style={AppStyles.displayRow}>
+                      <Text style={AppStyles.displayCellHeader}>Modified By</Text>
+                      <Text style={AppStyles.displayCell}>{member.ModifiedBy || 'N/A'}</Text>
+                    </View>
+                    <TouchableOpacity
+                      style={AppStyles.button}
+                      onPress={() => navigation.navigate('UpdateFamilyMember', { member })}
+                    >
+                      <Text style={AppStyles.buttonText}>Edit Family Member {index + 1}</Text>
+                    </TouchableOpacity>
+                 
                   </View>
                 ))
               ) : (
@@ -183,8 +234,16 @@ const Find = () => {
                       <Text style={AppStyles.displayCell}>{property.ShopCount || 'N/A'}</Text>
                     </View>
                     <View style={AppStyles.displayRow}>
+                      <Text style={AppStyles.displayCellHeader}>Shop Area</Text>
+                      <Text style={AppStyles.displayCell}>{property.ShopArea || 'N/A'}</Text>
+                    </View>
+                    <View style={AppStyles.displayRow}>
                       <Text style={AppStyles.displayCellHeader}>Tenant Count</Text>
                       <Text style={AppStyles.displayCell}>{property.TenantCount || 'N/A'}</Text>
+                    </View>
+                    <View style={AppStyles.displayRow}>
+                      <Text style={AppStyles.displayCellHeader}>Tenant Yearly Rent</Text>
+                      <Text style={AppStyles.displayCell}>{property.TenantYearlyRent || 'N/A'}</Text>
                     </View>
                     <View style={AppStyles.displayRow}>
                       <Text style={AppStyles.displayCellHeader}>Water Harvesting</Text>
@@ -234,11 +293,29 @@ const Find = () => {
                       <Text style={AppStyles.displayCellHeader}>Consent</Text>
                       <Text style={AppStyles.displayCell}>{property.Consent ? 'Yes' : 'No'}</Text>
                     </View>
+                    <View style={AppStyles.displayRow}>
+                      <Text style={AppStyles.displayCellHeader}>Created By</Text>
+                      <Text style={AppStyles.displayCell}>{property.CreatedBy || 'N/A'}</Text>
+                    </View>
+                    <View style={AppStyles.displayRow}>
+                      <Text style={AppStyles.displayCellHeader}>Date Created</Text>
+                      <Text style={AppStyles.displayCell}>{property.DateCreated || 'N/A'}</Text>
+                    </View>
+                    <View style={AppStyles.displayRow}>
+                      <Text style={AppStyles.displayCellHeader}>Modified By</Text>
+                      <Text style={AppStyles.displayCell}>{property.ModifiedBy || 'N/A'}</Text>
+                    </View>
+                    <TouchableOpacity
+                      style={AppStyles.button}
+                      onPress={() => navigation.navigate('UpdateProperty', { property })}>
+                      <Text style={AppStyles.buttonText}>Edit Property</Text>
+                    </TouchableOpacity>
                   </View>
                 ))
               ) : (
                 <Text style={AppStyles.displayNoDataText}>No properties available</Text>
               )}
+                
             </View>
 
             <Text style={AppStyles.displayHeader}>Special Considerations</Text>
@@ -263,6 +340,16 @@ const Find = () => {
                       <Text style={AppStyles.displayCellHeader}>Created By</Text>
                       <Text style={AppStyles.displayCell}>{consideration.CreatedBy || 'N/A'}</Text>
                     </View>
+                    <View style={AppStyles.displayRow}>
+                      <Text style={AppStyles.displayCellHeader}>Modified By</Text>
+                      <Text style={AppStyles.displayCell}>{consideration.ModifiedBy || 'N/A'}</Text>
+                    </View>
+                    <TouchableOpacity
+                      style={AppStyles.button}
+                      onPress={() => navigation.navigate('UpdateConsideration', { consideration })}>
+                      <Text style={AppStyles.buttonText}>Edit Consideration </Text>
+                    </TouchableOpacity>
+
                   </View>
                 ))
               ) : (

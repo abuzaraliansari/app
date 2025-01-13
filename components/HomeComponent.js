@@ -15,7 +15,7 @@ const HomeComponent = () => {
   };
 
   const navigateToFindAndUpdate = () => {
-    navigation.replace('FindAndUpdate'); // Replace with your actual screen name
+    navigation.replace('Find'); // Replace with your actual screen name
   };
 
   const navigateToLogout = () => {

@@ -124,7 +124,7 @@ const FamilyMember = () => {
     console.log('familyMembers:', formData.familyMembers);
     if (source === 'Home') {
       console.log('Navigating to Family');
-      navigation.navigate('FamilyData', { NumberOfMembers });
+      navigation.navigate('FamilyData', { NumberOfMembers ,source: 'Home'  });
     } else if (source === 'AllDetails') {
       console.log('Navigating to AllDetails');
       navigation.navigate('AllDetails', { source: 'AllDetails' });

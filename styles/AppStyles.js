@@ -1,9 +1,16 @@
 import { StyleSheet } from 'react-native';
 
 const AppStyles = StyleSheet.create({
+  
   container: {
     padding: 20,
     backgroundColor: '#f0f4f7',
+    marginBottom: 15,
+  },
+  containerfind: {
+    padding: 20,
+    backgroundColor: '#f0f4f7',
+    //marginBottom: 5,
   },
   heading: {
     fontSize: 35,
@@ -23,7 +30,8 @@ const AppStyles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginVertical: 8,
-    color: '#555',
+    //color: '#555',
+    color: '#000', 
   },
   input: {
     borderWidth: 3,
@@ -33,6 +41,7 @@ const AppStyles = StyleSheet.create({
     fontSize: 20,
     backgroundColor: '#fff',
     marginBottom: 15,
+    color: '#000', 
   },
   picker: {
     borderWidth: 3,
@@ -42,6 +51,7 @@ const AppStyles = StyleSheet.create({
     marginBottom: 15,
     backgroundColor: '#fff',
     fontSize: 30,
+    color: '#000', 
   },
   pickerContainer: {
     borderWidth: 3,
@@ -51,6 +61,7 @@ const AppStyles = StyleSheet.create({
     marginBottom: 15,
     backgroundColor: '#fff',
     fontSize: 20,
+    color: '#000', 
   },
   button: {
     backgroundColor: '#1E90FF',
@@ -89,6 +100,7 @@ const AppStyles = StyleSheet.create({
     color: '#2c3e50',
     textAlign: 'center',
     marginVertical: 10,
+    color: '#000', 
   },
   text: {
     fontSize: 16,
@@ -138,6 +150,7 @@ const AppStyles = StyleSheet.create({
     width: '60%',
     textAlign: 'center',
     justifyContent: 'center',
+    color: '#000', 
   },
   loginButton: {
     backgroundColor: '#4CAF50',
@@ -197,6 +210,7 @@ const AppStyles = StyleSheet.create({
   },
   radioText: {
     fontSize: 16,
+    //color: '#000', 
   },
   tenantContainer: {
     marginBottom: 16,
@@ -245,6 +259,7 @@ const AppStyles = StyleSheet.create({
       marginBottom: 16,
       color: '#333',
       textAlign: 'center',
+      color: '#000', 
     },
     photoContainer: {
       marginBottom: 20,
@@ -264,6 +279,7 @@ const AppStyles = StyleSheet.create({
       marginBottom: 8,
       color: '#555',
       textAlign: 'center',
+      color: '#000', 
     },
     captureButton: {
       backgroundColor: '#007bff',
@@ -319,6 +335,7 @@ const AppStyles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: '#fff',
+    marginBottom: 15,
   },
   displayContent: {
     padding: 16,
@@ -347,6 +364,13 @@ const AppStyles = StyleSheet.create({
     borderColor: '#ddd',
     borderRadius: 4,
     marginBottom: 16,
+    backgroundColor: '#fff',
+    padding: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 2,
   },
   displayRow: {
     flexDirection: 'row',

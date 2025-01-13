@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext ,useEffect } from 'react';
 import {
   View,
   Text,
@@ -48,6 +48,47 @@ const PropertyHouseComponent = () => {
 
   const API_ENDPOINT = `${Config.API_URL}/auth/PropertyDetailsHouse`;
   const DOCUMENT_API_ENDPOINT = `${Config.API_URL}/auth/uploadDoc`;
+
+  useEffect(() => {
+    if (source === 'AllDetails' && formData.propertyDetails) {
+      const {
+        propertyMode,
+        propertyAge,
+        roomCount,
+        floorCount,
+        shopCount,
+        ShopArea,
+        OpenArea,
+        ConstructedArea,
+        tenantCount,
+        TenantYearlyRent,
+        HouseType,
+        waterHarvesting,
+        submersible,
+        houseNumber,
+        bankAccountNumber,
+        consent,
+      } = formData.propertyDetails;
+
+      setPropertyMode(propertyMode || '');
+      setPropertyAge(propertyAge || '');
+      setRoomCount(roomCount || '0');
+      setFloorCount(floorCount || '0');
+      setShopCount(shopCount || '0');
+      setShopArea(ShopArea || '0');
+      setOpenArea(OpenArea || '');
+      setConstructedArea(ConstructedArea || '');
+      setTenantCount(tenantCount || '0');
+      setTenantYearlyRent(TenantYearlyRent || '0');
+      setHouseType(HouseType || '');
+      setWaterHarvesting(waterHarvesting || 'No');
+      setSubmersible(submersible || 'No');
+      SetHouseNumber(houseNumber || String(newHouseNumber));
+      setBankAccountNumber(bankAccountNumber || '');
+      setConsent(consent || 'Yes');
+    }
+  }, [source, formData.propertyDetails, newHouseNumber]);
+
 
   const handleNext = () => {
     if (!propertyMode || !HouseType) {

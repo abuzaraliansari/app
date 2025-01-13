@@ -42,6 +42,19 @@ const SpecialConsiderationComponent = () => {
 
 
   useEffect(() => {
+    if (source === 'AllDetails' && formData.specialConsideration) {
+      const {
+        considerationType,
+        description,
+      } = formData.specialConsideration;
+
+      setConsiderationType(considerationType || 'None');
+      setDescription(description || '');
+    }
+  }, [source, formData.specialConsideration]);
+
+
+  useEffect(() => {
     // Update the context with the latitude, longitude, considerationType, and description
     updateFormData({
       specialConsideration: {
@@ -63,7 +76,7 @@ const SpecialConsiderationComponent = () => {
 
     console.log('Special Consideration:', formData.specialConsideration);
     console.log('data:', formData); // Log the temporary data to verify
-    navigation.replace('AllDetails');
+    navigation.replace('AllDetails' ,{source: 'Home' });
   };
 
 

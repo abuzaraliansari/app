@@ -169,7 +169,7 @@ console.log('Temporary saved data:', ownerDetails.NumberOfMembers);
    // Conditionally navigate based on the source
    if (source === 'Home') {
     console.log('Navigating to Family');
-    navigation.navigate('Family', { NumberOfMembers });
+    navigation.navigate('Family', { NumberOfMembers,source: 'Home' });
   } else if (source === 'AllDetails') {
     console.log('Navigating to AllDetails');
     navigation.navigate('AllDetails');

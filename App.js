@@ -1,11 +1,11 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
 import FormScreen from './screens/FormScreen';
 import OwnerScreen from './screens/OwnerScreen';
 import DisplayAllDetails from './screens/DisplayAllDetails';
-import { FormDataProvider } from './contexts/FormDataContext';
-import { AuthProvider } from './contexts/AuthContext';
+import {FormDataProvider} from './contexts/FormDataContext';
+import {AuthProvider} from './contexts/AuthContext';
 import OwnerComponent from './components/OwnerComponent';
 import AppStyles from './styles/AppStyles';
 import {
@@ -31,10 +31,12 @@ import LiveLocationScreen from './screens/LiveLocationScreen';
 import TestComponent from './components/test';
 import dataScreen from './screens/dataScreen';
 import FinalScreen from './screens/FinalScreen';
+import Find from './screens/find';
+import UpdateOwner from './components/UpdateOwner';
 
 const Stack = createStackNavigator();
 
-const CustomButton = ({ onPress, title }) => (
+const CustomButton = ({onPress, title}) => (
   <TouchableOpacity onPress={onPress} style={AppStyles.customButton}>
     <Text style={AppStyles.customButtonText}>{title}</Text>
   </TouchableOpacity>
@@ -55,14 +57,13 @@ const App = () => (
             headerStyle: {
               backgroundColor: '#f0f4f7',
             },
-          }}
-        >
+          }}>
           <Stack.Screen name="Login" component={FormScreen} />
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen
             name="Owner"
             component={OwnerComponent}
-            options={({ navigation }) => ({
+            options={({navigation}) => ({
               title: 'Owner',
               headerLeft: () => (
                 <CustomButton
@@ -81,7 +82,7 @@ const App = () => (
           <Stack.Screen
             name="Family"
             component={FamilyScreen}
-            options={({ navigation }) => ({
+            options={({navigation}) => ({
               title: 'Family',
               headerLeft: () => (
                 <CustomButton
@@ -97,10 +98,10 @@ const App = () => (
               ),
             })}
           />
-           <Stack.Screen
+          <Stack.Screen
             name="FamilyData"
             component={dataScreen}
-            options={({ navigation }) => ({
+            options={({navigation}) => ({
               title: 'FamilyData',
               headerLeft: () => (
                 <CustomButton
@@ -119,7 +120,7 @@ const App = () => (
           <Stack.Screen
             name="PropertyArea"
             component={PropertyScreenArea}
-            options={({ navigation }) => ({
+            options={({navigation}) => ({
               title: 'PropertyArea',
               headerLeft: () => (
                 <CustomButton
@@ -138,7 +139,7 @@ const App = () => (
           <Stack.Screen
             name="PropertyHouse"
             component={PropertyScreenHouse}
-            options={({ navigation }) => ({
+            options={({navigation}) => ({
               title: 'PropertyHouse',
               headerLeft: () => (
                 <CustomButton
@@ -157,7 +158,7 @@ const App = () => (
           <Stack.Screen
             name="LiveLocation"
             component={LiveLocationScreen}
-            options={({ navigation }) => ({
+            options={({navigation}) => ({
               title: 'LiveLocation',
               headerLeft: () => (
                 <CustomButton
@@ -176,7 +177,7 @@ const App = () => (
           <Stack.Screen
             name="Consideration"
             component={SpecialConsiderationScreen}
-            options={({ navigation }) => ({
+            options={({navigation}) => ({
               title: 'Consideration',
               headerLeft: () => (
                 <CustomButton
@@ -195,7 +196,7 @@ const App = () => (
           <Stack.Screen
             name="FormWithPhoto"
             component={FormWithPhoto}
-            options={({ navigation }) => ({
+            options={({navigation}) => ({
               title: 'FormWithPhoto',
               headerLeft: () => (
                 <CustomButton
@@ -214,7 +215,7 @@ const App = () => (
           <Stack.Screen
             name="AllDetails"
             component={DisplayAllDetails}
-            options={({ navigation }) => ({
+            options={({navigation}) => ({
               title: 'AllDetails',
               headerLeft: () => (
                 <CustomButton
@@ -250,6 +251,56 @@ const App = () => (
               ),
             })}
           /> */}
+
+          <Stack.Screen
+            name="Find"
+            component={Find}
+            options={({navigation}) => ({
+              title: 'Find',
+              headerLeft: () => (
+                <CustomButton
+                  onPress={() => navigation.replace('Home')}
+                  title="Home"
+                />
+              ),
+              headerRight: () => (
+                <CustomButton
+                  onPress={() => navigation.goBack()}
+                  title="Back"
+                />
+              ),
+            })}
+          />
+
+
+
+          {/* ////// */}
+
+          <Stack.Screen
+            name="UpdateOwner"
+            component={UpdateOwner}
+            options={({navigation}) => ({
+              title: 'UpdateOwner',
+              headerLeft: () => (
+                <CustomButton
+                  onPress={() => navigation.replace('Home')}
+                  title="Home"
+                />
+              ),
+              headerRight: () => (
+                <CustomButton
+                  onPress={() => navigation.goBack()}
+                  title="Back"
+                />
+              ),
+            })}
+          />
+
+
+
+
+
+          
         </Stack.Navigator>
       </NavigationContainer>
     </FormDataProvider>
