@@ -21,6 +21,7 @@ const UpdateOwnerInfo = () => {
   const { authState } = useContext(AuthContext);
   const { owner } = route.params;
   console.log(owner.OwnerID);
+  const OwnerID = owner.OwnerID;
   const [firstName, setFirstName] = useState(owner.FirstName || '');
   const [middleName, setMiddleName] = useState(owner.MiddleName || '');
   const [lastName, setLastName] = useState(owner.LastName || '');
@@ -134,7 +135,7 @@ console.log(owner.OwnerID);
   return (
     <ScrollView style={AppStyles.container}>
       <View style={AppStyles.content}>
-        <Text style={AppStyles.header}>Update Owner Info</Text>
+        <Text style={AppStyles.header}>Update Owner Info {OwnerID}</Text>
 
         <Text style={AppStyles.label}>First Name *</Text>
         <TextInput

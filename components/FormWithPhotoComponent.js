@@ -23,33 +23,27 @@ import AppStyles from '../styles/AppStyles';
 const FormData = require('form-data');
 
 const FormWithPhotoComponent = () => {
-
   const route = useRoute();
   const { ownerID, propertyID, tenantCount, CreatedBy } = route.params;
 
   const { authState } = useContext(AuthContext);
-  const {login} = useContext(AuthContext);
+  const { login } = useContext(AuthContext);
   const [photos, setPhotos] = useState([]);
   const [tenantDocuments, setTenantDocuments] = useState([]);
   const [tenantNames, setTenantNames] = useState([]);
   const [hasPermission, setHasPermission] = useState(false);
   const [fadeAnim] = useState(new Animated.Value(0));
   const [error, setError] = useState('');
-const [OwnerID, SetOwnerID] = useState(String(ownerID));
-const [PropertyID, SetpropertyID] = useState(String(propertyID));
-const [TenantCount, SettenantCount] = useState(String(tenantCount));
-const [createdBy, SetCreatedBy] = useState(String(CreatedBy));
+  const [OwnerID, SetOwnerID] = useState(String(ownerID));
+  const [PropertyID, SetpropertyID] = useState(String(propertyID));
+  const [TenantCount, SettenantCount] = useState(String(tenantCount));
+  const [createdBy, SetCreatedBy] = useState(String(CreatedBy));
   const token = authState.token;
   const navigation = useNavigation();
 
   const API_ENDPOINT_PHOTO = `${Config.API_URL}/auth/uploadFileMetadata`;
   const API_ENDPOINT_DOCUMENT = `${Config.API_URL}/auth/uploadTenantDocuments`;
 
-
-  console.log(OwnerID);
-  console.log(PropertyID);
-  console.log(TenantCount);
-  console.log(createdBy);
   useEffect(() => {
     const checkPermission = async () => {
       const result = await check(PERMISSIONS.ANDROID.CAMERA);
@@ -121,12 +115,6 @@ const [createdBy, SetCreatedBy] = useState(String(CreatedBy));
       if (result) {
         const { name: documentName, size: documentSize, type: documentType, uri: documentUri } = result;
 
-        // Log the details of the selected document
-        console.log("Document Name:", documentName);
-        console.log("Document Size:", documentSize);
-        console.log("Document Type:", documentType);
-        console.log("Document URI:", documentUri);
-
         const updatedTenantDocuments = [...tenantDocuments];
         updatedTenantDocuments[index] = {
           documentName,
@@ -184,8 +172,8 @@ const [createdBy, SetCreatedBy] = useState(String(CreatedBy));
         throw new Error('Please take all three photos.');
       }
 
-      if (tenantNames.length < TenantCount || tenantDocuments.length < TenantCount ||
-          tenantNames.some(name => !name) || tenantDocuments.some(doc => !doc.documentPath)) {
+      if (TenantCount > 0 && (tenantNames.length < TenantCount || tenantDocuments.length < TenantCount ||
+        tenantNames.some(name => !name) || tenantDocuments.some(doc => !doc.documentPath))) {
         throw new Error('Please provide names and documents for all tenants.');
       }
 
@@ -222,30 +210,32 @@ const [createdBy, SetCreatedBy] = useState(String(CreatedBy));
         throw new Error('Photo upload failed.');
       }
 
-      // Submit tenant documents
-      const documentData = new FormData();
-      documentData.append('OwnerID', OwnerID);
-      documentData.append('PropertyID', PropertyID);
-      documentData.append('CreatedBy', createdBy);
-      documentData.append('tenantNames', JSON.stringify(tenantNames));
-      tenantDocuments.forEach((document, index) => {
-        documentData.append('files', {
-          uri: document.documentPath,
-          name: document.documentName,
-          type: document.documentType,
+      // Submit tenant documents if tenant count is greater than 0
+      if (TenantCount > 0) {
+        const documentData = new FormData();
+        documentData.append('OwnerID', OwnerID);
+        documentData.append('PropertyID', PropertyID);
+        documentData.append('CreatedBy', createdBy);
+        documentData.append('tenantNames', JSON.stringify(tenantNames));
+        tenantDocuments.forEach((document, index) => {
+          documentData.append('files', {
+            uri: document.documentPath,
+            name: document.documentName,
+            type: document.documentType,
+          });
         });
-      });
 
-      console.log('Document FormData:', documentData);
-      const documentResponse = await axios.post(API_ENDPOINT_DOCUMENT, documentData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${token}`,
-        },
-      });
+        console.log('Document FormData:', documentData);
+        const documentResponse = await axios.post(API_ENDPOINT_DOCUMENT, documentData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-      if (documentResponse.status !== 200) {
-        throw new Error(documentResponse.data.message || 'Document submission failed.');
+        if (documentResponse.status !== 200) {
+          throw new Error(documentResponse.data.message || 'Document submission failed.');
+        }
       }
 
       navigation.navigate('Final', { propertyID: PropertyID });
@@ -253,9 +243,7 @@ const [createdBy, SetCreatedBy] = useState(String(CreatedBy));
       Alert.alert('Error', error.message);
     }
   };
-console.log(OwnerID, PropertyID, TenantCount, createdBy);
-console.log("see",ownerID, propertyID, tenantCount, CreatedBy);
-console.log("hello", OwnerID);
+
   return (
     <ScrollView style={AppStyles.container}>
       <Animated.View style={{ opacity: fadeAnim }}>
@@ -283,15 +271,6 @@ console.log("hello", OwnerID);
         />
 
         {renderTenantFields()}
-
-        {/* <Text style={AppStyles.header}>Owner ID</Text>
-<Text style={AppStyles.input}>{OwnerID}</Text>
-
-<Text style={AppStyles.header}>Property ID</Text>
-<Text style={AppStyles.input}>{PropertyID}</Text>
-
-<Text style={AppStyles.header}>Created By,{ownerID}</Text>
-<Text style={AppStyles.input}>{createdBy}</Text> */}
 
         <TouchableOpacity
           style={[AppStyles.submitButton, { marginBottom: 50 }]}
