@@ -204,7 +204,7 @@ const FamilyMember = () => {
         <Picker.Item label="90+" value="90+" />
       </Picker>
 
-      <Text style={AppStyles.label}>Date of Birth *</Text>
+      <Text style={AppStyles.label}>Date of Birth</Text>
       <TouchableOpacity onPress={showDatePickerHandler} style={AppStyles.input}>
         <Text>{DOB ? DOB.toDateString() : 'Select Date of Birth'}</Text>
       </TouchableOpacity>

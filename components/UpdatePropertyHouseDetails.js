@@ -133,39 +133,37 @@ const UpdatePropertyDetailsHouse = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     padding: 16,
-    backgroundColor: '#fff',
   },
   label: {
-    marginTop: 16,
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#333',
+    marginTop: 16,
   },
   input: {
     borderWidth: 1,
     borderColor: '#ccc',
-    borderRadius: 8,
-    padding: 10,
+    borderRadius: 4,
+    padding: 8,
     marginTop: 8,
   },
   picker: {
-    marginTop: 8,
     borderWidth: 1,
     borderColor: '#ccc',
-    borderRadius: 8,
+    borderRadius: 4,
+    padding: 8,
+    marginTop: 8,
   },
   button: {
-    backgroundColor: '#007bff',
+    backgroundColor: 'blue',
     padding: 16,
-    borderRadius: 8,
-    marginTop: 24,
+    borderRadius: 4,
+    marginTop: 16,
   },
   buttonText: {
-    color: '#fff',
-    fontSize: 18,
+    color: 'white',
     textAlign: 'center',
+    fontWeight: 'bold',
   },
 });
 

@@ -45,7 +45,8 @@ const PropertyHouseComponent = () => {
   const [IsActive, setIsActive] = useState('');
   const token = authState.token;
   const CreatedBy = authState.user;
-
+console.log(newHouseNumber);
+console.log('hy');
   const API_ENDPOINT = `${Config.API_URL}/auth/PropertyDetailsHouse`;
   const DOCUMENT_API_ENDPOINT = `${Config.API_URL}/auth/uploadDoc`;
 
@@ -83,7 +84,7 @@ const PropertyHouseComponent = () => {
       setHouseType(HouseType || '');
       setWaterHarvesting(waterHarvesting || 'No');
       setSubmersible(submersible || 'No');
-      SetHouseNumber(houseNumber || String(newHouseNumber));
+      SetHouseNumber(newHouseNumber || houseNumber || String(newHouseNumber));
       setBankAccountNumber(bankAccountNumber || '');
       setConsent(consent || 'Yes');
     }
@@ -150,7 +151,8 @@ const PropertyHouseComponent = () => {
       console.log('Source is not recognized');
     }
   };
-
+  console.log(houseNumber);
+  console.log('hyyy');
   return (
     <ScrollView style={AppStyles.container}>
       <Text style={AppStyles.header}>Property Details</Text>
@@ -158,7 +160,7 @@ const PropertyHouseComponent = () => {
       <Text style={AppStyles.label}>House Number *</Text>
       <TextInput
         style={AppStyles.input}
-        value={houseNumber}
+        value={String(houseNumber)}
         onChangeText={SetHouseNumber}
       />
 

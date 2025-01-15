@@ -195,7 +195,7 @@ console.log('response32',data);
                     </View>
                     <TouchableOpacity
                       style={AppStyles.button}
-                      onPress={() => navigation.navigate('UpdateFamilyMember', { member })}
+                      onPress={() => navigation.navigate('UpdateFamily', { member })}
                     >
                       <Text style={AppStyles.buttonText}>Edit Family Member {index + 1}</Text>
                     </TouchableOpacity>

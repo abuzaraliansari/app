@@ -76,7 +76,7 @@ const UpdateOwnerInfo = () => {
       Alert.alert('Invalid Aadhar number', 'It must be 12 digits.');
       return;
     }
-console.log(owner.OwnerID);
+
     const ownerDetails = {
       OwnerID: owner.OwnerID,
       FirstName: firstName,
@@ -100,7 +100,8 @@ console.log(owner.OwnerID);
     };
 
     try {
-      const response = await axios.put(
+      console.log('Sending owner details to API:', ownerDetails);
+      const response = await axios.post(
         `${Config.API_URL}/auth/updateOwner`,
         ownerDetails,
         {
@@ -118,6 +119,7 @@ console.log(owner.OwnerID);
         Alert.alert('Error', response.data.message);
       }
     } catch (error) {
+      console.error('API call error:', error);
       Alert.alert('Error', error.response?.data?.message || 'An error occurred');
     }
   };

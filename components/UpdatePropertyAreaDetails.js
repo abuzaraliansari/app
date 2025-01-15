@@ -156,38 +156,35 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: AppStyles.colors.background,
   },
   title: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
-    color: AppStyles.colors.primary,
     marginBottom: 20,
   },
   input: {
     borderWidth: 1,
-    borderColor: AppStyles.colors.border,
+    borderColor: '#ccc',
     borderRadius: 5,
     padding: 10,
-    marginBottom: 15,
-    backgroundColor: AppStyles.colors.inputBackground,
+    marginBottom: 10,
   },
   picker: {
     borderWidth: 1,
-    borderColor: AppStyles.colors.border,
+    borderColor: '#ccc',
     borderRadius: 5,
-    marginBottom: 15,
+    marginBottom: 10,
   },
   button: {
-    backgroundColor: AppStyles.colors.buttonBackground,
-    padding: 15,
+    backgroundColor: '#007BFF',
+    padding: 10,
     borderRadius: 5,
-    alignItems: 'center',
+    marginTop: 20,
   },
   buttonText: {
-    color: AppStyles.colors.buttonText,
-    fontSize: 16,
+    color: '#FFFFFF',
     fontWeight: 'bold',
+    textAlign: 'center',
   },
 });
 

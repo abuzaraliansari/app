@@ -168,8 +168,8 @@ const FormWithPhotoComponent = () => {
 
   const validateAndSubmit = async () => {
     try {
-      if (photos.length < 3 || photos.some(photo => !photo.uri)) {
-        throw new Error('Please take all three photos.');
+      if (photos.length < 2 || photos.some(photo => !photo.uri)) {
+        throw new Error('Please take at leat two photos.');
       }
 
       if (TenantCount > 0 && (tenantNames.length < TenantCount || tenantDocuments.length < TenantCount ||
