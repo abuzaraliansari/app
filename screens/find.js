@@ -307,7 +307,7 @@ console.log('response32',data);
                     </View>
                     <TouchableOpacity
                       style={AppStyles.button}
-                      onPress={() => navigation.navigate('UpdateProperty', { property })}>
+                      onPress={() => navigation.navigate('UpdateArea', { property })}>
                       <Text style={AppStyles.buttonText}>Edit Property</Text>
                     </TouchableOpacity>
                   </View>

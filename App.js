@@ -33,8 +33,8 @@ import dataScreen from './screens/dataScreen';
 import FinalScreen from './screens/FinalScreen';
 import Find from './screens/find';
 import UpdateOwner from './components/UpdateOwner';
-import UpdateFamilyMember from './components/UpdateFamilyMember';
-import UpdatePropertyDetails from './components/UpdatePropertyAreaDetails';
+import UpdateFamily from './components/UpdateFamilyMember';
+import UpdatePropertyAreaDetails from './components/UpdatePropertyAreaDetails';
 import UpdatePropertyDetailsHouse from './components/UpdatePropertyHouseDetails';
 import UpdateSpecialConsideration from './components/UpdateSpecialConsideration';
 
@@ -300,7 +300,7 @@ const App = () => (
 
           <Stack.Screen
             name="UpdateFamily"
-            component={UpdateFamilyMember}
+            component={UpdateFamily}
             options={({navigation}) => ({
               title: 'UpdateFamily',
               headerLeft: () => (
@@ -320,7 +320,7 @@ const App = () => (
 
           <Stack.Screen
             name="UpdateArea"
-            component={UpdatePropertyDetails}
+            component={UpdatePropertyAreaDetails}
             options={({navigation}) => ({
               title: 'UpdateArea',
               headerLeft: () => (
@@ -342,7 +342,7 @@ const App = () => (
             name="UpdateHouse"
             component={UpdatePropertyDetailsHouse}
             options={({navigation}) => ({
-              title: 'UpdateHouse}',
+              title: 'UpdateHouse',
               headerLeft: () => (
                 <CustomButton
                   onPress={() => navigation.replace('Home')}

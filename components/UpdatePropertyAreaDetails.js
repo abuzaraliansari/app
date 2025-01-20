@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {
   View,
   Text,
@@ -7,185 +7,277 @@ import {
   Alert,
   StyleSheet,
   ScrollView,
-  PermissionsAndroid,
-  Platform,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { Picker } from '@react-native-picker/picker';
+import {useNavigation , useRoute} from '@react-navigation/native';
+import {Picker} from '@react-native-picker/picker';
 import AppStyles from '../styles/AppStyles';
-import { AuthContext } from '../contexts/AuthContext';
+import {AuthContext} from '../contexts/AuthContext';
 import Config from 'react-native-config';
+import Geolocation from '@react-native-community/geolocation';
+import {PermissionsAndroid, Platform} from 'react-native';
+import { FormDataContext } from '../contexts/FormDataContext';
 import axios from 'axios';
 
-const UpdatePropertyDetails = () => {
+const PropertyAreaComponent = () => {
+  const {authState} = useContext(AuthContext);
+  const { updateFormData , formData } = useContext(FormDataContext);
+  const {login} = useContext(AuthContext);
+  const ownerID = authState.ownerId;
+
+  const [galliNumber, setGalliNumber] = useState('');
+  const CreatedBy = authState.user;
+  const token = authState.token;
+  const [colony, setColony] = useState('');
+  const [newColony, setNewColony] = useState('');
+  const [showAddColony, setShowAddColony] = useState(false);
   const navigation = useNavigation();
-  const { userToken } = useContext(AuthContext);
+  const [zone, setZone] = useState('');
+  const [locality, setLocality] = useState('');
+  const [localities, setLocalities] = useState([]);
+  const [Colonies, setColonies] = useState([]);
+  const [selectedLocality, setSelectedLocality] = useState('');
+  const route = useRoute();
+  const source = route.params?.source; 
+  const { property } = route.params;
+  const [propertyID, setPropertyID] = useState(property.PropertyID);
+  const [propertyDetails, setPropertyDetails] = useState(property);
+  const API_ENDPOINTloc = `${Config.API_URL}/auth/Locality`;
+  const API_ENDPOINTcol = `${Config.API_URL}/auth/Colony`;
+  const AddColony = `${Config.API_URL}/auth/AddColony`;
+  const API_ENDPOINT = `${Config.API_URL}/auth/PropertyDetails1`;
+  const API_ENDPOINTnewHouseNumber = `${Config.API_URL}/auth/getMaxHouseNumber`;
+  
 
-  const [propertyDetails, setPropertyDetails] = useState({
-    ownerID: '',
-    locality: '',
-    galliNumber: '',
-    zone: '',
-    colony: '',
-  });
+  const zoneID = 4;
+  const colonyID = 4;
 
-  const [zones, setZones] = useState([]);
-  const [loading, setLoading] = useState(false);
+
 
   useEffect(() => {
-    const fetchZones = async () => {
+    if (property) {
+      setGalliNumber(property.GalliNumber || '');
+      setColony(property.Colony || '');
+      setZone(property.ZoneID ? String(property.ZoneID) : '');
+      setLocality(property.Locality || '');
+      setPropertyID(property.PropertyID || '');
+    }
+  }, [property]);
+
+  useEffect(() => {
+    const fetchLocalities = async zoneId => {
+      setLocalities([]);
       try {
-        const response = await axios.get(`${Config.API_BASE_URL}/api/zones`, {
-          headers: { Authorization: `Bearer ${userToken}` },
+        console.log('API_ENDPOINTloc:', API_ENDPOINTloc);
+        const response = await axios.post(API_ENDPOINTloc, {
+          ZoneID: String(zone),
+        }, {
+          headers: {
+            header_gkey: authState.token,
+          },
         });
-        setZones(response.data.zones || []);
+
+        if (response.data?.locality && Array.isArray(response.data.locality[0])) {
+          setLocalities(response.data.locality[0]);
+        } else {
+          console.error('Invalid response format:', response.data);
+        }
       } catch (error) {
-        console.error('Error fetching zones:', error);
-        Alert.alert('Error', 'Failed to fetch zones');
+        console.error('Error fetching localities:', error);
       }
     };
 
-    fetchZones();
-  }, [userToken]);
+    fetchLocalities(zone);
+  }, [zone]);
 
-  const handleChange = (key, value) => {
-    setPropertyDetails((prevState) => ({
-      ...prevState,
-      [key]: value,
-    }));
-  };
+  const fetchColony = async localityId => {
+    setColonies([]);
 
-  const handleSubmit = async () => {
-    if (!propertyDetails.ownerID) {
-      Alert.alert('Error', 'OwnerID is required');
+  // useEffect(() => {
+    // const fetchColony = async localityId => {
+    //   setColonies([]);
+      try {
+        console.log('API_ENDPOINTcol:', API_ENDPOINTcol);
+        const response = await axios.post(API_ENDPOINTcol, {
+          LocalityID: String(locality),
+        }, {
+          headers: {
+            header_gkey: authState.token,
+          },
+        });
+
+        if (response.data?.locality && Array.isArray(response.data.locality[0])) {
+          setColonies(response.data.locality[0]);
+        } else {
+          console.error('Invalid response format:', response.data);
+        }
+      } catch (error) {
+        console.error('Error fetching colony:', error);
+      }
+    };
+
+    useEffect(() => {
+      fetchColony(locality);
+    }, [locality]);
+
+  const handleAddColony = async () => {
+    if (!newColony) {
+      Alert.alert('Error', 'Please enter the new colony name.');
       return;
     }
 
-    setLoading(true);
-
     try {
-      const response = await axios.put(
-        `${Config.API_BASE_URL}/api/updatePropertyDetails`,
-        { PropertyDetails: propertyDetails },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${userToken}`,
-          },
-        }
-      );
-
-      setLoading(false);
-
-      if (response.data.success) {
-        Alert.alert('Success', response.data.message, [
-          { text: 'OK', onPress: () => navigation.goBack() },
-        ]);
+      const response = await axios.post(AddColony, {
+        LocalityID: locality,
+        Colony: newColony,
+      }, {
+        headers: {
+          header_gkey: authState.token,
+        },
+      });
+console.log('response:', response);
+      if (response.status === 201) {
+        Alert.alert('Success', 'New colony added successfully.');
+        setShowAddColony(false);
+        setNewColony('');
+        fetchColony(locality); // Refresh the colonies list
       } else {
-        Alert.alert('Error', response.data.message);
+        Alert.alert('Error', 'Failed to add new colony.');
       }
     } catch (error) {
-      setLoading(false);
-      console.error('Error updating property details:', error);
-      Alert.alert(
-        'Error',
-        error.response?.data?.message || 'An error occurred while updating property details'
-      );
+      console.error('Error adding new colony:', error);
+      Alert.alert('Error', 'Failed to add new colony.');
+    }
+  };
+
+  const handleNext = async () => {
+    if (!galliNumber || !colony || !zone || !locality) {
+      Alert.alert('Error', 'Please fill all the required fields.');
+      return;
+    }
+
+    try {
+      const response = await axios.post(API_ENDPOINTnewHouseNumber, {
+        zone,
+        galliNumber,
+      }, {
+        headers: {
+          header_gkey: authState.token,
+        },
+      });
+
+      if (response.status === 200 && response.data.success) {
+        const newHouseNumber = response.data.newHouseNumber;
+        const updatedPropertyDetails = {
+          ...propertyDetails,
+          ZoneID: zone,
+          Locality: locality,
+          Colony: colony,
+          GalliNumber: galliNumber,
+          HouseNumber: newHouseNumber,
+        };
+  
+        updateFormData({
+          propertyDetails: updatedPropertyDetails,
+        });
+        console.log('Area:', formData);
+        console.log('newHouseNumber:', newHouseNumber);
+        console.log('updatedPropertyDetails:', updatedPropertyDetails);
+  
+        navigation.navigate('UpdateHouse', { updatedPropertyDetails , newHouseNumber });
+      } else {
+        Alert.alert('Error', 'Failed to fetch new house number.');
+      }
+    } catch (error) {
+      console.error('Error fetching new house number:', error);
+      Alert.alert('Error', 'Failed to fetch new house number.');
     }
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.title}>Update Property Details</Text>
+    <ScrollView style={AppStyles.container}>
+      <Text style={AppStyles.header}>Property Details</Text>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Owner ID"
-        keyboardType="numeric"
-        value={propertyDetails.ownerID}
-        onChangeText={(text) => handleChange('ownerID', text)}
-      />
-
-      <TextInput
-        style={styles.input}
-        placeholder="Locality"
-        keyboardType="numeric"
-        value={propertyDetails.locality}
-        onChangeText={(text) => handleChange('locality', text)}
-      />
-
-      <TextInput
-        style={styles.input}
-        placeholder="Galli Number"
-        value={propertyDetails.galliNumber}
-        onChangeText={(text) => handleChange('galliNumber', text)}
-      />
-
+      <Text style={AppStyles.label}>Zone</Text>
       <Picker
-        selectedValue={propertyDetails.zone}
-        onValueChange={(value) => handleChange('zone', value)}
-        style={styles.picker}
-      >
+        selectedValue={zone}
+        onValueChange={itemValue => setZone(itemValue)}
+        style={AppStyles.picker}>
         <Picker.Item label="Select Zone" value="" />
-        {zones.map((zone) => (
-          <Picker.Item key={zone.id} label={zone.name} value={zone.id} />
+        <Picker.Item label="Zone 1" value="1" />
+        <Picker.Item label="Zone 2" value="2" />
+        <Picker.Item label="Zone 3" value="3" />
+        <Picker.Item label="Zone 4" value="4" />
+      </Picker>
+
+      <Text style={AppStyles.label}>Locality Ward Sankhya</Text>
+      <Picker
+        selectedValue={locality}
+        onValueChange={itemValue => setLocality(itemValue)}
+        style={AppStyles.picker}>
+        <Picker.Item label="Select Locality Ward" value="" />
+        {localities.map(loc => (
+          <Picker.Item
+            key={loc.LocalityID}
+            label={loc.Locality}
+            value={loc.LocalityID}
+          />
         ))}
       </Picker>
 
+      <Text style={AppStyles.label}>Colony</Text>
+      <Picker
+        selectedValue={colony}
+        onValueChange={itemValue => {
+          if (itemValue === 'addNewColony') {
+            setShowAddColony(true);
+          } else {
+            setShowAddColony(false);
+            setColony(itemValue);
+          }
+        }}
+        style={AppStyles.picker}>
+        <Picker.Item label="Select Colony" value="" />
+        {Colonies.map(col => (
+          <Picker.Item
+            key={col.ColonyID}
+            label={col.Colony}
+            value={col.Colony}
+          />
+        ))}
+        <Picker.Item label="Add New Colony" value="addNewColony" />
+      </Picker>
+
+      {showAddColony && (
+        <View>
+          <TextInput
+            style={AppStyles.input}
+            placeholder="Enter New Colony Name"
+            value={newColony}
+            onChangeText={setNewColony}
+          />
+          <TouchableOpacity
+            style={[AppStyles.button, AppStyles.probutton]}
+            onPress={handleAddColony}>
+            <Text style={AppStyles.buttonText}>Add Colony</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
+      <Text style={AppStyles.label}>Galli Number</Text>
       <TextInput
-        style={styles.input}
-        placeholder="Colony"
-        value={propertyDetails.colony}
-        onChangeText={(text) => handleChange('colony', text)}
+        style={AppStyles.input}
+        placeholder="Enter Galli Number"
+        value={galliNumber}
+        onChangeText={setGalliNumber}
       />
 
       <TouchableOpacity
-        style={styles.button}
-        onPress={handleSubmit}
-        disabled={loading}
-      >
-        <Text style={styles.buttonText}>
-          {loading ? 'Updating...' : 'Update'}
-        </Text>
+        style={[AppStyles.button, AppStyles.probutton]}
+        onPress={handleNext}>
+        <Text style={AppStyles.buttonText}>Save and Next</Text>
       </TouchableOpacity>
     </ScrollView>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 10,
-  },
-  picker: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    marginBottom: 10,
-  },
-  button: {
-    backgroundColor: '#007BFF',
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 20,
-  },
-  buttonText: {
-    color: '#FFFFFF',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-});
-
-export default UpdatePropertyDetails;
+export default PropertyAreaComponent;

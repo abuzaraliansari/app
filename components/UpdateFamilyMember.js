@@ -18,88 +18,79 @@ import Config from 'react-native-config';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import axios from 'axios';
 
-const UpdateFamilyMember = () => {
-  const { authState } = useContext(AuthContext);
-  const route = useRoute();
+const UpdateFamily = () => {
   const navigation = useNavigation();
-  const { member } = route.params || {};
-  const [Relation, setRelation] = useState(member?.Relation || '');
-  const [FirstName, setFirstName] = useState(member?.FirstName || '');
-  const [LastName, setLastName] = useState(member?.LastName || '');
-  const [age, setAge] = useState(member?.Age || '');
-  const [gender, setGender] = useState(member?.Gender || '');
-  const [occupation, setOccupation] = useState(member?.Occupation || '');
-  const [Income, setIncome] = useState(member?.Income || '');
-  const [DOB, setDob] = useState(member?.DOB ? new Date(member.DOB) : null);
+  const route = useRoute();
+  const { authState } = useContext(AuthContext);
+  const { member } = route.params;
+  console.log(member.FamilyMemberID);
+  const FamilyMemberID = member.FamilyMemberID;
+  const [firstName, setFirstName] = useState(member.FirstName || '');
+  const [lastName, setLastName] = useState(member.LastName || '');
+  const [relation, setRelation] = useState(member.Relation || '');
+  const [age, setAge] = useState(member.Age || '');
+  const [DOB, setDob] = useState(member.DOB ? new Date(member.DOB) : null);
+  const [gender, setGender] = useState(member.Gender || '');
+  const [occupation, setOccupation] = useState(member.Occupation || '');
+  const [income, setIncome] = useState(member.Income || '');
+  const [isActive, setIsActive] = useState(member.IsActive || false);
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState('');
-  const [isError, setIsError] = useState(false);
 
+  const ModifiedBy = authState.user;
+  const DateModified = new Date().toISOString();
   const CreatedBy = authState.user;
   const token = authState.token;
 
-  useEffect(() => {
-    if (member) {
-      setRelation(member.Relation || '');
-      setFirstName(member.FirstName || '');
-      setLastName(member.LastName || '');
-      setAge(member.Age || '');
-      setGender(member.Gender || '');
-      setOccupation(member.Occupation || '');
-      setIncome(member.Income || '');
-      setDob(member.DOB ? new Date(member.DOB) : null);
-    }
-  }, [member]);
 
-  const handleUpdateFamilyMember = async () => {
-    if (!Relation || !FirstName || !age || !gender) {
-      setMessage('Relation, FirstName, Age, Gender fields are required.');
-      setIsError(true);
+  const handleSubmit = async () => {
+    if (!firstName || !lastName || !relation || !age || !gender) {
+      Alert.alert('Error', 'First Name, Last Name, Relation, Age, and Gender are required fields.');
       return;
     }
 
-    const updatedFamilyMember = {
+    if (!['M', 'F', 'O'].includes(gender)) {
+      Alert.alert('Error', "Gender must be 'M', 'F', or 'O'.");
+      return;
+    }
+
+    const familyMemberDetails = {
       FamilyMemberID: member.FamilyMemberID,
       OwnerID: member.OwnerID,
-      Relation,
-      FirstName,
-      LastName,
+      FirstName: firstName,
+      LastName: lastName,
+      Relation: relation,
       Age: age,
       DOB: DOB ? DOB.toISOString().split('T')[0] : null,
       Gender: gender,
       Occupation: occupation,
-      Income,
-      ModifiedBy: CreatedBy,
-      DateModified: new Date().toISOString(),
+      Income: income,
+      IsActive: isActive,
+      ModifiedBy: ModifiedBy,
+      DateModified: DateModified,
     };
 
     try {
-      setLoading(true);
-      const response = await axios.put(
+      console.log('Sending family member details to API:', familyMemberDetails);
+      const response = await axios.post(
         `${Config.API_URL}/auth/updateFamily`,
-        updatedFamilyMember,
+        familyMemberDetails,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${authState.token}`,
           },
         }
       );
 
       if (response.data.success) {
-        setMessage('Family member updated successfully.');
-        setIsError(false);
-        navigation.goBack();
+        Alert.alert('Success', response.data.message, [
+          { text: 'OK', onPress: () => navigation.goBack() },
+        ]);
       } else {
-        setMessage(response.data.message);
-        setIsError(true);
+        Alert.alert('Error', response.data.message);
       }
     } catch (error) {
       console.error('API call error:', error);
-      setMessage(error.response?.data?.message || 'An error occurred');
-      setIsError(true);
-    } finally {
-      setLoading(false);
+      Alert.alert('Error', error.response?.data?.message || 'An error occurred');
     }
   };
 
@@ -120,7 +111,7 @@ const UpdateFamilyMember = () => {
 
       <Text style={AppStyles.label}>Relation *</Text>
       <Picker
-        selectedValue={Relation}
+        selectedValue={relation}
         style={AppStyles.picker}
         onValueChange={itemValue => setRelation(itemValue)}>
         <Picker.Item label="Select Relation" value="" />
@@ -143,7 +134,7 @@ const UpdateFamilyMember = () => {
       <TextInput
         style={AppStyles.input}
         placeholder="Enter Name"
-        value={FirstName}
+        value={firstName}
         onChangeText={setFirstName}
       />
 
@@ -151,7 +142,7 @@ const UpdateFamilyMember = () => {
       <TextInput
         style={AppStyles.input}
         placeholder="Enter Last Name"
-        value={LastName}
+        value={lastName}
         onChangeText={setLastName}
       />
 
@@ -226,7 +217,7 @@ const UpdateFamilyMember = () => {
 
       <Text style={AppStyles.label}>Income</Text>
       <Picker
-        selectedValue={Income}
+        selectedValue={income}
         style={AppStyles.picker}
         onValueChange={itemValue => setIncome(itemValue)}>
         <Picker.Item label="Select an Income range" value="0" />
@@ -248,24 +239,13 @@ const UpdateFamilyMember = () => {
         <Picker.Item label="10,000,000+" value="10,000,000+" />
       </Picker>
 
-      {loading ? (
-        <ActivityIndicator size="large" color="#1E90FF" />
-      ) : (
-        <TouchableOpacity
-          style={AppStyles.button}
-          onPress={handleUpdateFamilyMember}>
-          <Text style={AppStyles.buttonText}>Update Member</Text>
+      <TouchableOpacity style={AppStyles.button} onPress={handleSubmit}>
+          <Text style={AppStyles.buttonText}>Update</Text>
         </TouchableOpacity>
-      )}
+      </View>
 
-      {message && (
-        <Text style={[AppStyles.message, { color: isError ? 'red' : 'green' }]}>
-          {message}
-        </Text>
-      )}
-    </View>
     </ScrollView>
   );
 };
 
-export default UpdateFamilyMember;
+export default UpdateFamily;

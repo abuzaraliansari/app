@@ -42,6 +42,7 @@ const PropertyAreaComponent = () => {
   const AddColony = `${Config.API_URL}/auth/AddColony`;
   const API_ENDPOINT = `${Config.API_URL}/auth/PropertyDetails1`;
   const API_ENDPOINTnewHouseNumber = `${Config.API_URL}/auth/getMaxHouseNumber`;
+  
 
   const zoneID = 4;
   const colonyID = 4;
