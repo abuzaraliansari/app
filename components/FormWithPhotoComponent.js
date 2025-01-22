@@ -87,8 +87,9 @@ const FormWithPhotoComponent = () => {
           console.log('Camera error:', response.errorMessage);
         } else if (response.assets && response.assets.length > 0) {
           const { uri, fileName, fileSize } = response.assets[0];
+          const newFileName = `${OwnerID}_${PropertyID}_${fileName}`;
           const updatedPhotos = [...photos];
-          updatedPhotos[index] = { uri, fileName, fileSize };
+          updatedPhotos[index] = { uri, fileName: newFileName, fileSize };
           setPhotos(updatedPhotos);
 
           // Save photo details locally
@@ -114,10 +115,12 @@ const FormWithPhotoComponent = () => {
       });
       if (result) {
         const { name: documentName, size: documentSize, type: documentType, uri: documentUri } = result;
+        const newDocumentName = `${OwnerID}_${PropertyID}_${documentName}`;
+
 
         const updatedTenantDocuments = [...tenantDocuments];
         updatedTenantDocuments[index] = {
-          documentName,
+          documentName: newDocumentName,
           documentPath: documentUri,
           documentSize,
           documentType,

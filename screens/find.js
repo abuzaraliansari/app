@@ -37,13 +37,17 @@ const Find = () => {
         Alert.alert('Error', 'No data found.');
       }
     } catch (error) {
-      console.error('Error fetching data:', error);
-      Alert.alert('Error', 'Failed to fetch data.');
+      if (error.response && error.response.status === 204) {
+        Alert.alert('Error', 'No owner found.');
+      } else {
+        console.error('Error fetching data:', error);
+        Alert.alert('Error', 'An error occurred while fetching data.');
+      }
     } finally {
       setLoading(false);
     }
   };
-console.log('response32',data);
+console.log('response',data);
   return (
     <ScrollView style={AppStyles.containerfind}>
       <View style={AppStyles.content}>
@@ -346,7 +350,7 @@ console.log('response32',data);
                     </View>
                     <TouchableOpacity
                       style={AppStyles.button}
-                      onPress={() => navigation.navigate('UpdateConsideration', { consideration })}>
+                      onPress={() => navigation.navigate('UpdateSpecial', { consideration })}>
                       <Text style={AppStyles.buttonText}>Edit Consideration </Text>
                     </TouchableOpacity>
 
