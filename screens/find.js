@@ -151,7 +151,7 @@ console.log('response',data);
           </TouchableOpacity>
             </View>
 
-            <Text style={AppStyles.displayHeader}>Family Members</Text>
+            {/* <Text style={AppStyles.displayHeader}>Family Members</Text>
             <View style={AppStyles.displayTable}>
               {data.familyMembers && data.familyMembers.length > 0 ? (
                 data.familyMembers.map((member, index) => (
@@ -359,7 +359,7 @@ console.log('response',data);
               ) : (
                 <Text style={AppStyles.displayNoDataText}>No special considerations available</Text>
               )}
-            </View>
+            </View> */}
           </View>
         )}
       </View>
