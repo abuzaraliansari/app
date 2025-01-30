@@ -93,7 +93,27 @@ const OwnerComponent = () => {
     }
   }, [source, formData.ownerDetails]);
 
-  
+  const checkMobileNumber = async (mobileNumber) => {
+    try {
+      const response = await axios.post(`${Config.API_URL}/auth/checkMobile`, {
+        mobileNumber,
+      });
+      if (response.data.exists) {
+        Alert.alert('Error', 'This mobile number is already present. Please change the number.');
+      }
+    } catch (error) {
+      console.error('Error checking mobile number:', error);
+      Alert.alert('Error', 'Failed to check mobile number. Please try again.');
+    }
+  };
+
+  const handleMobileNumberChange = (number) => {
+    setMobileNumber(number);
+    if (number.length === 10) {
+      checkMobileNumber(number);
+    }
+  };
+
   const handleNext = () => {
     console.log('handleNext called');
     console.log('source:', source);
@@ -231,7 +251,7 @@ console.log('Temporary saved data:', ownerDetails.NumberOfMembers);
       <TextInput
         style={AppStyles.input}
         value={mobileNumber}
-        onChangeText={setMobileNumber}
+        onChangeText={handleMobileNumberChange}
         keyboardType="phone-pad"
         placeholder="Enter mobile number"
       />
