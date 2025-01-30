@@ -125,7 +125,7 @@ const App = () => (
             name="PropertyArea"
             component={PropertyScreenArea}
             options={({navigation}) => ({
-              title: 'PropertyArea',
+              title: 'Property',
               headerLeft: () => (
                 <CustomButton
                   onPress={() => navigation.replace('Home')}
@@ -144,7 +144,7 @@ const App = () => (
             name="PropertyHouse"
             component={PropertyScreenHouse}
             options={({navigation}) => ({
-              title: 'PropertyHouse',
+              title: 'Property',
               headerLeft: () => (
                 <CustomButton
                   onPress={() => navigation.replace('Home')}
@@ -163,7 +163,7 @@ const App = () => (
             name="LiveLocation"
             component={LiveLocationScreen}
             options={({navigation}) => ({
-              title: 'LiveLocation',
+              title: 'Location',
               headerLeft: () => (
                 <CustomButton
                   onPress={() => navigation.replace('Home')}
@@ -182,7 +182,7 @@ const App = () => (
             name="Consideration"
             component={SpecialConsiderationScreen}
             options={({navigation}) => ({
-              title: 'Consideration',
+              title: 'Consider',
               headerLeft: () => (
                 <CustomButton
                   onPress={() => navigation.replace('Home')}
@@ -201,7 +201,7 @@ const App = () => (
             name="FormWithPhoto"
             component={FormWithPhoto}
             options={({navigation}) => ({
-              title: 'FormWithPhoto',
+              title: 'Photo',
               headerLeft: () => (
                 <CustomButton
                   onPress={() => navigation.replace('Home')}
