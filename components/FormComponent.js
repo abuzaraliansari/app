@@ -66,11 +66,13 @@ const LoginComponent = () => {
   };
 
   return (
-    <ImageBackground
-      source={require('../logo.jpg')}
+    // <ImageBackground
+    //   source={require('../logo.jpg')}
+    //   style={AppStyles.loginBackground}
+    // >
+      <ScrollView
       style={AppStyles.loginBackground}
-    >
-      <ScrollView>
+      >
         <View style={AppStyles.loginContainer}>
           <Image source={require('../logo.jpg')} style={AppStyles.loginLogo} />
           <Text style={AppStyles.loginTitle}>Babrala House No. Allocation App!</Text>
@@ -106,7 +108,7 @@ const LoginComponent = () => {
           </TouchableOpacity>
         </View>
       </ScrollView>
-    </ImageBackground>
+    // </ImageBackground>
   );
 };
 
