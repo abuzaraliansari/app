@@ -12,6 +12,13 @@ import axios from 'axios';
 import Config from 'react-native-config';
 import { useNavigation } from '@react-navigation/native';
 
+const maskAadhaarNumber = (aadhaarNumber) => {
+  if (aadhaarNumber && aadhaarNumber.length === 12) {
+    return '********' + aadhaarNumber.slice(-4);
+  }
+  return 'N/A';
+};
+
 const Find = () => {
   const [mobileNumber, setMobileNumber] = useState('');
   const [data, setData] = useState(null);
@@ -129,9 +136,9 @@ console.log('response',data);
                 <Text style={AppStyles.displayCell}>{data.owner.PanNumber || 'N/A'}</Text>
               </View>
               <View style={AppStyles.displayRow}>
-                <Text style={AppStyles.displayCellHeader}>Adhar Card Number</Text>
-                <Text style={AppStyles.displayCell}>{data.owner.AdharNumber || 'N/A'}</Text>
-              </View>
+      <Text style={AppStyles.displayCellHeader}>Adhar Card Number</Text>
+      <Text style={AppStyles.displayCell}>{maskAadhaarNumber(data.owner.AdharNumber)}</Text>
+    </View>
               <View style={AppStyles.displayRow}>
                 <Text style={AppStyles.displayCellHeader}>Number Of Members</Text>
                 <Text style={AppStyles.displayCell}>{data.owner.NumberOfMembers || 'N/A'}</Text>
@@ -144,11 +151,11 @@ console.log('response',data);
                 <Text style={AppStyles.displayCellHeader}>Modified By</Text>
                 <Text style={AppStyles.displayCell}>{data.owner.ModifiedBy || 'N/A'}</Text>
               </View>
-              <TouchableOpacity
+              {/* <TouchableOpacity
             style={AppStyles.button}
             onPress={() => navigation.navigate('UpdateOwner', { owner: data.owner  ,source: 'AllDetails' })}>
             <Text style={AppStyles.buttonText}>Edit Owner</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
             </View>
 
             {/* <Text style={AppStyles.displayHeader}>Family Members</Text>
