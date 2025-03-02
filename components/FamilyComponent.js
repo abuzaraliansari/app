@@ -122,8 +122,13 @@ const FamilyMember = () => {
 
   const handleNext = () => {
     console.log('familyMembers:', formData.familyMembers);
+
+    if (formData.familyMembers.length < NumberOfMembers) {
+      Alert.alert('Error', `Please add ${NumberOfMembers} family members before proceeding.`);
+      return;
+    }
     if (source === 'Home') {
-      console.log('Navigating to Family');
+      console.log('Navigating to Family data');
       navigation.navigate('FamilyData', { NumberOfMembers ,source: 'Home'  });
     } else if (source === 'AllDetails') {
       console.log('Navigating to AllDetails');

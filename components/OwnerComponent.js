@@ -1,29 +1,24 @@
 import React, { useState, useContext, useEffect } from 'react';
-import {useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import {
   View,
   Text,
   TextInput,
-  Button,
   Alert,
-  StyleSheet,
   TouchableOpacity,
   ScrollView,
   Platform,
 } from 'react-native';
-import {Picker} from '@react-native-picker/picker';
-import {AuthContext} from '../contexts/AuthContext';
+import { Picker } from '@react-native-picker/picker';
+import { AuthContext } from '../contexts/AuthContext';
 import axios from 'axios';
 import AppStyles from '../styles/AppStyles';
 import Config from 'react-native-config';
 import { FormDataContext } from '../contexts/FormDataContext';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-
-
 const OwnerComponent = () => {
-  const {authState} = useContext(AuthContext);
-  const {login} = useContext(AuthContext);
+  const { authState } = useContext(AuthContext);
   const { formData, updateFormData } = useContext(FormDataContext);
   const [firstName, setFirstName] = useState('');
   const [middleName, setMiddleName] = useState('');
@@ -42,8 +37,6 @@ const OwnerComponent = () => {
   const [PanNumber, setPanNumber] = useState('');
   const [AdharNumber, setAdharNumber] = useState('');
   const [NumberOfMembers, setNumberOfMembers] = useState('');
-  const [Cast, setCast] = useState('');
-  const [IsActive, setAIsActive] = useState('');
   const [DOB, setDob] = useState(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const route = useRoute();
@@ -95,15 +88,18 @@ const OwnerComponent = () => {
 
   const checkMobileNumber = async (mobileNumber) => {
     try {
-      const response = await axios.post(`${Config.API_URL}/auth/checkMobile`, {
+      const response = await axios.post(`${Config.API_URL}/auth/check`, {
         mobileNumber,
       });
       if (response.data.exists) {
         Alert.alert('Error', 'This mobile number is already present. Please change the number.');
+        return true;
       }
+      return false;
     } catch (error) {
       console.error('Error checking mobile number:', error);
       Alert.alert('Error', 'Failed to check mobile number. Please try again.');
+      return true;
     }
   };
 
@@ -114,105 +110,101 @@ const OwnerComponent = () => {
     }
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     console.log('handleNext called');
     console.log('source:', source);
 
-      if (!firstName || !lastName || !mobileNumber || !CreatedBy || !FatherName) {
-        Alert.alert('Error', 'First Name, Last Name, Mobile Number, Created By, and Father Name are required fields.');
-        return;
-      }
-  
-      if (!age || !gender || !religion || !category || !AdharNumber) {
-        Alert.alert('Error', 'Age, Gender, Religion, Category, and Aadhar Number are required fields.');
-        return;
-      }
-  
-      if (!['M', 'F', 'O'].includes(gender)) {
-        Alert.alert('Error', "Gender must be 'M', 'F', or 'O'.");
-        return;
-      }
-  
-      const emailRegex = /^[^\s@]+@gmail\.com$/;
-      if (Email.trim() !== '' && !emailRegex.test(Email)) {
-        Alert.alert('Error', 'Invalid email format. Email must end with gmail.com.');
-        return;
-      }
-      const mobileRegex = /^\d{10}$/;
-      if (!mobileRegex.test(mobileNumber)) {
-        Alert.alert('Invalid Mobile number', 'It must be 10 digits.');
-        return; 
-      }
-      const aadharRegex = /^\d{12}$/;
-      if (!aadharRegex.test(AdharNumber)) {
-        Alert.alert('Invalid Aadhar number', 'It must be 12 digits.');
-        return; 
-      }
+    if (!firstName || !lastName || !mobileNumber || !CreatedBy || !FatherName) {
+      Alert.alert('Error', 'First Name, Last Name, Mobile Number, Created By, and Father Name are required fields.');
+      return;
+    }
 
+    if (!age || !gender || !religion || !category || !AdharNumber) {
+      Alert.alert('Error', 'Age, Gender, Religion, Category, and Aadhar Number are required fields.');
+      return;
+    }
 
-      //const ownerDetails = {
-        const ownerDetails ={
-        firstName,
-        middleName,
-        lastName,
-        FatherName,
-        mobileNumber,
-        occupation,
-        age,
-        DOB,
-        gender,
-        income,
-        religion,
-        category,
-        CreatedBy,
-        Email,
-        PanNumber,
-        AdharNumber,
-        NumberOfMembers,
-        DOB: DOB ? DOB.toISOString().split('T')[0] : null, // Format the date as YYYY-MM-DD
-      };
+    if (!['M', 'F', 'O'].includes(gender)) {
+      Alert.alert('Error', "Gender must be 'M', 'F', or 'O'.");
+      return;
+    }
 
+    const emailRegex = /^[^\s@]+@gmail\.com$/;
+    if (Email.trim() !== '' && !emailRegex.test(Email)) {
+      Alert.alert('Error', 'Invalid email format. Email must end with gmail.com.');
+      return;
+    }
+    const mobileRegex = /^\d{10}$/;
+    if (!mobileRegex.test(mobileNumber)) {
+      Alert.alert('Invalid Mobile number', 'It must be 10 digits.');
+      return;
+    }
+    const aadharRegex = /^\d{12}$/;
+    if (!aadharRegex.test(AdharNumber)) {
+      Alert.alert('Invalid Aadhar number', 'It must be 12 digits.');
+      return;
+    }
 
-      updateFormData({
-        ownerDetails,
-        familyMembers: formData.familyMembers || [],
-        propertyDetails: formData.propertyDetails || {},
-        specialConsideration: formData.specialConsideration || {},
-      });
+    const mobileExists = await checkMobileNumber(mobileNumber);
+    if (mobileExists) {
+      return; // Stop execution if the mobile number exists
+    }
 
-console.log('Temporary saved data:', ownerDetails);
-
-console.log('Temporary saved data:', ownerDetails.NumberOfMembers);
-
-      // navigation.navigate('Family' ,{NumberOfMembers}); 
-
-   // Conditionally navigate based on the source
-   if (source === 'Home') {
-    console.log('Navigating to Family');
-    navigation.navigate('Family', { NumberOfMembers,source: 'Home' });
-  } else if (source === 'AllDetails') {
-    console.log('Navigating to AllDetails');
-    navigation.navigate('AllDetails');
-  } else {
-    console.log('Source is not recognized');
-  }
-};
-    
-    const showDatePickerHandler = () => {
-      setShowDatePicker(true);
+    const ownerDetails = {
+      firstName,
+      middleName,
+      lastName,
+      FatherName,
+      mobileNumber,
+      occupation,
+      age,
+      DOB,
+      gender,
+      income,
+      religion,
+      category,
+      CreatedBy,
+      Email,
+      PanNumber,
+      AdharNumber,
+      NumberOfMembers,
+      DOB: DOB ? DOB.toISOString().split('T')[0] : null, // Format the date as YYYY-MM-DD
     };
-  
-    const onDateChange = (event, selectedDate) => {
-      const currentDate = selectedDate || DOB;
-      setShowDatePicker(Platform.OS === 'ios');
-      setDob(currentDate);
-    };
-  
+
+    updateFormData({
+      ownerDetails,
+      familyMembers: formData.familyMembers || [],
+      propertyDetails: formData.propertyDetails || {},
+      specialConsideration: formData.specialConsideration || {},
+    });
+
+    console.log('Temporary saved data:', ownerDetails);
+    console.log('Temporary saved data:', ownerDetails.NumberOfMembers);
+
+    // Conditionally navigate based on the source
+    if (source === 'Home') {
+      console.log('Navigating to Family');
+      navigation.navigate('Family', { NumberOfMembers, source: 'Home' });
+    } else if (source === 'AllDetails') {
+      console.log('Navigating to AllDetails');
+      navigation.navigate('AllDetails');
+    } else {
+      console.log('Source is not recognized');
+    }
+  };
+
+  const showDatePickerHandler = () => {
+    setShowDatePicker(true);
+  };
+
+  const onDateChange = (event, selectedDate) => {
+    const currentDate = selectedDate || DOB;
+    setShowDatePicker(Platform.OS === 'ios');
+    setDob(currentDate);
+  };
 
   return (
     <ScrollView contentContainerStyle={AppStyles.container}>
-      
-
       <Text style={AppStyles.heading}>Owner Details</Text>
 
       <Text style={AppStyles.label}>First Name *</Text>
@@ -239,7 +231,7 @@ console.log('Temporary saved data:', ownerDetails.NumberOfMembers);
         placeholder="Enter last name"
       />
 
-<Text style={AppStyles.label}>Father Name *</Text>
+      <Text style={AppStyles.label}>Father Name *</Text>
       <TextInput
         style={AppStyles.input}
         value={FatherName}
@@ -257,7 +249,7 @@ console.log('Temporary saved data:', ownerDetails.NumberOfMembers);
       />
 
       <Text style={AppStyles.label}>Occupation</Text>
-       <Picker
+      <Picker
         selectedValue={occupation}
         onValueChange={(itemValue) => setOccupation(itemValue)}
         style={AppStyles.picker}
@@ -378,7 +370,6 @@ console.log('Temporary saved data:', ownerDetails.NumberOfMembers);
         keyboardType="numeric"
         placeholder="Enter Number Of Members"
       />
-      
 
       <Text style={AppStyles.label}>Email</Text>
       <TextInput
@@ -387,7 +378,7 @@ console.log('Temporary saved data:', ownerDetails.NumberOfMembers);
         onChangeText={setEmail}
         placeholder="Enter Email"
       />
-      
+
       <Text style={AppStyles.label}>PanNumber</Text>
       <TextInput
         style={AppStyles.input}
@@ -403,7 +394,6 @@ console.log('Temporary saved data:', ownerDetails.NumberOfMembers);
         keyboardType="numeric"
         placeholder="Enter AdharNumber"
       />
-      
 
       <TouchableOpacity style={AppStyles.button} onPress={handleNext}>
         <Text style={AppStyles.buttonText}>Save and Next</Text>

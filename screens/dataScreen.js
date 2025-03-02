@@ -33,6 +33,7 @@ const OwnerDetailsScreen = () => {
     //navigation.navigate('PropertyArea', { source: 'Home' }); // Replace 'NextPage' with the actual route name of the next page
     if (source === 'Home') {
       console.log('Navigating to Family');
+      console.log(source);
       navigation.navigate('PropertyArea', { source: 'Home' });
     } else if (source === 'AllDetails') {
       console.log('Navigating to AllDetails');
@@ -94,7 +95,7 @@ const OwnerDetailsScreen = () => {
                   </View>
                   <TouchableOpacity
                     style={AppStyles.button}
-                    onPress={() => navigation.navigate('Family', { source: 'AllDetails', index })}>
+                    onPress={() => navigation.navigate('Family', { source: 'Home', index })}>
                     <Text style={AppStyles.buttonText}>Edit Family Member</Text>
                   </TouchableOpacity>
                 </View>

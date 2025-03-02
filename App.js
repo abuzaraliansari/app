@@ -1,11 +1,11 @@
 import React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import FormScreen from './screens/FormScreen';
 import OwnerScreen from './screens/OwnerScreen';
 import DisplayAllDetails from './screens/DisplayAllDetails';
-import {FormDataProvider} from './contexts/FormDataContext';
-import {AuthProvider} from './contexts/AuthContext';
+import { FormDataProvider } from './contexts/FormDataContext';
+import { AuthProvider } from './contexts/AuthContext';
 import OwnerComponent from './components/OwnerComponent';
 import AppStyles from './styles/AppStyles';
 import {
@@ -40,7 +40,7 @@ import UpdateSpecialConsideration from './components/UpdateSpecialConsideration'
 
 const Stack = createStackNavigator();
 
-const CustomButton = ({onPress, title}) => (
+const CustomButton = ({ onPress, title }) => (
   <TouchableOpacity onPress={onPress} style={AppStyles.customButton}>
     <Text style={AppStyles.customButtonText}>{title}</Text>
   </TouchableOpacity>
@@ -67,7 +67,7 @@ const App = () => (
           <Stack.Screen
             name="Owner"
             component={OwnerComponent}
-            options={({navigation}) => ({
+            options={({ navigation }) => ({
               title: 'Owner',
               headerLeft: () => (
                 <CustomButton
@@ -86,7 +86,7 @@ const App = () => (
           <Stack.Screen
             name="Family"
             component={FamilyScreen}
-            options={({navigation}) => ({
+            options={({ navigation }) => ({
               title: 'Family',
               headerLeft: () => (
                 <CustomButton
@@ -105,7 +105,7 @@ const App = () => (
           <Stack.Screen
             name="FamilyData"
             component={dataScreen}
-            options={({navigation}) => ({
+            options={({ navigation }) => ({
               title: 'FamilyData',
               headerLeft: () => (
                 <CustomButton
@@ -124,7 +124,7 @@ const App = () => (
           <Stack.Screen
             name="PropertyArea"
             component={PropertyScreenArea}
-            options={({navigation}) => ({
+            options={({ navigation }) => ({
               title: 'Property',
               headerLeft: () => (
                 <CustomButton
@@ -143,7 +143,7 @@ const App = () => (
           <Stack.Screen
             name="PropertyHouse"
             component={PropertyScreenHouse}
-            options={({navigation}) => ({
+            options={({ navigation }) => ({
               title: 'Property',
               headerLeft: () => (
                 <CustomButton
@@ -162,7 +162,7 @@ const App = () => (
           <Stack.Screen
             name="LiveLocation"
             component={LiveLocationScreen}
-            options={({navigation}) => ({
+            options={({ navigation }) => ({
               title: 'Location',
               headerLeft: () => (
                 <CustomButton
@@ -181,7 +181,7 @@ const App = () => (
           <Stack.Screen
             name="Consideration"
             component={SpecialConsiderationScreen}
-            options={({navigation}) => ({
+            options={({ navigation }) => ({
               title: 'Consider',
               headerLeft: () => (
                 <CustomButton
@@ -200,7 +200,7 @@ const App = () => (
           <Stack.Screen
             name="FormWithPhoto"
             component={FormWithPhoto}
-            options={({navigation}) => ({
+            options={({ navigation }) => ({
               title: 'Photo',
               headerLeft: () => (
                 <CustomButton
@@ -219,7 +219,7 @@ const App = () => (
           <Stack.Screen
             name="AllDetails"
             component={DisplayAllDetails}
-            options={({navigation}) => ({
+            options={({ navigation }) => ({
               title: 'AllDetails',
               headerLeft: () => (
                 <CustomButton
@@ -259,7 +259,7 @@ const App = () => (
           <Stack.Screen
             name="Find"
             component={Find}
-            options={({navigation}) => ({
+            options={({ navigation }) => ({
               title: 'Find',
               headerLeft: () => (
                 <CustomButton
@@ -281,7 +281,7 @@ const App = () => (
           <Stack.Screen
             name="UpdateOwner"
             component={UpdateOwner}
-            options={({navigation}) => ({
+            options={({ navigation }) => ({
               title: 'UpdateOwner',
               headerLeft: () => (
                 <CustomButton
@@ -301,7 +301,7 @@ const App = () => (
           <Stack.Screen
             name="UpdateFamily"
             component={UpdateFamily}
-            options={({navigation}) => ({
+            options={({ navigation }) => ({
               title: 'UpdateFamily',
               headerLeft: () => (
                 <CustomButton
@@ -321,7 +321,7 @@ const App = () => (
           <Stack.Screen
             name="UpdateArea"
             component={UpdatePropertyAreaDetails}
-            options={({navigation}) => ({
+            options={({ navigation }) => ({
               title: 'UpdateArea',
               headerLeft: () => (
                 <CustomButton
@@ -341,7 +341,7 @@ const App = () => (
           <Stack.Screen
             name="UpdateHouse"
             component={UpdatePropertyDetailsHouse}
-            options={({navigation}) => ({
+            options={({ navigation }) => ({
               title: 'UpdateHouse',
               headerLeft: () => (
                 <CustomButton
@@ -361,7 +361,7 @@ const App = () => (
           <Stack.Screen
             name="UpdateSpecial"
             component={UpdateSpecialConsideration}
-            options={({navigation}) => ({
+            options={({ navigation }) => ({
               title: 'UpdateSpecial',
               headerLeft: () => (
                 <CustomButton
