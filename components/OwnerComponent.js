@@ -119,8 +119,8 @@ const OwnerComponent = () => {
       return;
     }
 
-    if (!age || !gender || !religion || !category || !AdharNumber) {
-      Alert.alert('Error', 'Age, Gender, Religion, Category, and Aadhar Number are required fields.');
+    if (!age || !gender || !religion || !category) {
+      Alert.alert('Error', 'Age, Gender, Religion And Category are required fields.');
       return;
     }
 
@@ -139,11 +139,11 @@ const OwnerComponent = () => {
       Alert.alert('Invalid Mobile number', 'It must be 10 digits.');
       return;
     }
-    const aadharRegex = /^\d{12}$/;
-    if (!aadharRegex.test(AdharNumber)) {
-      Alert.alert('Invalid Aadhar number', 'It must be 12 digits.');
-      return;
-    }
+    // const aadharRegex = /^\d{12}$/;
+    // if (!aadharRegex.test(AdharNumber)) {
+    //   Alert.alert('Invalid Aadhar number', 'It must be 12 digits.');
+    //   return;
+    // }
 
     const mobileExists = await checkMobileNumber(mobileNumber);
     if (mobileExists) {
@@ -386,7 +386,7 @@ const OwnerComponent = () => {
         onChangeText={(text) => setPanNumber(text.toUpperCase())}
         placeholder="Enter PanNumber"
       />
-      <Text style={AppStyles.label}>Adhar Number *</Text>
+      <Text style={AppStyles.label}>Adhar Number</Text>
       <TextInput
         style={AppStyles.input}
         value={AdharNumber}

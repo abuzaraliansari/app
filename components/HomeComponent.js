@@ -3,13 +3,14 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AppStyles from '../styles/AppStyles';
 import Config from 'react-native-config';
-import {AuthContext} from '../contexts/AuthContext';
-import {useState, useContext} from 'react';
+import { AuthContext } from '../contexts/AuthContext';
+import { useState, useContext } from 'react';
 
 const HomeComponent = () => {
-    const {authState} = useContext(AuthContext);
+  const { authState } = useContext(AuthContext);
   const navigation = useNavigation();
   const createdBy = authState.user;
+
   const navigateToAddProperty = () => {
     navigation.navigate('Owner', { source: 'Home' }); // Pass the source parameter
   };
@@ -21,6 +22,14 @@ const HomeComponent = () => {
   const navigateToLogout = () => {
     navigation.replace('Login'); // Assuming 'Login' is the screen name for logout
   };
+
+  // const navigateToAddUser = () => {
+  //   navigation.navigate('AddUser'); // Replace with your actual screen name for adding a user
+  // };
+
+  // const navigateToUserDetails = () => {
+  //   navigation.navigate('UserDetails'); // Replace with your actual screen name for user details
+  // };
 
   return (
     <View style={AppStyles.container}>

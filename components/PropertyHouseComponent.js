@@ -40,6 +40,8 @@ const PropertyHouseComponent = () => {
   const [waterHarvesting, setWaterHarvesting] = useState('No');
   const [submersible, setSubmersible] = useState('No');
   const [houseNumber, SetHouseNumber] = useState(String(newHouseNumber));
+  const [prePropertyNo, SetprePropertyNo] = useState('');
+  const [RoadSize, setRoadSize] = useState('');
   const [bankAccountNumber, setBankAccountNumber] = useState('');
   const [consent, setConsent] = useState('Yes');
   const [IsActive, setIsActive] = useState('');
@@ -67,6 +69,8 @@ console.log('hy');
         waterHarvesting,
         submersible,
         houseNumber,
+        prePropertyNo,
+        RoadSize,
         bankAccountNumber,
         consent,
       } = formData.propertyDetails;
@@ -85,6 +89,8 @@ console.log('hy');
       setWaterHarvesting(waterHarvesting || 'No');
       setSubmersible(submersible || 'No');
       SetHouseNumber(newHouseNumber || houseNumber || String(newHouseNumber));
+      SetprePropertyNo(prePropertyNo || '');
+      setRoadSize(RoadSize || '');
       setBankAccountNumber(bankAccountNumber || '');
       setConsent(consent || 'Yes');
     }
@@ -104,6 +110,11 @@ console.log('hy');
     // Validation for houseNumber
     if (!houseNumber) {
       Alert.alert('Error', 'House number cannot be blank.');
+      return;
+    }
+
+    if (!RoadSize) {
+      Alert.alert('Error', 'Please select Road Size.');
       return;
     }
     
@@ -129,6 +140,8 @@ console.log('hy');
       colony: formData.propertyDetails?.colony || '',
       galliNumber: formData.propertyDetails?.galliNumber || '',
       houseNumber,
+      prePropertyNo,
+      RoadSize,
       HouseType,
       OpenArea,
       ConstructedArea,
@@ -163,6 +176,25 @@ console.log('hy');
         value={String(houseNumber)}
         onChangeText={SetHouseNumber}
       />
+  <Text style={AppStyles.label}>previous Property No</Text>
+      <TextInput
+        style={AppStyles.input}
+        placeholder="Enter previous Property No"
+        value={prePropertyNo}
+        onChangeText={SetprePropertyNo}
+      />
+ <Text style={AppStyles.label}>Road Size *</Text>
+      <Picker
+        selectedValue={RoadSize}
+        style={AppStyles.pickerContainer}
+        onValueChange={itemValue => setRoadSize(itemValue)}
+      >
+        <Picker.Item label="Select Road Size" value="" />
+        <Picker.Item label="9 Feet" value="9 Feet" />
+        <Picker.Item label="18 Feet" value="18 Feet" />
+        <Picker.Item label="24 Feet" value="24 Feet" />
+        <Picker.Item label="24+ Feet" value="24+ Feet" />
+      </Picker>
 
       <Text style={AppStyles.label}>House Type *</Text>
       <Picker

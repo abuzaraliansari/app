@@ -185,6 +185,8 @@ console.log('response:', response);
           colony,
           galliNumber,
           houseNumber: newHouseNumber,
+          prePropertyNo: formData.propertyDetails?.prePropertyNo || '',
+          RoadSize: formData.propertyDetails?.RoadSize || '',
           HouseType: formData.propertyDetails?.HouseType || '',
           OpenArea: formData.propertyDetails?.OpenArea || '',
           ConstructedArea: formData.propertyDetails?.ConstructedArea || '',

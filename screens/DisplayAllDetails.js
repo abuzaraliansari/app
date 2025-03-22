@@ -28,27 +28,34 @@ const DisplayAllDetails = () => {
       if (!formData.ownerDetails) {
         throw new Error('Owner details are required');
       }
-      // if (!formData.familyMembers) {
-      //   throw new Error('Family members are required');
-      // }
       if (!formData.propertyDetails) {
         throw new Error('Property details are required');
       }
       if (!formData.specialConsideration) {
         throw new Error('Special consideration details are required');
       }
-
+  
+      // Check if all family member details are blank
+      const isFamilyMembersEmpty =
+        !formData.familyMembers ||
+        formData.familyMembers.every((member) =>
+          Object.values(member).every((value) => !value || value === 'N/A')
+        );
+  
+      // Construct the request body
       const requestBody = {
         ownerDetails: formData.ownerDetails,
-        familyMembers: Array.isArray(formData.familyMembers)
-        ? formData.familyMembers
-        : [formData.familyMembers], 
         propertyDetails: formData.propertyDetails,
         specialConsideration: formData.specialConsideration,
       };
-
+  
+      // Only include familyMembers if they are not empty
+      if (!isFamilyMembersEmpty) {
+        requestBody.familyMembers = formData.familyMembers;
+      }
+  
       console.log('Request Body:', JSON.stringify(requestBody));
-
+  
       const response = await fetch(`${Config.API_URL}/auth/addOwnerProperty`, {
         method: 'POST',
         headers: {
@@ -57,33 +64,30 @@ const DisplayAllDetails = () => {
         },
         body: JSON.stringify(requestBody),
       });
-
+  
       const data = await response.json();
       console.log('API Response:', data);
-console.log(data.ownerID);
-console.log(data.propertyID);
-
-
-if (response.ok && data.success) {
-  const { ownerID, propertyID } = data;
-  console.log('OwnerID:', ownerID); // Log the generated ownerID
-  console.log('PropertyID:', propertyID); // Log the generated propertyID
-
-  // Navigate to the next screen
-  navigation.navigate('FormWithPhoto', {
-    ownerID,
-    propertyID,
-    tenantCount: formData.propertyDetails.tenantCount,
-    CreatedBy: formData.ownerDetails.CreatedBy,
-  });
-} else {
-  throw new Error(data.message || 'Failed to create owner and property');
-}
-} catch (error) {
-setErrorMessage(error.message);
-Alert.alert('Error', error.message);
-}
-};
+  
+      if (response.ok && data.success) {
+        const { ownerID, propertyID } = data;
+        console.log('OwnerID:', ownerID); // Log the generated ownerID
+        console.log('PropertyID:', propertyID); // Log the generated propertyID
+  
+        // Navigate to the next screen
+        navigation.navigate('FormWithPhoto', {
+          ownerID,
+          propertyID,
+          tenantCount: formData.propertyDetails.tenantCount,
+          CreatedBy: formData.ownerDetails.CreatedBy,
+        });
+      } else {
+        throw new Error(data.message || 'Failed to create owner and property');
+      }
+    } catch (error) {
+      setErrorMessage(error.message);
+      Alert.alert('Error', error.message);
+    }
+  };
 
   return (
     <ScrollView style={AppStyles.displayContainer}>

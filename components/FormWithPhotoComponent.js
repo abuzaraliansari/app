@@ -8,6 +8,7 @@ import {
   ScrollView,
   Animated,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { launchCamera } from 'react-native-image-picker';
@@ -27,13 +28,13 @@ const FormWithPhotoComponent = () => {
   const { ownerID, propertyID, tenantCount, CreatedBy } = route.params;
 
   const { authState } = useContext(AuthContext);
-  const { login } = useContext(AuthContext);
   const [photos, setPhotos] = useState([]);
   const [tenantDocuments, setTenantDocuments] = useState([]);
   const [tenantNames, setTenantNames] = useState([]);
   const [hasPermission, setHasPermission] = useState(false);
   const [fadeAnim] = useState(new Animated.Value(0));
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false); // Loading state
   const [OwnerID, SetOwnerID] = useState(String(ownerID));
   const [PropertyID, SetpropertyID] = useState(String(propertyID));
   const [TenantCount, SettenantCount] = useState(String(tenantCount));
@@ -117,7 +118,6 @@ const FormWithPhotoComponent = () => {
         const { name: documentName, size: documentSize, type: documentType, uri: documentUri } = result;
         const newDocumentName = documentName;
 
-
         const updatedTenantDocuments = [...tenantDocuments];
         updatedTenantDocuments[index] = {
           documentName: newDocumentName,
@@ -170,13 +170,19 @@ const FormWithPhotoComponent = () => {
   };
 
   const validateAndSubmit = async () => {
+    setLoading(true); // Start loading animation
     try {
       if (photos.length < 2 || photos.some(photo => !photo.uri)) {
-        throw new Error('Please take at leat two photos.');
+        throw new Error('Please take at least two photos.');
       }
 
-      if (TenantCount > 0 && (tenantNames.length < TenantCount || tenantDocuments.length < TenantCount ||
-        tenantNames.some(name => !name) || tenantDocuments.some(doc => !doc.documentPath))) {
+      if (
+        TenantCount > 0 &&
+        (tenantNames.length < TenantCount ||
+          tenantDocuments.length < TenantCount ||
+          tenantNames.some(name => !name) ||
+          tenantDocuments.some(doc => !doc.documentPath))
+      ) {
         throw new Error('Please provide names and documents for all tenants.');
       }
 
@@ -244,6 +250,8 @@ const FormWithPhotoComponent = () => {
       navigation.navigate('Final', { propertyID: PropertyID });
     } catch (error) {
       Alert.alert('Error', error.message);
+    } finally {
+      setLoading(false); // Stop loading animation
     }
   };
 
@@ -278,8 +286,13 @@ const FormWithPhotoComponent = () => {
         <TouchableOpacity
           style={[AppStyles.submitButton, { marginBottom: 50 }]}
           onPress={validateAndSubmit}
+          disabled={loading} // Disable button while loading
         >
-          <Text style={AppStyles.buttonText}>Submit</Text>
+          {loading ? (
+            <ActivityIndicator size="small" color="#ffffff" />
+          ) : (
+            <Text style={AppStyles.buttonText}>Submit</Text>
+          )}
         </TouchableOpacity>
       </Animated.View>
     </ScrollView>
