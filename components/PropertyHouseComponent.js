@@ -183,17 +183,20 @@ console.log('hy');
         value={prePropertyNo}
         onChangeText={SetprePropertyNo}
       />
- <Text style={AppStyles.label}>Road Size *</Text>
+ <Text style={AppStyles.label}>Road Size (In Feet)*</Text>
       <Picker
         selectedValue={RoadSize}
         style={AppStyles.pickerContainer}
         onValueChange={itemValue => setRoadSize(itemValue)}
       >
-        <Picker.Item label="Select Road Size" value="" />
-        <Picker.Item label="9 Feet" value="9 Feet" />
-        <Picker.Item label="18 Feet" value="18 Feet" />
-        <Picker.Item label="24 Feet" value="24 Feet" />
-        <Picker.Item label="24+ Feet" value="24+ Feet" />
+        <Picker.Item label="Select Road Size (In Feet)" value="" />
+        <Picker.Item label="6" value="6" />
+        <Picker.Item label="8" value="8" />
+        <Picker.Item label="9" value="9" />
+        <Picker.Item label="12" value="12" />
+        <Picker.Item label="18" value="18" />
+        <Picker.Item label="24" value="24" />
+        <Picker.Item label="24+" value="24+" />
       </Picker>
 
       <Text style={AppStyles.label}>House Type *</Text>
