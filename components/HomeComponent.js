@@ -47,7 +47,7 @@ const HomeComponent = () => {
         style={[AppStyles.button, AppStyles.nextButton]}
         onPress={navigateToFindAndUpdate}
       >
-        <Text style={AppStyles.buttonText}>Find & Update Property</Text>
+        <Text style={AppStyles.buttonText}>Find Property</Text>
       </TouchableOpacity>
 
       <TouchableOpacity

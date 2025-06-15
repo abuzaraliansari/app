@@ -1,24 +1,14 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Image,
-  Button,
-  Alert,
-  TextInput,
-  ActivityIndicator,
-  Platform,
 } from 'react-native';
-import { useNavigation ,useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { AuthContext } from '../contexts/AuthContext';
-import { Picker } from '@react-native-picker/picker';
 import AppStyles from '../styles/AppStyles';
-import Config from 'react-native-config';
 import { FormDataContext } from '../contexts/FormDataContext';
-import DateTimePicker from '@react-native-community/datetimepicker';
 
 const OwnerDetailsScreen = () => {
   const { formData } = useContext(FormDataContext);
@@ -26,24 +16,15 @@ const OwnerDetailsScreen = () => {
   const CreatedBy = authState.user;
   const navigation = useNavigation();
   const route = useRoute();
-  const source = route.params?.source; 
+  const source = route.params?.source;
 
   const handleNext = () => {
-    
-    //navigation.navigate('PropertyArea', { source: 'Home' }); // Replace 'NextPage' with the actual route name of the next page
-    if (source === 'Home') {
-      console.log('Navigating to Family');
-      console.log(source);
+    if (source === 'Home' || source === 'edite') {
       navigation.navigate('PropertyArea', { source: 'Home' });
     } else if (source === 'AllDetails') {
-      console.log('Navigating to AllDetails');
       navigation.navigate('AllDetails');
-    } else {
-      console.log('Source is not recognized');
     }
   };
-
-
 
   return (
     <ScrollView style={AppStyles.displayContainer}>
@@ -95,7 +76,9 @@ const OwnerDetailsScreen = () => {
                   </View>
                   <TouchableOpacity
                     style={AppStyles.button}
-                    onPress={() => navigation.navigate('Family', { source: 'Home', index })}>
+                    onPress={() =>
+                      navigation.navigate('Family', { source: 'edite', index })
+                    }>
                     <Text style={AppStyles.buttonText}>Edit Family Member</Text>
                   </TouchableOpacity>
                 </View>

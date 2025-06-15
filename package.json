@@ -23,6 +23,7 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "fs": "^0.0.1-security",
+    "g": "^2.0.1",
     "metro-react-native-babel-preset": "^0.77.0",
     "mssql": "^11.0.1",
     "react": "18.3.1",

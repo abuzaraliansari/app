@@ -1,27 +1,23 @@
-import React, { useState, useContext, useEffect }  from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import {
   View,
   TextInput,
-  Button,
   Text,
-  StyleSheet,
-  Alert,
   TouchableOpacity,
   ActivityIndicator,
   Platform,
 } from 'react-native';
-import { useNavigation ,useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { AuthContext } from '../contexts/AuthContext';
 import { Picker } from '@react-native-picker/picker';
 import AppStyles from '../styles/AppStyles';
-import Config from 'react-native-config';
 import { FormDataContext } from '../contexts/FormDataContext';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 const FamilyMember = () => {
   const { authState } = useContext(AuthContext);
   const route = useRoute();
-  const source = route.params?.source; 
+  const source = route.params?.source;
   const ownerID = authState.ownerId;
   const [Relation, setRelation] = useState('');
   const [FirstName, setFirstName] = useState('');
@@ -39,13 +35,23 @@ const FamilyMember = () => {
   const { updateFormData, formData } = useContext(FormDataContext);
   const [DOB, setDob] = useState(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const RedStar = () => <Text style={{ color: 'red' }}>*</Text>;
 
   const navigation = useNavigation();
 
-  const { NumberOfMembers, index } = route.params || {}; // Get the index parameter if passed
+  const { NumberOfMembers, index } = route.params || {};
+  const isEdit = source === 'edite';
 
-  console.log('members:', NumberOfMembers);
-
+  // If NumberOfMembers is 0 or not set, navigate immediately
+  useEffect(() => {
+    if (!NumberOfMembers || NumberOfMembers === 0 || NumberOfMembers === '0') {
+      if (source === 'Home') {
+        navigation.replace('FamilyData', { NumberOfMembers, source: 'Home' });
+      } else if (source === 'AllDetails') {
+        navigation.replace('AllDetails', { source: 'AllDetails' });
+      }
+    }
+  }, [NumberOfMembers, source, navigation]);
 
   useEffect(() => {
     if (index !== undefined && formData.familyMembers && formData.familyMembers[index]) {
@@ -61,18 +67,34 @@ const FamilyMember = () => {
     }
   }, [index, formData.familyMembers]);
 
-
-  const handleAddFamilyMember = () => {
-    console.log('mobile:', authState.MobileNumber);
-    console.log('members:', NumberOfMembers);
-
-    if (!Relation || !FirstName || !age || !gender) {
-      setMessage('Relation, FirstName, Age, Gender fields are required.');
+  const handleSaveAndNext = () => {
+    if (!Relation) {
+      setMessage('Relation is required.');
+      setIsError(true);
+      return;
+    }
+    if (!FirstName) {
+      setMessage('First Name is required.');
+      setIsError(true);
+      return;
+    }
+    if (!age) {
+      setMessage('Age is required.');
+      setIsError(true);
+      return;
+    }
+    if (!gender) {
+      setMessage('Gender is required.');
       setIsError(true);
       return;
     }
 
-    if (formData.familyMembers && formData.familyMembers.length >= NumberOfMembers) {
+    // Only block adding new members, not editing
+    if (
+      (!isEdit && (index === undefined || index === null)) &&
+      formData.familyMembers &&
+      formData.familyMembers.length >= NumberOfMembers
+    ) {
       setMessage('You have reached the limit of family members.');
       setIsError(true);
       return;
@@ -83,15 +105,14 @@ const FamilyMember = () => {
       FirstName,
       LastName,
       age,
-      DOB,
+      DOB: DOB ? DOB.toISOString().split('T')[0] : null,
       gender,
       occupation,
       Income,
-      DOB: DOB ? DOB.toISOString().split('T')[0] : null, // Format the date as YYYY-MM-DD
     };
 
     let updatedFamilyMembers;
-    if (index !== undefined && formData.familyMembers && formData.familyMembers[index]) {
+    if ((isEdit || (index !== undefined && formData.familyMembers && formData.familyMembers[index]))) {
       updatedFamilyMembers = formData.familyMembers.map((member, i) =>
         i === index ? newFamilyMember : member
       );
@@ -99,14 +120,9 @@ const FamilyMember = () => {
       updatedFamilyMembers = [...(formData.familyMembers || []), newFamilyMember];
     }
 
-    // updateFormData({
-    //   familyMembers: [...(formData.familyMembers || []), newFamilyMember],
-    // });
-
     updateFormData({
       familyMembers: updatedFamilyMembers,
     });
-
 
     setRelation('');
     setFirstName('');
@@ -118,23 +134,23 @@ const FamilyMember = () => {
     setDob('');
     setMessage('Family member added successfully.');
     setIsError(false);
-  };
 
-  const handleNext = () => {
-    console.log('familyMembers:', formData.familyMembers);
-
-    if (formData.familyMembers.length < NumberOfMembers) {
-      Alert.alert('Error', `Please add ${NumberOfMembers} family members before proceeding.`);
+    // If editing, go back to summary page with source = 'edite'
+    if (isEdit) {
+      navigation.replace('OwnerDetails', { source: 'edite' });
       return;
     }
-    if (source === 'Home') {
-      console.log('Navigating to Family data');
-      navigation.navigate('FamilyData', { NumberOfMembers ,source: 'Home'  });
-    } else if (source === 'AllDetails') {
-      console.log('Navigating to AllDetails');
-      navigation.navigate('AllDetails', { source: 'AllDetails' });
-    } else {
-      console.log('Source is not recognized');
+
+    // Only auto-navigate if adding a new member and limit is reached
+    if (
+      (index === undefined || index === null) &&
+      updatedFamilyMembers.length >= NumberOfMembers
+    ) {
+      if (source === 'Home') {
+        navigation.replace('FamilyData', { NumberOfMembers, source: 'Home' });
+      } else if (source === 'AllDetails') {
+        navigation.replace('AllDetails', { source: 'AllDetails' });
+      }
     }
   };
 
@@ -148,11 +164,16 @@ const FamilyMember = () => {
     setDob(currentDate);
   };
 
+  // If NumberOfMembers is 0, don't render the form
+  if (!NumberOfMembers || NumberOfMembers === 0 || NumberOfMembers === '0') {
+    return null;
+  }
+
   return (
     <View style={AppStyles.container}>
-      <Text style={AppStyles.header}>Add Family Member</Text>
+      <Text style={AppStyles.header}>{isEdit ? 'Edit Family Member' : 'Add Family Member'}</Text>
 
-      <Text style={AppStyles.label}>Relation *</Text>
+      <Text style={AppStyles.label}>Relation <RedStar /></Text>
       <Picker
         selectedValue={Relation}
         style={AppStyles.picker}
@@ -173,7 +194,7 @@ const FamilyMember = () => {
         <Picker.Item label="Other" value="Other" />
       </Picker>
 
-      <Text style={AppStyles.label}>First Name *</Text>
+      <Text style={AppStyles.label}>First Name <RedStar /></Text>
       <TextInput
         style={AppStyles.input}
         placeholder="Enter Name"
@@ -181,7 +202,7 @@ const FamilyMember = () => {
         onChangeText={setFirstName}
       />
 
-      <Text style={AppStyles.label}>Last Name *</Text>
+      <Text style={AppStyles.label}>Last Name <RedStar /></Text>
       <TextInput
         style={AppStyles.input}
         placeholder="Enter Last Name"
@@ -189,7 +210,7 @@ const FamilyMember = () => {
         onChangeText={setLastName}
       />
 
-      <Text style={AppStyles.label}>Age *</Text>
+      <Text style={AppStyles.label}>Age <RedStar /></Text>
       <Picker
         selectedValue={age}
         style={AppStyles.picker}
@@ -222,7 +243,7 @@ const FamilyMember = () => {
         />
       )}
 
-      <Text style={AppStyles.label}>Gender *</Text>
+      <Text style={AppStyles.label}>Gender <RedStar /></Text>
       <Picker
         selectedValue={gender}
         onValueChange={itemValue => setGender(itemValue)}
@@ -279,23 +300,16 @@ const FamilyMember = () => {
           value="1,000,001 - 10,000,000"
         />
         <Picker.Item label="10,000,000+" value="10,000,000+" />
-        </Picker>
+      </Picker>
 
       {loading ? (
         <ActivityIndicator size="large" color="#1E90FF" />
       ) : (
-        <>
-          <TouchableOpacity
-            style={AppStyles.button}
-            onPress={handleAddFamilyMember}>
-            <Text style={AppStyles.buttonText}>Save Member</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[AppStyles.button, AppStyles.nextButton]}
-            onPress={handleNext}>
-            <Text style={AppStyles.buttonText}>Next</Text>
-          </TouchableOpacity>
-        </>
+        <TouchableOpacity
+          style={AppStyles.button}
+          onPress={handleSaveAndNext}>
+          <Text style={AppStyles.buttonText}>Save Member</Text>
+        </TouchableOpacity>
       )}
 
       {message && (

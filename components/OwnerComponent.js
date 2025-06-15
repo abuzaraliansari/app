@@ -16,6 +16,7 @@ import AppStyles from '../styles/AppStyles';
 import Config from 'react-native-config';
 import { FormDataContext } from '../contexts/FormDataContext';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { StyleSheet } from 'react-native';
 
 const OwnerComponent = () => {
   const { authState } = useContext(AuthContext);
@@ -41,6 +42,8 @@ const OwnerComponent = () => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const route = useRoute();
   const source = route.params?.source; // Get the source parameter
+  const RedStar = () => <Text style={{ color: 'red' }}>*</Text>;
+
   const navigation = useNavigation();
   const API_ENDPOINT = `${Config.API_URL}/auth/owner`;
 
@@ -114,13 +117,40 @@ const OwnerComponent = () => {
     console.log('handleNext called');
     console.log('source:', source);
 
-    if (!firstName || !lastName || !mobileNumber || !CreatedBy || !FatherName) {
-      Alert.alert('Error', 'First Name, Last Name, Mobile Number, Created By, and Father Name are required fields.');
+    if (!firstName) {
+      Alert.alert('Error', 'First Name is required.');
       return;
     }
-
-    if (!age || !gender || !religion || !category) {
-      Alert.alert('Error', 'Age, Gender, Religion And Category are required fields.');
+    if (!lastName) {
+      Alert.alert('Error', 'Last Name is required.');
+      return;
+    }
+    if (!mobileNumber) {
+      Alert.alert('Error', 'Mobile Number is required.');
+      return;
+    }
+    if (!CreatedBy) {
+      Alert.alert('Error', 'Created By is required.');
+      return;
+    }
+    if (!FatherName) {
+      Alert.alert('Error', 'Father Name is required.');
+      return;
+    }
+    if (!age) {
+      Alert.alert('Error', 'Age is required.');
+      return;
+    }
+    if (!gender) {
+      Alert.alert('Error', 'Gender is required.');
+      return;
+    }
+    if (!religion) {
+      Alert.alert('Error', 'Religion is required.');
+      return;
+    }
+    if (!category) {
+      Alert.alert('Error', 'Category is required.');
       return;
     }
 
@@ -149,6 +179,14 @@ const OwnerComponent = () => {
     if (mobileExists) {
       return; // Stop execution if the mobile number exists
     }
+// Empty all the familyMembers, propertyDetails, specialConsideration before navigation
+updateFormData({
+  ...formData,
+  familyMembers: [],
+  propertyDetails: {},
+  specialConsideration: {},
+});
+
 
     const ownerDetails = {
       firstName,
@@ -172,12 +210,13 @@ const OwnerComponent = () => {
     };
 
     updateFormData({
+      ...formData,
       ownerDetails,
-      familyMembers: formData.familyMembers || [],
-      propertyDetails: formData.propertyDetails || {},
-      specialConsideration: formData.specialConsideration || {},
+      familyMembers: [],
+      propertyDetails: {},
+      specialConsideration: {},
     });
-
+  
     console.log('Temporary saved data:', ownerDetails);
     console.log('Temporary saved data:', ownerDetails.NumberOfMembers);
 
@@ -207,7 +246,7 @@ const OwnerComponent = () => {
     <ScrollView contentContainerStyle={AppStyles.container}>
       <Text style={AppStyles.heading}>Owner Details</Text>
 
-      <Text style={AppStyles.label}>First Name *</Text>
+      <Text style={AppStyles.label}>First Name <RedStar /></Text>
       <TextInput
         style={AppStyles.input}
         value={firstName}
@@ -223,7 +262,7 @@ const OwnerComponent = () => {
         placeholder="Enter middle name"
       />
 
-      <Text style={AppStyles.label}>Last Name *</Text>
+      <Text style={AppStyles.label}>Last Name <RedStar /></Text>
       <TextInput
         style={AppStyles.input}
         value={lastName}
@@ -231,7 +270,7 @@ const OwnerComponent = () => {
         placeholder="Enter last name"
       />
 
-      <Text style={AppStyles.label}>Father Name *</Text>
+      <Text style={AppStyles.label}>Father Name <RedStar /></Text>
       <TextInput
         style={AppStyles.input}
         value={FatherName}
@@ -239,7 +278,7 @@ const OwnerComponent = () => {
         placeholder="Enter FatherName"
       />
 
-      <Text style={AppStyles.label}>Mobile Number *</Text>
+      <Text style={AppStyles.label}>Mobile Number <RedStar /></Text>
       <TextInput
         style={AppStyles.input}
         value={mobileNumber}
@@ -273,7 +312,7 @@ const OwnerComponent = () => {
         <Picker.Item label="Others" value="Others" />
       </Picker>
 
-      <Text style={AppStyles.label}>Age *</Text>
+      <Text style={AppStyles.label}>Age <RedStar /></Text>
       <Picker
         selectedValue={age}
         style={AppStyles.picker}
@@ -302,7 +341,7 @@ const OwnerComponent = () => {
         />
       )}
 
-      <Text style={AppStyles.label}>Gender *</Text>
+      <Text style={AppStyles.label}>Gender <RedStar /></Text>
       <Picker
         selectedValue={gender}
         onValueChange={itemValue => setGender(itemValue)}
@@ -336,7 +375,7 @@ const OwnerComponent = () => {
         />
         <Picker.Item label="10,000,000+" value="10,000,000+" />
       </Picker>
-      <Text style={AppStyles.label}>Religion *</Text>
+      <Text style={AppStyles.label}>Religion <RedStar /></Text>
       <Picker
         selectedValue={religion}
         style={AppStyles.picker}
@@ -349,7 +388,7 @@ const OwnerComponent = () => {
         <Picker.Item label="Other" value="Other" />
       </Picker>
 
-      <Text style={AppStyles.label}>Category *</Text>
+      <Text style={AppStyles.label}>Category <RedStar /></Text>
       <Picker
         selectedValue={category}
         style={AppStyles.picker}

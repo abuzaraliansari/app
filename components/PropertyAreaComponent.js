@@ -17,6 +17,7 @@ import Geolocation from '@react-native-community/geolocation';
 import {PermissionsAndroid, Platform} from 'react-native';
 import { FormDataContext } from '../contexts/FormDataContext';
 import axios from 'axios';
+import { logToFile } from '../utils/Logger'; // <-- Add this line
 
 const PropertyAreaComponent = () => {
   const {authState} = useContext(AuthContext);
@@ -35,6 +36,8 @@ const PropertyAreaComponent = () => {
   const [localities, setLocalities] = useState([]);
   const [Colonies, setColonies] = useState([]);
   const [selectedLocality, setSelectedLocality] = useState('');
+  const RedStar = () => <Text style={{ color: 'red' }}>*</Text>;
+
   const route = useRoute();
   const source = route.params?.source; 
   const API_ENDPOINTloc = `${Config.API_URL}/auth/Locality`;
@@ -121,110 +124,129 @@ const PropertyAreaComponent = () => {
       fetchColony(locality);
     }, [locality]);
 
-  const handleAddColony = async () => {
-    if (!newColony) {
-      Alert.alert('Error', 'Please enter the new colony name.');
-      return;
-    }
-
-    try {
-      const response = await axios.post(AddColony, {
-        LocalityID: locality,
-        Colony: newColony,
-      }, {
-        headers: {
-          header_gkey: authState.token,
-        },
-      });
-console.log('response:', response);
-      if (response.status === 201) {
-        Alert.alert('Success', 'New colony added successfully.');
-        setShowAddColony(false);
-        setNewColony('');
-        fetchColony(locality); // Refresh the colonies list
-      } else {
+    const handleAddColony = async () => {
+      if (!newColony) {
+        Alert.alert('Error', 'Please enter the new colony name.');
+        return;
+      }
+  
+      try {
+        logToFile('Calling AddColony API');
+        const response = await axios.post(AddColony, {
+          LocalityID: locality,
+          Colony: newColony,
+        }, {
+          headers: {
+            header_gkey: authState.token,
+          },
+        });
+        logToFile(`AddColony response: ${JSON.stringify(response.data)}`);
+        if (response.status === 201) {
+          Alert.alert('Success', 'New colony added successfully.');
+          setShowAddColony(false);
+          setNewColony('');
+          fetchColony(locality); // Refresh the colonies list
+        } else {
+          logToFile('Failed to add new colony: Unexpected status');
+          Alert.alert('Error', 'Failed to add new colony.');
+        }
+      } catch (error) {
+        logToFile(`Error adding new colony: ${error.message}`);
+        console.error('Error adding new colony:', error);
         Alert.alert('Error', 'Failed to add new colony.');
       }
-    } catch (error) {
-      console.error('Error adding new colony:', error);
-      Alert.alert('Error', 'Failed to add new colony.');
-    }
-  };
-
-  const handleNext = async () => {
-    if (!galliNumber || !colony || !zone || !locality) {
-      Alert.alert('Error', 'Please fill all the required fields.');
-      return;
-    }
-
-    try {
-      const response = await axios.post(API_ENDPOINTnewHouseNumber, {
-        zone,
-        galliNumber,
-      }, {
-        headers: {
-          header_gkey: authState.token,
-        },
-      });
-
-      if (response.status === 200 && response.data.success) {
-        const newHouseNumber = response.data.newHouseNumber;
-        const propertyDetails = {
-          propertyMode: formData.propertyDetails?.propertyMode || '',
-          propertyAge: formData.propertyDetails?.propertyAge || '',
-          roomCount: formData.propertyDetails?.roomCount || '',
-          floorCount: formData.propertyDetails?.floorCount || '',
-          shopCount: formData.propertyDetails?.shopCount || '',
-          ShopArea: formData.propertyDetails?.ShopArea || '',
-          tenantCount: formData.propertyDetails?.tenantCount || '',
-          TenantYearlyRent: formData.propertyDetails?.TenantYearlyRent || '',
-          waterHarvesting: formData.propertyDetails?.waterHarvesting || '',
-          submersible: formData.propertyDetails?.submersible || '',
-          zone,
-          locality,
-          colony,
-          galliNumber,
-          houseNumber: newHouseNumber,
-          prePropertyNo: formData.propertyDetails?.prePropertyNo || '',
-          RoadSize: formData.propertyDetails?.RoadSize || '',
-          HouseType: formData.propertyDetails?.HouseType || '',
-          OpenArea: formData.propertyDetails?.OpenArea || '',
-          ConstructedArea: formData.propertyDetails?.ConstructedArea || '',
-          bankAccountNumber: formData.propertyDetails?.bankAccountNumber || '',
-          consent: formData.propertyDetails?.consent || '',
-          CreatedBy: authState.user,
-        };
-
-        updateFormData({
-          propertyDetails,
-        });
-        console.log('Area:', formData);
-        console.log('newHouseNumber:', newHouseNumber);
-        // navigation.navigate('PropertyHouse', { newHouseNumber } , { source: 'Home' });
-
-        if (source === 'Home') {
-          console.log('Navigating to PropertyHouse');
-          navigation.navigate('PropertyHouse', { newHouseNumber, source: 'Home' });
-        } else if (source === 'AllDetails') {
-          console.log('Navigating to AllDetails');
-          navigation.navigate('PropertyHouse', { newHouseNumber, source: 'AllDetails' });
-        } else {
-          console.log('Source is not recognized');
-        }
-      } else {
-        Alert.alert('Error', 'Failed to fetch new house number.');
+    };
+  
+    const handleNext = async () => {
+      if (!zone) {
+        Alert.alert('Error', 'Zone is required.');
+        return;
       }
-    } catch (error) {
-      console.error('Error fetching new house number:', error);
-      Alert.alert('Error', 'Failed to fetch new house number.');
-    }
-  };
+      if (!locality) {
+        Alert.alert('Error', 'Locality Ward Sankhya is required.');
+        return;
+      }
+      if (!colony) {
+        Alert.alert('Error', 'Colony is required.');
+        return;
+      }
+      if (!galliNumber) {
+        Alert.alert('Error', 'Galli Number is required.');
+        return;
+      }
+  
+      try {
+        logToFile('Calling getMaxHouseNumber API');
+        const response = await axios.post(API_ENDPOINTnewHouseNumber, {
+          zone,
+          galliNumber,
+        }, {
+          headers: {
+            header_gkey: authState.token,
+          },
+        });
+  
+        logToFile(`getMaxHouseNumber response: ${JSON.stringify(response.data)}`);
+  
+        if (response.status === 200 && response.data.success) {
+          const newHouseNumber = response.data.newHouseNumber;
+          const propertyDetails = {
+            propertyMode: formData.propertyDetails?.propertyMode || '',
+            propertyAge: formData.propertyDetails?.propertyAge || '',
+            roomCount: formData.propertyDetails?.roomCount || '',
+            floorCount: formData.propertyDetails?.floorCount || '',
+            shopCount: formData.propertyDetails?.shopCount || '',
+            ShopArea: formData.propertyDetails?.ShopArea || '',
+            tenantCount: formData.propertyDetails?.tenantCount || '',
+            TenantYearlyRent: formData.propertyDetails?.TenantYearlyRent || '',
+            waterHarvesting: formData.propertyDetails?.waterHarvesting || '',
+            submersible: formData.propertyDetails?.submersible || '',
+            zone,
+            locality,
+            colony,
+            galliNumber,
+            houseNumber: newHouseNumber,
+            prePropertyNo: formData.propertyDetails?.prePropertyNo || '',
+            RoadSize: formData.propertyDetails?.RoadSize || '',
+            HouseType: formData.propertyDetails?.HouseType || '',
+            OpenArea: formData.propertyDetails?.OpenArea || '',
+            ConstructedArea: formData.propertyDetails?.ConstructedArea || '',
+            bankAccountNumber: formData.propertyDetails?.bankAccountNumber || '',
+            consent: formData.propertyDetails?.consent || '',
+            CreatedBy: authState.user,
+          };
+  
+          updateFormData({
+            propertyDetails,
+          });
+          logToFile(`Saved propertyDetails: ${JSON.stringify(propertyDetails)}`);
+          // navigation.navigate('PropertyHouse', { newHouseNumber } , { source: 'Home' });
+  
+          if (source === 'Home') {
+            logToFile('Navigating to PropertyHouse with source Home');
+            navigation.navigate('PropertyHouse', { newHouseNumber, source: 'Home' });
+          } else if (source === 'AllDetails') {
+            logToFile('Navigating to PropertyHouse with source AllDetails');
+            navigation.navigate('PropertyHouse', { newHouseNumber, source: 'AllDetails' });
+          } else {
+            logToFile('Source is not recognized');
+          }
+        } else {
+          logToFile('House number not fetched. Network error.');
+          Alert.alert('Network Error', 'House number not fetched. Please logout and try again.');
+        }
+      } catch (error) {
+        logToFile(`Error fetching new house number: ${error.message}`);
+        console.error('Error fetching new house number:', error);
+        Alert.alert('Network Error', 'House number not fetched. Please logout and try again.');
+      }
+    };
 
   return (
     <ScrollView style={AppStyles.container}>
       <Text style={AppStyles.header}>Property Details</Text>
 
-      <Text style={AppStyles.label}>Zone</Text>
+      <Text style={AppStyles.label}>Zone <RedStar /></Text>
       <Picker
         selectedValue={zone}
         onValueChange={itemValue => setZone(itemValue)}
@@ -234,9 +256,10 @@ console.log('response:', response);
         <Picker.Item label="Zone 2" value="2" />
         <Picker.Item label="Zone 3" value="3" />
         <Picker.Item label="Zone 4" value="4" />
+        <Picker.Item label="Zone 5" value="5" />
       </Picker>
 
-      <Text style={AppStyles.label}>Locality Ward Sankhya</Text>
+      <Text style={AppStyles.label}>Locality Ward Sankhya <RedStar /></Text>
       <Picker
         selectedValue={locality}
         onValueChange={itemValue => setLocality(itemValue)}
@@ -251,7 +274,7 @@ console.log('response:', response);
         ))}
       </Picker>
 
-      <Text style={AppStyles.label}>Colony</Text>
+      <Text style={AppStyles.label}>Colony <RedStar /></Text>
       <Picker
         selectedValue={colony}
         onValueChange={itemValue => {
@@ -290,7 +313,7 @@ console.log('response:', response);
         </View>
       )}
 
-      <Text style={AppStyles.label}>Galli Number</Text>
+      <Text style={AppStyles.label}>Galli Number <RedStar /></Text>
       <TextInput
         style={AppStyles.input}
         placeholder="Enter Galli Number"

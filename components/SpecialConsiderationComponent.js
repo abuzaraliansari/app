@@ -33,6 +33,8 @@ const SpecialConsiderationComponent = () => {
   const [message, setMessage] = useState('');
   const [isError, setIsError] = useState(false);
   const navigation = useNavigation(); 
+  const RedStar = () => <Text style={{ color: 'red' }}>*</Text>;
+
 
   const route = useRoute(); // Access the route object
   const { latitude, longitude  } = route.params; 
@@ -84,7 +86,7 @@ const SpecialConsiderationComponent = () => {
     <ScrollView contentContainerStyle={AppStyles.container}>
       <Text style={AppStyles.heading}>Special Consideration Details</Text>
       {/* <Text style={AppStyles.label}>Welcome, {authState.user}{} </Text> */}
-      <Text style={AppStyles.label}>Consideration Type *</Text>
+      <Text style={AppStyles.label}>Consideration Type <RedStar /></Text>
       <View style={AppStyles.pickerContainer}>
         <Picker
           selectedValue={considerationType}

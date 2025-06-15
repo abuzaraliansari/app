@@ -7,6 +7,7 @@ import {
   Alert,
   ScrollView,
 } from 'react-native';
+import { StyleSheet } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import AppStyles from '../styles/AppStyles';
@@ -49,6 +50,8 @@ const PropertyHouseComponent = () => {
   const CreatedBy = authState.user;
 console.log(newHouseNumber);
 console.log('hy');
+const RedStar = () => <Text style={{ color: 'red' }}>*</Text>;
+
   const API_ENDPOINT = `${Config.API_URL}/auth/PropertyDetailsHouse`;
   const DOCUMENT_API_ENDPOINT = `${Config.API_URL}/auth/uploadDoc`;
 
@@ -98,8 +101,12 @@ console.log('hy');
 
 
   const handleNext = () => {
-    if (!propertyMode || !HouseType) {
-      Alert.alert('Error', 'Please fill all the required fields.');
+    if (!propertyMode) {
+      Alert.alert('Error', 'Please select Property Mode.');
+      return;
+    }
+    if (!HouseType) {
+      Alert.alert('Error', 'Please select a house type.');
       return;
     }
     if (!HouseType) {
@@ -170,7 +177,7 @@ console.log('hy');
     <ScrollView style={AppStyles.container}>
       <Text style={AppStyles.header}>Property Details</Text>
 
-      <Text style={AppStyles.label}>House Number *</Text>
+      <Text style={AppStyles.label}>House Number <RedStar /></Text>
       <TextInput
         style={AppStyles.input}
         value={String(houseNumber)}
@@ -183,7 +190,7 @@ console.log('hy');
         value={prePropertyNo}
         onChangeText={SetprePropertyNo}
       />
- <Text style={AppStyles.label}>Road Size (In Feet)*</Text>
+ <Text style={AppStyles.label}>Road Size (In Feet) <RedStar /></Text>
       <Picker
         selectedValue={RoadSize}
         style={AppStyles.pickerContainer}
@@ -199,7 +206,7 @@ console.log('hy');
         <Picker.Item label="24+" value="24+" />
       </Picker>
 
-      <Text style={AppStyles.label}>House Type *</Text>
+      <Text style={AppStyles.label}>House Type <RedStar /></Text>
       <Picker
         selectedValue={HouseType}
         style={AppStyles.pickerContainer}
@@ -230,7 +237,7 @@ console.log('hy');
         keyboardType="numeric"
       />
 
-      <Text style={AppStyles.label}>Property Mode *</Text>
+      <Text style={AppStyles.label}>Property Mode <RedStar /></Text>
       <View style={AppStyles.pickerContainer}>
         <Picker
           selectedValue={propertyMode}
@@ -388,7 +395,7 @@ console.log('hy');
       </View>
 
       <Text style={AppStyles.label}>
-        Do you give consent to provide the above information? *
+        Do you give consent to provide the above information? <RedStar />
       </Text>
       <View style={AppStyles.radioGroup}>
         <TouchableOpacity
