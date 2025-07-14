@@ -220,17 +220,19 @@ updateFormData({
     console.log('Temporary saved data:', ownerDetails);
     console.log('Temporary saved data:', ownerDetails.NumberOfMembers);
 
-    // Conditionally navigate based on the source
-    if (source === 'Home') {
-      console.log('Navigating to Family');
-      navigation.navigate('Family', { NumberOfMembers, source: 'Home' });
-    } else if (source === 'AllDetails') {
-      console.log('Navigating to AllDetails');
-      navigation.navigate('AllDetails');
-    } else {
-      console.log('Source is not recognized');
-    }
-  };
+    // Navigate based on NumberOfMembers
+    if (!NumberOfMembers || NumberOfMembers === '0' || NumberOfMembers === 0) {
+      // If 0 or null family members, go to FamilyData
+      navigation.navigate('FamilyData', { NumberOfMembers, source: 'Home' });
+  } else if (NumberOfMembers && NumberOfMembers !== '0') {
+    // If any family members, go to Family
+    navigation.navigate('Family', { NumberOfMembers, source: 'Home' });
+  } else if (source === 'AllDetails') {
+    navigation.navigate('AllDetails');
+  } else {
+    console.log('Source is not recognized');
+  }
+};
 
   const showDatePickerHandler = () => {
     setShowDatePicker(true);

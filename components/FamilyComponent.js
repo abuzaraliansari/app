@@ -42,19 +42,20 @@ const FamilyMember = () => {
   const { NumberOfMembers, index } = route.params || {};
   const isEdit = source === 'edite';
 
-  // If NumberOfMembers is 0 or not set, navigate immediately
-  useEffect(() => {
-    if (!NumberOfMembers || NumberOfMembers === 0 || NumberOfMembers === '0') {
-      if (source === 'Home') {
-        navigation.replace('FamilyData', { NumberOfMembers, source: 'Home' });
-      } else if (source === 'AllDetails') {
-        navigation.replace('AllDetails', { source: 'AllDetails' });
-      }
-    }
-  }, [NumberOfMembers, source, navigation]);
+  // Set member number for heading
+  const memberNumber =
+    isEdit && index !== undefined
+      ? Number(index) + 1
+      : (formData.familyMembers?.length || 0) + 1;
 
   useEffect(() => {
-    if (index !== undefined && formData.familyMembers && formData.familyMembers[index]) {
+    // Only set fields if editing and index is valid
+    if (
+      isEdit &&
+      index !== undefined &&
+      formData.familyMembers &&
+      formData.familyMembers[index]
+    ) {
       const member = formData.familyMembers[index];
       setRelation(member.Relation || '');
       setFirstName(member.FirstName || '');
@@ -65,7 +66,7 @@ const FamilyMember = () => {
       setIncome(member.Income || '');
       setDob(member.DOB ? new Date(member.DOB) : null);
     }
-  }, [index, formData.familyMembers]);
+  }, [isEdit, index, formData.familyMembers]);
 
   const handleSaveAndNext = () => {
     if (!Relation) {
@@ -112,7 +113,7 @@ const FamilyMember = () => {
     };
 
     let updatedFamilyMembers;
-    if ((isEdit || (index !== undefined && formData.familyMembers && formData.familyMembers[index]))) {
+    if (isEdit && index !== undefined && formData.familyMembers && formData.familyMembers[index]) {
       updatedFamilyMembers = formData.familyMembers.map((member, i) =>
         i === index ? newFamilyMember : member
       );
@@ -135,22 +136,21 @@ const FamilyMember = () => {
     setMessage('Family member added successfully.');
     setIsError(false);
 
-    // If editing, go back to summary page with source = 'edite'
+    // If editing, after save, go to FamilyData
     if (isEdit) {
-      navigation.replace('OwnerDetails', { source: 'edite' });
+      navigation.replace('FamilyData', { NumberOfMembers, source: 'Home' });
       return;
     }
 
-    // Only auto-navigate if adding a new member and limit is reached
+    // If adding new, check if limit reached
     if (
       (index === undefined || index === null) &&
       updatedFamilyMembers.length >= NumberOfMembers
     ) {
-      if (source === 'Home') {
-        navigation.replace('FamilyData', { NumberOfMembers, source: 'Home' });
-      } else if (source === 'AllDetails') {
-        navigation.replace('AllDetails', { source: 'AllDetails' });
-      }
+      navigation.replace('FamilyData', { NumberOfMembers, source: 'Home' });
+    } else if (!isEdit) {
+      // If not edit and not limit, stay and allow next member entry
+      setMessage('Family member added. Please add next member.');
     }
   };
 
@@ -164,14 +164,25 @@ const FamilyMember = () => {
     setDob(currentDate);
   };
 
-  // If NumberOfMembers is 0, don't render the form
-  if (!NumberOfMembers || NumberOfMembers === 0 || NumberOfMembers === '0') {
-    return null;
+  // Only show "No family members to add" if not editing and NumberOfMembers is 0
+  if (
+    !isEdit &&
+    (!NumberOfMembers || NumberOfMembers === 0 || NumberOfMembers === '0')
+  ) {
+    return (
+      <View style={AppStyles.container}>
+        <Text>No family members to add.</Text>
+      </View>
+    );
   }
 
   return (
     <View style={AppStyles.container}>
-      <Text style={AppStyles.header}>{isEdit ? 'Edit Family Member' : 'Add Family Member'}</Text>
+      <Text style={AppStyles.header}>
+        {isEdit
+          ? `Edit Family Member ${memberNumber}`
+          : `Family Member ${memberNumber}`}
+      </Text>
 
       <Text style={AppStyles.label}>Relation <RedStar /></Text>
       <Picker

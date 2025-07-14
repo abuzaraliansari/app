@@ -23,13 +23,9 @@ const HomeComponent = () => {
     navigation.replace('Login'); // Assuming 'Login' is the screen name for logout
   };
 
-  // const navigateToAddUser = () => {
-  //   navigation.navigate('AddUser'); // Replace with your actual screen name for adding a user
-  // };
-
-  // const navigateToUserDetails = () => {
-  //   navigation.navigate('UserDetails'); // Replace with your actual screen name for user details
-  // };
+  const navigateToAddPropertyArea = () => {
+    navigation.navigate('Find', { source: 'Add' });
+  };
 
   return (
     <View style={AppStyles.container}>
@@ -41,6 +37,13 @@ const HomeComponent = () => {
         onPress={navigateToAddProperty}
       >
         <Text style={AppStyles.buttonText}>Add Property</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={[AppStyles.button, AppStyles.nextButton]}
+        onPress={navigateToAddPropertyArea}
+      >
+        <Text style={AppStyles.buttonText}>Find & Add Property</Text>
       </TouchableOpacity>
 
       <TouchableOpacity

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   View,
   Text,
@@ -10,7 +10,8 @@ import {
 import AppStyles from '../styles/AppStyles';
 import axios from 'axios';
 import Config from 'react-native-config';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { AuthContext } from '../contexts/AuthContext';
 
 const maskAadhaarNumber = (aadhaarNumber) => {
   if (aadhaarNumber && aadhaarNumber.length === 12) {
@@ -23,7 +24,9 @@ const Find = () => {
   const [mobileNumber, setMobileNumber] = useState('');
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
-    const navigation = useNavigation();
+  const navigation = useNavigation();
+  const route = useRoute();
+  const { login } = useContext(AuthContext);
 
   const handleSearch = async () => {
     if (!mobileNumber) {
@@ -54,7 +57,7 @@ const Find = () => {
       setLoading(false);
     }
   };
-console.log('response',data);
+  console.log('response', data);
   return (
     <ScrollView style={AppStyles.containerfind}>
       <View style={AppStyles.content}>
@@ -71,37 +74,50 @@ console.log('response',data);
           onPress={handleSearch}
           disabled={loading}
         >
-          <Text style={AppStyles.buttonText}>{loading ? 'Searching...' : 'Search'}</Text>
+          <Text style={AppStyles.buttonText}>
+            {loading ? 'Searching...' : 'Search'}
+          </Text>
         </TouchableOpacity>
 
         {data && (
           <View style={AppStyles.displayContent}>
             <Text style={AppStyles.displayHeader}>Owner Info</Text>
             <View style={AppStyles.displayTable}>
-              
-            <View style={AppStyles.displayRow}>
+              <View style={AppStyles.displayRow}>
                 <Text style={AppStyles.displayCellHeader}>First Name</Text>
-                <Text style={AppStyles.displayCell}>{data.owner.FirstName || 'N/A'}</Text>
+                <Text style={AppStyles.displayCell}>
+                  {data.owner.FirstName || 'N/A'}
+                </Text>
               </View>
               <View style={AppStyles.displayRow}>
                 <Text style={AppStyles.displayCellHeader}>Middle Name</Text>
-                <Text style={AppStyles.displayCell}>{data.owner.MiddleName || 'N/A'}</Text>
+                <Text style={AppStyles.displayCell}>
+                  {data.owner.MiddleName || 'N/A'}
+                </Text>
               </View>
               <View style={AppStyles.displayRow}>
                 <Text style={AppStyles.displayCellHeader}>Last Name</Text>
-                <Text style={AppStyles.displayCell}>{data.owner.LastName || 'N/A'}</Text>
+                <Text style={AppStyles.displayCell}>
+                  {data.owner.LastName || 'N/A'}
+                </Text>
               </View>
               <View style={AppStyles.displayRow}>
                 <Text style={AppStyles.displayCellHeader}>Father Name</Text>
-                <Text style={AppStyles.displayCell}>{data.owner.FatherName || 'N/A'}</Text>
+                <Text style={AppStyles.displayCell}>
+                  {data.owner.FatherName || 'N/A'}
+                </Text>
               </View>
               <View style={AppStyles.displayRow}>
                 <Text style={AppStyles.displayCellHeader}>Mobile Number</Text>
-                <Text style={AppStyles.displayCell}>{data.owner.MobileNumber || 'N/A'}</Text>
+                <Text style={AppStyles.displayCell}>
+                  {data.owner.MobileNumber || 'N/A'}
+                </Text>
               </View>
               <View style={AppStyles.displayRow}>
                 <Text style={AppStyles.displayCellHeader}>Occupation</Text>
-                <Text style={AppStyles.displayCell}>{data.owner.Occupation || 'N/A'}</Text>
+                <Text style={AppStyles.displayCell}>
+                  {data.owner.Occupation || 'N/A'}
+                </Text>
               </View>
               <View style={AppStyles.displayRow}>
                 <Text style={AppStyles.displayCellHeader}>Age</Text>
@@ -113,19 +129,27 @@ console.log('response',data);
               </View>
               <View style={AppStyles.displayRow}>
                 <Text style={AppStyles.displayCellHeader}>Gender</Text>
-                <Text style={AppStyles.displayCell}>{data.owner.Gender || 'N/A'}</Text>
+                <Text style={AppStyles.displayCell}>
+                  {data.owner.Gender || 'N/A'}
+                </Text>
               </View>
               <View style={AppStyles.displayRow}>
                 <Text style={AppStyles.displayCellHeader}>Income</Text>
-                <Text style={AppStyles.displayCell}>{data.owner.Income || 'N/A'}</Text>
+                <Text style={AppStyles.displayCell}>
+                  {data.owner.Income || 'N/A'}
+                </Text>
               </View>
               <View style={AppStyles.displayRow}>
                 <Text style={AppStyles.displayCellHeader}>Religion</Text>
-                <Text style={AppStyles.displayCell}>{data.owner.Religion || 'N/A'}</Text>
+                <Text style={AppStyles.displayCell}>
+                  {data.owner.Religion || 'N/A'}
+                </Text>
               </View>
               <View style={AppStyles.displayRow}>
                 <Text style={AppStyles.displayCellHeader}>Category</Text>
-                <Text style={AppStyles.displayCell}>{data.owner.Category || 'N/A'}</Text>
+                <Text style={AppStyles.displayCell}>
+                  {data.owner.Category || 'N/A'}
+                </Text>
               </View>
               <View style={AppStyles.displayRow}>
                 <Text style={AppStyles.displayCellHeader}>Email</Text>
@@ -133,23 +157,33 @@ console.log('response',data);
               </View>
               <View style={AppStyles.displayRow}>
                 <Text style={AppStyles.displayCellHeader}>Pan Card Number</Text>
-                <Text style={AppStyles.displayCell}>{data.owner.PanNumber || 'N/A'}</Text>
+                <Text style={AppStyles.displayCell}>
+                  {data.owner.PanNumber || 'N/A'}
+                </Text>
               </View>
               <View style={AppStyles.displayRow}>
-      <Text style={AppStyles.displayCellHeader}>Adhar Card Number</Text>
-      <Text style={AppStyles.displayCell}>{maskAadhaarNumber(data.owner.AdharNumber)}</Text>
-    </View>
+                <Text style={AppStyles.displayCellHeader}>Adhar Card Number</Text>
+                <Text style={AppStyles.displayCell}>
+                  {maskAadhaarNumber(data.owner.AdharNumber)}
+                </Text>
+              </View>
               <View style={AppStyles.displayRow}>
                 <Text style={AppStyles.displayCellHeader}>Number Of Members</Text>
-                <Text style={AppStyles.displayCell}>{data.owner.NumberOfMembers || 'N/A'}</Text>
+                <Text style={AppStyles.displayCell}>
+                  {data.owner.NumberOfMembers || 'N/A'}
+                </Text>
               </View>
               <View style={AppStyles.displayRow}>
                 <Text style={AppStyles.displayCellHeader}>Created By</Text>
-                <Text style={AppStyles.displayCell}>{data.owner.CreatedBy || 'N/A'}</Text>
+                <Text style={AppStyles.displayCell}>
+                  {data.owner.CreatedBy || 'N/A'}
+                </Text>
               </View>
               <View style={AppStyles.displayRow}>
                 <Text style={AppStyles.displayCellHeader}>Modified By</Text>
-                <Text style={AppStyles.displayCell}>{data.owner.ModifiedBy || 'N/A'}</Text>
+                <Text style={AppStyles.displayCell}>
+                  {data.owner.ModifiedBy || 'N/A'}
+                </Text>
               </View>
               {/* <TouchableOpacity
             style={AppStyles.button}
@@ -217,7 +251,7 @@ console.log('response',data);
                 <Text style={AppStyles.displayNoDataText}>No family members available</Text>
               )}
             </View>
-
+*/}
             <Text style={AppStyles.displayHeader}>Property Details</Text>
             <View style={AppStyles.displayTable}>
               {data.properties && data.properties.length > 0 ? (
@@ -226,43 +260,63 @@ console.log('response',data);
                     <Text style={AppStyles.displayLabel}>Property {index + 1}</Text>
                     <View style={AppStyles.displayRow}>
                       <Text style={AppStyles.displayCellHeader}>Property Mode</Text>
-                      <Text style={AppStyles.displayCell}>{property.PropertyMode || 'N/A'}</Text>
+                      <Text style={AppStyles.displayCell}>
+                        {property.PropertyMode || 'N/A'}
+                      </Text>
                     </View>
                     <View style={AppStyles.displayRow}>
                       <Text style={AppStyles.displayCellHeader}>Property Age</Text>
-                      <Text style={AppStyles.displayCell}>{property.PropertyAge || 'N/A'}</Text>
+                      <Text style={AppStyles.displayCell}>
+                        {property.PropertyAge || 'N/A'}
+                      </Text>
                     </View>
                     <View style={AppStyles.displayRow}>
                       <Text style={AppStyles.displayCellHeader}>Room Count</Text>
-                      <Text style={AppStyles.displayCell}>{property.RoomCount || 'N/A'}</Text>
+                      <Text style={AppStyles.displayCell}>
+                        {property.RoomCount || 'N/A'}
+                      </Text>
                     </View>
                     <View style={AppStyles.displayRow}>
                       <Text style={AppStyles.displayCellHeader}>Floor Count</Text>
-                      <Text style={AppStyles.displayCell}>{property.FloorCount || 'N/A'}</Text>
+                      <Text style={AppStyles.displayCell}>
+                        {property.FloorCount || 'N/A'}
+                      </Text>
                     </View>
                     <View style={AppStyles.displayRow}>
                       <Text style={AppStyles.displayCellHeader}>Shop Count</Text>
-                      <Text style={AppStyles.displayCell}>{property.ShopCount || 'N/A'}</Text>
+                      <Text style={AppStyles.displayCell}>
+                        {property.ShopCount || 'N/A'}
+                      </Text>
                     </View>
                     <View style={AppStyles.displayRow}>
                       <Text style={AppStyles.displayCellHeader}>Shop Area</Text>
-                      <Text style={AppStyles.displayCell}>{property.ShopArea || 'N/A'}</Text>
+                      <Text style={AppStyles.displayCell}>
+                        {property.ShopArea || 'N/A'}
+                      </Text>
                     </View>
                     <View style={AppStyles.displayRow}>
                       <Text style={AppStyles.displayCellHeader}>Tenant Count</Text>
-                      <Text style={AppStyles.displayCell}>{property.TenantCount || 'N/A'}</Text>
+                      <Text style={AppStyles.displayCell}>
+                        {property.TenantCount || 'N/A'}
+                      </Text>
                     </View>
                     <View style={AppStyles.displayRow}>
                       <Text style={AppStyles.displayCellHeader}>Tenant Yearly Rent</Text>
-                      <Text style={AppStyles.displayCell}>{property.TenantYearlyRent || 'N/A'}</Text>
+                      <Text style={AppStyles.displayCell}>
+                        {property.TenantYearlyRent || 'N/A'}
+                      </Text>
                     </View>
                     <View style={AppStyles.displayRow}>
                       <Text style={AppStyles.displayCellHeader}>Water Harvesting</Text>
-                      <Text style={AppStyles.displayCell}>{property.WaterHarvesting ? 'Yes' : 'No'}</Text>
+                      <Text style={AppStyles.displayCell}>
+                        {property.WaterHarvesting ? 'Yes' : 'No'}
+                      </Text>
                     </View>
                     <View style={AppStyles.displayRow}>
                       <Text style={AppStyles.displayCellHeader}>Submersible</Text>
-                      <Text style={AppStyles.displayCell}>{property.Submersible ? 'Yes' : 'No'}</Text>
+                      <Text style={AppStyles.displayCell}>
+                        {property.Submersible ? 'Yes' : 'No'}
+                      </Text>
                     </View>
                     <View style={AppStyles.displayRow}>
                       <Text style={AppStyles.displayCellHeader}>Zone ID</Text>
@@ -294,11 +348,15 @@ console.log('response',data);
                     </View>
                     <View style={AppStyles.displayRow}>
                       <Text style={AppStyles.displayCellHeader}>Constructed Area</Text>
-                      <Text style={AppStyles.displayCell}>{property.ConstructedArea || 'N/A'}</Text>
+                      <Text style={AppStyles.displayCell}>
+                        {property.ConstructedArea || 'N/A'}
+                      </Text>
                     </View>
                     <View style={AppStyles.displayRow}>
                       <Text style={AppStyles.displayCellHeader}>Bank Account Number</Text>
-                      <Text style={AppStyles.displayCell}>{property.BankAccountNumber || 'N/A'}</Text>
+                      <Text style={AppStyles.displayCell}>
+                        {property.BankAccountNumber || 'N/A'}
+                      </Text>
                     </View>
                     <View style={AppStyles.displayRow}>
                       <Text style={AppStyles.displayCellHeader}>Consent</Text>
@@ -306,7 +364,9 @@ console.log('response',data);
                     </View>
                     <View style={AppStyles.displayRow}>
                       <Text style={AppStyles.displayCellHeader}>Created By</Text>
-                      <Text style={AppStyles.displayCell}>{property.CreatedBy || 'N/A'}</Text>
+                      <Text style={AppStyles.displayCell}>
+                        {property.CreatedBy || 'N/A'}
+                      </Text>
                     </View>
                     <View style={AppStyles.displayRow}>
                       <Text style={AppStyles.displayCellHeader}>Date Created</Text>
@@ -314,11 +374,14 @@ console.log('response',data);
                     </View>
                     <View style={AppStyles.displayRow}>
                       <Text style={AppStyles.displayCellHeader}>Modified By</Text>
-                      <Text style={AppStyles.displayCell}>{property.ModifiedBy || 'N/A'}</Text>
+                      <Text style={AppStyles.displayCell}>
+                        {property.ModifiedBy || 'N/A'}
+                      </Text>
                     </View>
                     <TouchableOpacity
                       style={AppStyles.button}
-                      onPress={() => navigation.navigate('UpdateArea', { property })}>
+                      onPress={() => navigation.navigate('UpdateArea', { property })}
+                    >
                       <Text style={AppStyles.buttonText}>Edit Property</Text>
                     </TouchableOpacity>
                   </View>
@@ -326,7 +389,6 @@ console.log('response',data);
               ) : (
                 <Text style={AppStyles.displayNoDataText}>No properties available</Text>
               )}
-                
             </View>
 
             <Text style={AppStyles.displayHeader}>Special Considerations</Text>
@@ -337,36 +399,61 @@ console.log('response',data);
                     <Text style={AppStyles.displayLabel}>Consideration {index + 1}</Text>
                     <View style={AppStyles.displayRow}>
                       <Text style={AppStyles.displayCellHeader}>Consideration Type</Text>
-                      <Text style={AppStyles.displayCell}>{consideration.ConsiderationType || 'N/A'}</Text>
+                      <Text style={AppStyles.displayCell}>
+                        {consideration.ConsiderationType || 'N/A'}
+                      </Text>
                     </View>
                     <View style={AppStyles.displayRow}>
                       <Text style={AppStyles.displayCellHeader}>Description</Text>
-                      <Text style={AppStyles.displayCell}>{consideration.Description || 'N/A'}</Text>
+                      <Text style={AppStyles.displayCell}>
+                        {consideration.Description || 'N/A'}
+                      </Text>
                     </View>
                     <View style={AppStyles.displayRow}>
                       <Text style={AppStyles.displayCellHeader}>GeoLocation</Text>
-                      <Text style={AppStyles.displayCell}>{consideration.GeoLocation || 'N/A'}</Text>
+                      <Text style={AppStyles.displayCell}>
+                        {consideration.GeoLocation || 'N/A'}
+                      </Text>
                     </View>
                     <View style={AppStyles.displayRow}>
                       <Text style={AppStyles.displayCellHeader}>Created By</Text>
-                      <Text style={AppStyles.displayCell}>{consideration.CreatedBy || 'N/A'}</Text>
+                      <Text style={AppStyles.displayCell}>
+                        {consideration.CreatedBy || 'N/A'}
+                      </Text>
                     </View>
                     <View style={AppStyles.displayRow}>
                       <Text style={AppStyles.displayCellHeader}>Modified By</Text>
-                      <Text style={AppStyles.displayCell}>{consideration.ModifiedBy || 'N/A'}</Text>
+                      <Text style={AppStyles.displayCell}>
+                        {consideration.ModifiedBy || 'N/A'}
+                      </Text>
                     </View>
                     <TouchableOpacity
                       style={AppStyles.button}
-                      onPress={() => navigation.navigate('UpdateSpecial', { consideration })}>
+                      onPress={() => navigation.navigate('UpdateSpecial', { consideration })}
+                    >
                       <Text style={AppStyles.buttonText}>Edit Consideration </Text>
                     </TouchableOpacity>
-
                   </View>
                 ))
               ) : (
                 <Text style={AppStyles.displayNoDataText}>No special considerations available</Text>
               )}
-            </View> */}
+            </View>
+
+            {data && data.owner && data.owner.OwnerID && (
+              <TouchableOpacity
+                style={AppStyles.button}
+                onPress={() => {
+                  navigation.navigate('PropertyArea', {
+                    source: 'Add',
+                    owner: data.owner,
+                    ownerId: data.owner.OwnerID,
+                  });
+                }}
+              >
+                <Text style={AppStyles.buttonText}>Add Property</Text>
+              </TouchableOpacity>
+            )}
           </View>
         )}
       </View>

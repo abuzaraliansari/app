@@ -23,7 +23,7 @@ const PropertyHouseComponent = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const source = route.params?.source; 
-  const { newHouseNumber, propertyID } = route.params;
+  const { newHouseNumber, propertyID, owner } = route.params;
   const FormData = require('form-data');
   const ownerID = authState.ownerId;
   const [propertyMode, setPropertyMode] = useState('');
@@ -56,6 +56,9 @@ const RedStar = () => <Text style={{ color: 'red' }}>*</Text>;
   const DOCUMENT_API_ENDPOINT = `${Config.API_URL}/auth/uploadDoc`;
 
   useEffect(() => {
+    if (source === 'Add' && owner) {
+      console.log('Owner details (from Add):', owner);
+    }
     if (source === 'AllDetails' && formData.propertyDetails) {
       const {
         propertyMode,
@@ -97,7 +100,7 @@ const RedStar = () => <Text style={{ color: 'red' }}>*</Text>;
       setBankAccountNumber(bankAccountNumber || '');
       setConsent(consent || 'Yes');
     }
-  }, [source, formData.propertyDetails, newHouseNumber]);
+  }, [source, formData.propertyDetails, newHouseNumber, owner]);
 
 
   const handleNext = () => {
@@ -164,6 +167,9 @@ const RedStar = () => <Text style={{ color: 'red' }}>*</Text>;
     if (source === 'Home') {
       console.log('Navigating to Family');
       navigation.navigate('LiveLocation', {source: 'Home' });
+    } else if (source === 'Add') 
+      {console.log('Navigating to Family');
+      navigation.navigate('AddProperty', {source: 'Add', owner });
     } else if (source === 'AllDetails') {
       console.log('Navigating to AllDetails');
       navigation.navigate('AllDetails');

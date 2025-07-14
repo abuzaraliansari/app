@@ -32,6 +32,7 @@ import TestComponent from './components/test';
 import dataScreen from './screens/dataScreen';
 import FinalScreen from './screens/FinalScreen';
 import Find from './screens/find';
+import AddProperty from './screens/AddProperty';
 import UpdateOwner from './components/UpdateOwner';
 import UpdateFamily from './components/UpdateFamilyMember';
 import UpdatePropertyAreaDetails from './components/UpdatePropertyAreaDetails';
@@ -363,6 +364,26 @@ const App = () => (
             component={UpdateSpecialConsideration}
             options={({ navigation }) => ({
               title: 'UpdateSpecial',
+              headerLeft: () => (
+                <CustomButton
+                  onPress={() => navigation.replace('Home')}
+                  title="Home"
+                />
+              ),
+              headerRight: () => (
+                <CustomButton
+                  onPress={() => navigation.goBack()}
+                  title="Back"
+                />
+              ),
+            })}
+          />
+
+          <Stack.Screen
+            name="AddProperty"
+            component={AddProperty}
+            options={({ navigation }) => ({
+              title: 'AddProperty',
               headerLeft: () => (
                 <CustomButton
                   onPress={() => navigation.replace('Home')}

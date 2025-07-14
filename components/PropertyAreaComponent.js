@@ -40,6 +40,7 @@ const PropertyAreaComponent = () => {
 
   const route = useRoute();
   const source = route.params?.source; 
+  const { newHouseNumber, ownerId, owner } = route.params;
   const API_ENDPOINTloc = `${Config.API_URL}/auth/Locality`;
   const API_ENDPOINTcol = `${Config.API_URL}/auth/Colony`;
   const AddColony = `${Config.API_URL}/auth/AddColony`;
@@ -53,6 +54,9 @@ const PropertyAreaComponent = () => {
 
 
   useEffect(() => {
+    if (source === 'Add' && owner) {
+      console.log('Owner details (from Add):', owner);
+    }
     if (source === 'AllDetails' && formData.propertyDetails) {
       const {
         galliNumber,
@@ -66,7 +70,7 @@ const PropertyAreaComponent = () => {
       setZone(zone || '');
       setLocality(locality || '');
     }
-  }, [source, formData.propertyDetails]);
+  }, [source, formData.propertyDetails, owner]);
 
   useEffect(() => {
     const fetchLocalities = async zoneId => {
@@ -225,6 +229,10 @@ const PropertyAreaComponent = () => {
           if (source === 'Home') {
             logToFile('Navigating to PropertyHouse with source Home');
             navigation.navigate('PropertyHouse', { newHouseNumber, source: 'Home' });
+          }
+            else if (source === 'Add') {
+            logToFile('Navigating to PropertyHouse with source Add');
+            navigation.navigate('PropertyHouse', { newHouseNumber, source: 'Add', owner });
           } else if (source === 'AllDetails') {
             logToFile('Navigating to PropertyHouse with source AllDetails');
             navigation.navigate('PropertyHouse', { newHouseNumber, source: 'AllDetails' });
