@@ -15,9 +15,9 @@ const HomeComponent = () => {
     navigation.navigate('Owner', { source: 'Home' }); // Pass the source parameter
   };
 
-  const navigateToFindAndUpdate = () => {
-    navigation.replace('Find'); // Replace with your actual screen name
-  };
+  // const navigateToFindAndUpdate = () => {
+  //   navigation.replace('Find'); // Replace with your actual screen name
+  // };
 
   const navigateToLogout = () => {
     navigation.replace('Login'); // Assuming 'Login' is the screen name for logout
@@ -46,12 +46,7 @@ const HomeComponent = () => {
         <Text style={AppStyles.buttonText}>Find & Add Property</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity
-        style={[AppStyles.button, AppStyles.nextButton]}
-        onPress={navigateToFindAndUpdate}
-      >
-        <Text style={AppStyles.buttonText}>Find Property</Text>
-      </TouchableOpacity>
+
 
       <TouchableOpacity
         style={[AppStyles.button, AppStyles.logoutButton]}

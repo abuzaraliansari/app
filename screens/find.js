@@ -319,12 +319,12 @@ const Find = () => {
                       </Text>
                     </View>
                     <View style={AppStyles.displayRow}>
-                      <Text style={AppStyles.displayCellHeader}>Zone ID</Text>
-                      <Text style={AppStyles.displayCell}>{property.ZoneID || 'N/A'}</Text>
+                      <Text style={AppStyles.displayCellHeader}>Zone</Text>
+                      <Text style={AppStyles.displayCell}>{property.ZoneName || 'N/A'}</Text>
                     </View>
                     <View style={AppStyles.displayRow}>
                       <Text style={AppStyles.displayCellHeader}>Locality</Text>
-                      <Text style={AppStyles.displayCell}>{property.Locality || 'N/A'}</Text>
+                      <Text style={AppStyles.displayCell}>{property.LocalityName || 'N/A'}</Text>
                     </View>
                     <View style={AppStyles.displayRow}>
                       <Text style={AppStyles.displayCellHeader}>Colony</Text>
@@ -334,10 +334,12 @@ const Find = () => {
                       <Text style={AppStyles.displayCellHeader}>Galli Number</Text>
                       <Text style={AppStyles.displayCell}>{property.GalliNumber || 'N/A'}</Text>
                     </View>
-                    <View style={AppStyles.displayRow}>
-                      <Text style={AppStyles.displayCellHeader}>House Number</Text>
-                      <Text style={AppStyles.displayCell}>{property.HouseNumber || 'N/A'}</Text>
-                    </View>
+                   <View style={AppStyles.displayRow}>
+  <Text style={AppStyles.displayCellHeader}>House Number</Text>
+  <Text style={AppStyles.displayCell}>
+    {`${property.ZoneName || ''}/${property.LocalityName ? ' ' + property.LocalityName : ''}/${property.GalliNumber ? ' ' + property.GalliNumber : ''}/${property.HouseNumber ? ' ' + property.HouseNumber : ''}`.trim() || 'N/A'}
+  </Text>
+</View>
                     <View style={AppStyles.displayRow}>
                       <Text style={AppStyles.displayCellHeader}>House Type</Text>
                       <Text style={AppStyles.displayCell}>{property.HouseType || 'N/A'}</Text>
@@ -352,12 +354,12 @@ const Find = () => {
                         {property.ConstructedArea || 'N/A'}
                       </Text>
                     </View>
-                    <View style={AppStyles.displayRow}>
+                    {/* <View style={AppStyles.displayRow}>
                       <Text style={AppStyles.displayCellHeader}>Bank Account Number</Text>
                       <Text style={AppStyles.displayCell}>
                         {property.BankAccountNumber || 'N/A'}
                       </Text>
-                    </View>
+                    </View> */}
                     <View style={AppStyles.displayRow}>
                       <Text style={AppStyles.displayCellHeader}>Consent</Text>
                       <Text style={AppStyles.displayCell}>{property.Consent ? 'Yes' : 'No'}</Text>
@@ -378,12 +380,12 @@ const Find = () => {
                         {property.ModifiedBy || 'N/A'}
                       </Text>
                     </View>
-                    <TouchableOpacity
+                    {/* <TouchableOpacity
                       style={AppStyles.button}
                       onPress={() => navigation.navigate('UpdateArea', { property })}
                     >
                       <Text style={AppStyles.buttonText}>Edit Property</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                   </View>
                 ))
               ) : (
@@ -391,7 +393,7 @@ const Find = () => {
               )}
             </View>
 
-            <Text style={AppStyles.displayHeader}>Special Considerations</Text>
+            {/* <Text style={AppStyles.displayHeader}>Special Considerations</Text>
             <View style={AppStyles.displayTable}>
               {data.considerations && data.considerations.length > 0 ? (
                 data.considerations.map((consideration, index) => (
@@ -438,7 +440,7 @@ const Find = () => {
               ) : (
                 <Text style={AppStyles.displayNoDataText}>No special considerations available</Text>
               )}
-            </View>
+            </View> */}
 
             {data && data.owner && data.owner.OwnerID && (
               <TouchableOpacity
