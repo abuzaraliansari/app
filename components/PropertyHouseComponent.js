@@ -165,11 +165,11 @@ const RedStar = () => <Text style={{ color: 'red' }}>*</Text>;
     });
     //navigation.navigate('LiveLocation');
     if (source === 'Home') {
-      console.log('Navigating to Family');
-      navigation.navigate('LiveLocation', {source: 'Home' });
-    } else if (source === 'Add') 
-      {console.log('Navigating to Family');
-      navigation.navigate('AddProperty', {source: 'Add', owner });
+      console.log('Navigating to LiveLocation with source Home');
+      navigation.navigate('LiveLocation', { source: 'Home', owner });
+    } else if (source === 'Add') {
+      console.log('Navigating to LiveLocation with source Add');
+      navigation.navigate('LiveLocation', { source: 'Add', owner });
     } else if (source === 'AllDetails') {
       console.log('Navigating to AllDetails');
       navigation.navigate('AllDetails');

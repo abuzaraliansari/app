@@ -22,33 +22,50 @@ const AddProperty = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const owner = route.params?.owner;
+  // Debug: print owner details at mount
+  React.useEffect(() => {
+    console.log('DEBUG: Owner details from route.params:', route.params?.owner);
+  }, [route.params?.owner]);
   const CreatedBy = authState.user;
   const [errorMessage, setErrorMessage] = useState('');
+  const [geoLocation, setGeoLocation] = useState('');
 
   // Get AddUser from authState
   const addUser = authState.AddUser;
 
   // Ensure formData.ownerDetails is set from owner param if present
   React.useEffect(() => {
-    if (owner) {
-      updateFormData({
-        ownerDetails: {
-          ...owner,
-        },
-      });
-    }
-  }, [owner, updateFormData]);
+  if (route.params?.geoLocation) {
+    setGeoLocation(route.params.geoLocation);
+    // Optionally, update formData.propertyDetails as well:
+    updateFormData({
+      ...formData,
+      propertyDetails: {
+        ...formData.propertyDetails,
+        GeoLocation: route.params.geoLocation,
+      },
+    });
+  }
+}, [route.params?.geoLocation]);
 
   const handleSubmit = async () => {
     try {
       if (!formData.propertyDetails) {
+        console.log('ERROR: propertyDetails missing in formData:', formData);
         throw new Error('Property details are required');
       }
-      if (!owner || !owner.OwnerID) {
-        throw new Error('Owner details are required');
+      if (!owner) {
+        console.log('ERROR: owner is undefined. route.params:', route.params);
+        throw new Error('Owner details are required (owner is undefined)');
+      }
+      if (!owner.OwnerID) {
+        console.log('ERROR: owner.OwnerID is missing. owner:', owner);
+        throw new Error('Owner details are required (OwnerID missing)');
       }
 
-      // Prepare propertyDetails with correct types and required fields
+
+
+      // Backend expects { propertyDetails: ... } in the request body
       const pd = {
         ...formData.propertyDetails,
         ownerID: owner.OwnerID,
@@ -62,6 +79,7 @@ const AddProperty = () => {
         consent: formData.propertyDetails.consent === 'Yes' || formData.propertyDetails.consent === true,
         IsActive: true,
         CreatedBy: owner.CreatedBy || CreatedBy || 'admin',
+        GeoLocation: geoLocation || formData.propertyDetails.GeoLocation || '',
       };
 
       // Remove any undefined/null fields not needed by backend
@@ -72,7 +90,7 @@ const AddProperty = () => {
       const requestBody = { propertyDetails: pd };
       console.log('Request Body:', JSON.stringify(requestBody));
 
-      const response = await fetch('https://babralaapi-d3fpaphrckejgdd5.centralindia-01.azurewebsites.net/auth/PropertyDetails', {
+      const response = await fetch(`${Config.API_URL}/auth/PropertyDetails`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -86,10 +104,11 @@ const AddProperty = () => {
       if (response.ok && data.success) {
         const { propertyID } = data;
         console.log('PropertyID:', propertyID);
-        navigation.navigate('Home', {
-          propertyID,
-          tenantCount: pd.tenantCount,
-          CreatedBy: pd.CreatedBy,
+        // Navigate to FormWithPhoto, passing owner, API response, and source
+        navigation.replace('FormWithPhoto', {
+          owner,
+          apiResponse: data,
+          source: 'Add'  // maintain the Add flow
         });
       } else {
         throw new Error(data.error || data.message || 'Failed to create property');
@@ -201,6 +220,12 @@ const AddProperty = () => {
             <Text style={AppStyles.displayCellHeader}>Created By</Text>
             <Text style={AppStyles.displayCell}>{formData.propertyDetails.CreatedBy || 'N/A'}</Text>
           </View>
+          <View style={AppStyles.displayRow}>
+  <Text style={AppStyles.displayCellHeader}>GeoLocation</Text>
+  <Text style={AppStyles.displayCell}>
+    {geoLocation || formData.propertyDetails.GeoLocation || 'N/A'}
+  </Text>
+</View>
           </View>
           {/* <TouchableOpacity
             style={AppStyles.button}

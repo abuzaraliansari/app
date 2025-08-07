@@ -1,20 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, StyleSheet , TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
-import Config from 'react-native-config';
-import {useNavigation , useRoute} from '@react-navigation/native';
-import { AuthContext } from '../contexts/AuthContext';
-import { FormDataContext } from '../contexts/FormDataContext';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 const LiveLocationComponent = () => {
-
-  //const { authState } = useContext(AuthContext);
- // const { updateFormData, formData } = useContext(FormDataContext);
   const [location, setLocation] = useState(null);
   const [error, setError] = useState(null);
-   const navigation = useNavigation();
-   const route = useRoute();
-   const source = route.params?.source; 
+  const navigation = useNavigation();
+  const route = useRoute();
+  const source = route.params?.source;
+  const owner = route.params?.owner;
 
    const fetchLocation = () => {
     setError(null); // Clear previous errors
@@ -41,8 +36,27 @@ const LiveLocationComponent = () => {
   const addlocation = () => {
     if (location && location.accuracy <= 20) {
       console.log('Location submitted:', location);
-      // Logic to handle submitting the location
-      navigation.navigate('Consideration', { latitude: location. latitude, longitude:location.longitude , source: 'Home' });
+      
+      if (source === 'Add') {
+        // For Add flow, navigate to AddProperty with geoLocation string
+        const geoLocationString = `${location.latitude},${location.longitude}`;
+        console.log('Navigating to AddProperty with owner:', owner);
+        navigation.navigate('AddProperty', {
+          latitude: location.latitude,
+          longitude: location.longitude,
+          geoLocation: geoLocationString,
+          source: 'Add',
+          owner: owner // pass owner from route params
+        });
+      } else {
+        // For Home flow, navigate to Consideration
+        console.log('Navigating to Consideration');
+        navigation.navigate('Consideration', {
+          latitude: location.latitude,
+          longitude: location.longitude,
+          source: 'Home'
+        });
+      }
     } else {
       setError('The location accuracy is insufficient. Please move to an open area.');
     }

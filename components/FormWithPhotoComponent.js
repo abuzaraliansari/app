@@ -25,7 +25,7 @@ const FormData = require('form-data');
 
 const FormWithPhotoComponent = () => {
   const route = useRoute();
-  const { ownerID, propertyID, tenantCount, CreatedBy } = route.params;
+  const { owner, apiResponse, source } = route.params;
 
   const { authState } = useContext(AuthContext);
   const [photos, setPhotos] = useState([]);
@@ -35,10 +35,12 @@ const FormWithPhotoComponent = () => {
   const [fadeAnim] = useState(new Animated.Value(0));
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false); // Loading state
-  const [OwnerID, SetOwnerID] = useState(String(ownerID));
-  const [PropertyID, SetpropertyID] = useState(String(propertyID));
-  const [TenantCount, SettenantCount] = useState(String(tenantCount));
-  const [createdBy, SetCreatedBy] = useState(String(CreatedBy));
+  
+  // Initialize state based on source
+  const [OwnerID, SetOwnerID] = useState(source === 'Add' ? String(owner.OwnerID) : route.params.ownerID);
+  const [PropertyID, SetpropertyID] = useState(source === 'Add' ? String(apiResponse.propertyID) : route.params.propertyID);
+  const [TenantCount, SettenantCount] = useState(String(route.params.tenantCount || '0'));
+  const [createdBy, SetCreatedBy] = useState(source === 'Add' ? owner.CreatedBy : route.params.CreatedBy);
   const token = authState.token;
   const navigation = useNavigation();
 
@@ -172,8 +174,9 @@ const FormWithPhotoComponent = () => {
   const validateAndSubmit = async () => {
     setLoading(true); // Start loading animation
     try {
-      if (photos.length < 2 || photos.some(photo => !photo.uri)) {
-        throw new Error('Please take at least two photos.');
+      const requiredPhotoCount = source === 'Add' ? 2 : 3;
+    if (photos.length < requiredPhotoCount || photos.some(photo => !photo.uri)) {
+        throw new Error(`Please take at least ${requiredPhotoCount} photos.`);
       }
 
       if (
@@ -247,7 +250,12 @@ const FormWithPhotoComponent = () => {
         }
       }
 
-      navigation.navigate('Final', { propertyID: PropertyID });
+      // Navigate to Home for Add flow, Final for others
+      if (source === 'Add') {
+        navigation.replace('Home', { propertyID: PropertyID });
+      } else {
+        navigation.replace('Final', { propertyID: PropertyID });
+      }
     } catch (error) {
       Alert.alert('Error', error.message);
     } finally {
@@ -259,7 +267,7 @@ const FormWithPhotoComponent = () => {
     <ScrollView style={AppStyles.container}>
       <Animated.View style={{ opacity: fadeAnim }}>
         <Text style={AppStyles.headerCenter}>Upload Photos</Text>
-        {['Owner Photo', 'Property Photo 1', 'Property Photo 2'].map((title, index) => (
+        {(source === 'Add' ? ['Property Photo 1', 'Property Photo 2'] : ['Owner Photo', 'Property Photo 1', 'Property Photo 2']).map((title, index) => (
           <View key={index} style={AppStyles.photoContainer}>
             <Text style={AppStyles.photoText}>{title}</Text>
             <TouchableOpacity
@@ -274,14 +282,13 @@ const FormWithPhotoComponent = () => {
           </View>
         ))}
 
-        <Text style={AppStyles.header}>Tenant Details</Text>
-        <TextInput
-          style={AppStyles.input}
-          placeholder="Enter Tenant Count"
-          defaultValue={TenantCount}
-        />
-
-        {renderTenantFields()}
+        {parseInt(TenantCount, 10) > 0 && (
+          <>
+            <Text style={AppStyles.header}>Tenant Details</Text>
+            <Text style={AppStyles.label}>Number of Tenants: {TenantCount}</Text>
+            {renderTenantFields()}
+          </>
+        )}
 
         <TouchableOpacity
           style={[AppStyles.submitButton, { marginBottom: 50 }]}

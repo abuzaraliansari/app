@@ -45,8 +45,13 @@ const DisplayAllDetails = () => {
       // Construct the request body
       const requestBody = {
         ownerDetails: formData.ownerDetails,
-        propertyDetails: formData.propertyDetails,
-        specialConsideration: formData.specialConsideration,
+        propertyDetails: {
+          ...formData.propertyDetails,
+          GeoLocation: `${formData.specialConsideration.latitude},${formData.specialConsideration.longitude}`
+        },
+        specialConsideration: {
+          ...formData.specialConsideration
+        },
       };
   
       // Only include familyMembers if they are not empty
@@ -204,6 +209,7 @@ const DisplayAllDetails = () => {
                 </View>
                 <View style={AppStyles.displayRow}>
                   <Text style={AppStyles.displayCellHeader}>Occupation</Text>
+
                   <Text style={AppStyles.displayCell}>{member.occupation || 'N/A'}</Text>
                 </View>
                 <View style={AppStyles.displayRow}>
